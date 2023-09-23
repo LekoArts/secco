@@ -1,0 +1,47 @@
+{
+  "name": "verdaccio-dev-cli",
+  "type": "module",
+  "version": "0.0.1",
+  "description": "A command-line tool for local development. Uses verdaccio to easily copy changes from your packages to sites you're testing your changes on.",
+  "author": "LekoArts",
+  "license": "MIT",
+  "homepage": "TODO",
+  "repository": {
+    "type": "git",
+    "url": "TODO"
+  },
+  "bugs": {
+    "url": "TODO"
+  },
+  "bin": {
+    "verdaccio-dev-cli": "dist/cli.mjs"
+  },
+  "files": [
+    "CHANGELOG.md",
+    "LICENSE",
+    "README.md",
+    "dist/"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "build": "tsup",
+    "watch": "pnpm run build --watch",
+    "prepare": "pnpm run build",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "dependencies": {
+    "yargs": "^17.7.2"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "1.0.0-beta.6",
+    "@types/node": "^20.6.3",
+    "@types/yargs": "^17.0.24",
+    "eslint": "^8.50.0",
+    "tsup": "^7.2.0",
+    "typescript": "^5.2.2",
+    "vitest": "^0.34.5"
+  }
+}
