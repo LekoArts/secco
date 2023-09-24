@@ -1,13 +1,14 @@
 import process from 'node:process'
 import { isAbsolute } from 'node:path'
 import { read, write } from 'rc9'
-import { type Output, ValiError, enumType, object, parse, safeParse, strict, string, toTrimmed } from 'valibot'
+import { type Output, ValiError, custom, enumType, object, optional, parse, safeParse, strict, string, toTrimmed } from 'valibot'
+import { CONFIG_FILE_NAME } from '../constants'
 import { logger } from './logger'
 
 const currentDir = process.cwd()
 
 export const configOptions = {
-  name: '.seccorc',
+  name: CONFIG_FILE_NAME,
   dir: currentDir,
   flat: false,
 }
@@ -28,13 +29,13 @@ function logErrors(input: ValiError['issues']) {
     return null
   })
 
-  logger.fatal(`Errors parsing your .seccorc file in ${configOptions.dir}
+  logger.fatal(`Errors parsing your ${CONFIG_FILE_NAME} file in ${configOptions.dir}
 
 ${listOfErrors.filter(Boolean).join('\n')}
 
-Make sure that your .seccorc file only contains valid key/value pairs.`)
+Make sure that your ${CONFIG_FILE_NAME} file only contains valid key/value pairs.`)
 
-  process.exit(1)
+  process.exit()
 }
 
 const ConfigSchema = strict(object({
@@ -58,8 +59,16 @@ const ConfigSchema = strict(object({
         return { output: input }
       },
     ]),
-    type: enumType(['single', 'monorepo'], 'source.type is required and must be either "single" or "monorepo"'),
-  })),
+    type: enumType(['single', 'monorepo'], 'source.type is required and must be either \`single\` or \`monorepo\`'),
+    folder: optional(string()),
+    pm: enumType(['npm', 'yarn', 'pnpm'], 'source.pm is required and must be either \`npm\`, \`yarn\`, or \`pnpm\`'),
+  }, [
+    custom(
+      input => input.type !== 'monorepo' || typeof input.folder === 'string',
+      '\`folder\` is required when \`type\` is \`monorepo\`'
+      ,
+    ),
+  ])),
 }))
 
 export type Config = Output<typeof ConfigSchema>
@@ -67,12 +76,13 @@ export type Config = Output<typeof ConfigSchema>
 export function getConfig(): Config {
   const unsafeConfig = read<Partial<Config>>(configOptions)
 
+  // If the file doesn't exist, the unsafeConfig will be an empty object
   if (isEmpty(unsafeConfig)) {
-    logger.fatal(`No .seccorc file found in ${configOptions.dir}
+    logger.fatal(`No ${CONFIG_FILE_NAME} file found in ${configOptions.dir}
 
-Please run \`secco init\` to create a new .seccorc file.`)
+Please run \`secco init\` to create a new ${CONFIG_FILE_NAME} file.`)
 
-    process.exit(1)
+    process.exit()
   }
 
   let config = {} as Config

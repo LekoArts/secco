@@ -4,14 +4,21 @@ import { serialize } from 'rc9'
 import { colors } from 'consola/utils'
 import { type Config, setConfig } from '../utils/config'
 import { logger } from '../utils/logger'
+import { CONFIG_FILE_NAME } from '../constants'
+import { hasConfigFile } from '../utils/initial-setup'
 
-interface Answers {
-  path: string
-  type: 'single' | 'monorepo'
-}
+type RequiredConfig = Omit<Config['source'], 'folder'>
+type OptionalConfig = Pick<Config['source'], 'folder'>
 
+/**
+ * When running `secco init` we want to ask the user a few questions to create a new config file.
+ * Warns if the file already exists.
+ */
 async function initialize() {
-  const answers = await new Enquirer<Answers>().prompt([
+  if (hasConfigFile())
+    logger.warn(`${CONFIG_FILE_NAME} file already exists in this directory. If you continue this wizard the file will be overwritten.`)
+
+  const requiredQuestions = await new Enquirer<RequiredConfig>().prompt([
     {
       type: 'input',
       name: 'path',
@@ -22,6 +29,12 @@ async function initialize() {
 
         return true
       },
+    },
+    {
+      type: 'select',
+      name: 'pm',
+      message: 'Which package manager does your source use?',
+      choices: ['npm', 'yarn', 'pnpm'],
     },
     {
       type: 'select',
@@ -44,25 +57,35 @@ async function initialize() {
 
   const configValues: Config = {
     source: {
-      path: answers.path,
-      type: answers.type,
+      path: requiredQuestions.path,
+      type: requiredQuestions.type,
+      pm: requiredQuestions.pm,
     },
   }
 
-  // To display the options in the last screen, use serialize and split the output on new line
-  const options = serialize(configValues)
+  if (requiredQuestions.type === 'monorepo') {
+    const { folder } = await new Enquirer<OptionalConfig>().prompt({
+      type: 'input',
+      name: 'folder',
+      message: 'Which workspace folder in your source do you want to watch?',
+    })
 
-  logger.info(`${colors.bold('Thanks! Your .seccorc file will contain the following options:')}
+    configValues.source.folder = folder
+  }
 
-${options}
+  const optionsToDisplay = serialize(configValues)
 
+  logger.info(`${colors.bold('Thanks!')}
+Your ${CONFIG_FILE_NAME} file will contain the following options:
+
+${optionsToDisplay}
 `)
 
   const { confirm } = await new Enquirer<{ confirm: boolean }>().prompt({
     type: 'confirm',
     name: 'confirm',
     initial: 'Yes',
-    message: 'Shall we do this?',
+    message: 'Do you want to create the file?',
     format: value => (value ? colors.greenBright('Yes') : colors.red('No')),
   })
 
@@ -73,10 +96,10 @@ ${options}
 
   setConfig(configValues)
 
-  logger.success('Successfully created .seccorc file')
+  logger.success(`Successfully created ${CONFIG_FILE_NAME}`)
 }
 
 export const command = 'init'
-export const desc = 'Initialize a new .seccorc file'
+export const desc = `Initialize a new ${CONFIG_FILE_NAME} file`
 export const builder = {}
 export const handler = initialize
