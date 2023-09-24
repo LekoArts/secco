@@ -1,1 +1,1 @@
-# verdaccio-dev-cli
+# secco

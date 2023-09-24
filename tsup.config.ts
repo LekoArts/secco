@@ -2,6 +2,7 @@ import { defineConfig } from 'tsup'
 
 export default defineConfig((options) => {
   return {
+    name: 'secco',
     entry: ['src/cli.ts'],
     dts: false,
     sourcemap: !!options.watch,
