@@ -85,7 +85,7 @@ If you only want to use \`secco\` you'll need to add the dependencies to your pa
       process.exit()
 
     else
-      logger.info('Continueing other dependency installation due to "--forceVerdaccio" flag')
+      logger.info('Continuing other dependency installation due to \`--forceVerdaccio\` flag')
   }
 
   console.log({ packageNamesToFilePath })
