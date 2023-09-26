@@ -10,3 +10,8 @@ TODO:
 - Add installation for diff package managers
 - Add file watching
 - Add docs site with Astro starlight
+- Fork https://github.com/alloc/filespy and update deps
+
+Stretch goals:
+
+- Support workspaces in destination project

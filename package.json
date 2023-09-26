@@ -13,9 +13,6 @@
   "bugs": {
     "url": "https://github.com/LekoArts/secco/issues"
   },
-  "bin": {
-    "secco": "dist/cli.mjs"
-  },
   "keywords": [
     "secco",
     "verdaccio",
@@ -23,6 +20,9 @@
     "cli",
     "dev-cli"
   ],
+  "bin": {
+    "secco": "dist/cli.mjs"
+  },
   "files": [
     "CHANGELOG.md",
     "LICENSE",
@@ -40,12 +40,13 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
+    "@lekoarts/filespy": "^1.0.0",
     "consola": "^3.2.3",
     "destr": "^2.0.1",
     "enquirer": "^2.4.1",
     "fs-extra": "^11.1.1",
     "lodash-es": "^4.17.21",
-    "micromatch": "^4.0.5",
+    "nypm": "^0.3.3",
     "pathe": "^1.1.1",
     "rc9": "^2.1.1",
     "valibot": "^0.17.0",

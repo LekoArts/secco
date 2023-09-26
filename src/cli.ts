@@ -3,12 +3,13 @@
 import process from 'node:process'
 import yargs from 'yargs'
 import { hideBin } from 'yargs/helpers'
-import pkg from '../package.json'
 import { getConfig } from './utils/config'
 import { logger } from './utils/logger'
 import { commands } from './commands'
 import { checkDirHasPackageJson, getLocalPackages, getPackageNamesToFilePath, getPackages } from './utils/initial-setup'
+import type { CliArguments } from './constants'
 import { CONFIG_FILE_NAME } from './constants'
+import { watcher } from './watch/watcher'
 
 const input = hideBin(process.argv)
 const yargsInstace = yargs(input)
@@ -41,15 +42,8 @@ const parser = yargsInstace
   .showHelpOnFail(false)
   .parseAsync()
 
-interface Arguments {
-  scanOnce: boolean
-  forceVerdaccio: boolean
-  verbose: boolean
-  packageNames?: Array<string>
-}
-
 async function run() {
-  const argv: Arguments = await parser
+  const argv: CliArguments = await parser
 
   if (argv.verbose)
     logger.level = 4
@@ -61,17 +55,17 @@ ${JSON.stringify(seccoConfig, null, 2)}`)
 
   checkDirHasPackageJson()
 
+  const { source } = seccoConfig
+
   const sourcePackages = getPackages({
-    sourcePath: seccoConfig.source.path,
-    sourceType: seccoConfig.source.type,
-    sourceFolder: seccoConfig.source.folder,
+    sourcePath: source.path,
+    sourceType: source.type,
+    sourceFolder: source.folder,
   })
   logger.debug(`Found ${sourcePackages.length} packages in source.`)
   const packageNamesToFilePath = getPackageNamesToFilePath()
   const localPackages = getLocalPackages(sourcePackages)
-  logger.debug(`Found ${localPackages.length} local packages.
-
-${JSON.stringify(localPackages, null, 2)}`)
+  logger.debug(`Found ${localPackages.length} local packages.`)
 
   if (!argv?.packageNames && localPackages.length === 0) {
     logger.error(`You haven't got any source dependencies in your current package.json.
@@ -88,7 +82,7 @@ If you only want to use \`secco\` you'll need to add the dependencies to your pa
       logger.info('Continuing other dependency installation due to \`--forceVerdaccio\` flag')
   }
 
-  console.log({ packageNamesToFilePath })
+  watcher(source, argv.packageNames, { scanOnce: argv.scanOnce, forceVerdaccio: argv.forceVerdaccio, verbose: argv.verbose })
 }
 
 run()
