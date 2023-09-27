@@ -6,10 +6,10 @@ import { hideBin } from 'yargs/helpers'
 import { getConfig } from './utils/config'
 import { logger } from './utils/logger'
 import { commands } from './commands'
-import { checkDirHasPackageJson, getLocalPackages, getPackageNamesToFilePath, getPackages } from './utils/initial-setup'
+import { checkDirHasPackageJson, getDestinationPackages, getPackageNamesToFilePath, getPackages } from './utils/initial-setup'
 import type { CliArguments } from './constants'
 import { CONFIG_FILE_NAME } from './constants'
-import { watcher } from './watch/watcher'
+import { watcher } from './watcher'
 
 const input = hideBin(process.argv)
 const yargsInstace = yargs(input)
@@ -36,7 +36,7 @@ const parser = yargsInstace
   // Some examples on how to use secco
   .example([
     ['$0', 'Scan destination and copy files from source'],
-    ['$0 packages ars aurea', 'Scan destination and copy specific packages from source'],
+    ['$0 packages ars aurea', 'Copy specified packages from source to destination'],
   ])
   .wrap(yargsInstace.terminalWidth())
   .showHelpOnFail(false)
@@ -60,14 +60,14 @@ ${JSON.stringify(seccoConfig, null, 2)}`)
   const sourcePackages = getPackages({
     sourcePath: source.path,
     sourceType: source.type,
-    sourceFolder: source.folder,
+    sourceFolders: source.folders,
   })
   logger.debug(`Found ${sourcePackages.length} packages in source.`)
   const packageNamesToFilePath = getPackageNamesToFilePath()
-  const localPackages = getLocalPackages(sourcePackages)
-  logger.debug(`Found ${localPackages.length} local packages.`)
+  const destinationPackages = getDestinationPackages(sourcePackages)
+  logger.debug(`Found ${destinationPackages.length} destination packages.`)
 
-  if (!argv?.packageNames && localPackages.length === 0) {
+  if (!argv?.packageNames && destinationPackages.length === 0) {
     logger.error(`You haven't got any source dependencies in your current package.json.
 You probably want to use the packages command to start developing. Example:
 
@@ -82,7 +82,17 @@ If you only want to use \`secco\` you'll need to add the dependencies to your pa
       logger.info('Continuing other dependency installation due to \`--forceVerdaccio\` flag')
   }
 
-  watcher(source, argv.packageNames, { scanOnce: argv.scanOnce, forceVerdaccio: argv.forceVerdaccio, verbose: argv.verbose })
+  watcher(source, argv.packageNames, { scanOnce: argv.scanOnce, forceVerdaccio: argv.forceVerdaccio, verbose: argv.verbose, destinationPackages, sourcePackages, packageNamesToFilePath })
 }
 
 run()
+
+// watch(gatsbyLocation, argv.packages, { localPackages, monoRepoPackages })
+// => source.path, destinationPackages, sourcePackages
+
+// traversePackages(root, packages: uniq_localPackages, monoRepoPackages, packageNamesToFilePath)
+// => source.path, uniq_destinationPackages, sourcePackages, packageNamesToFilePath)
+
+// localPackages => destinationPackages
+// monoRepoPackages => sourcePackages
+// packages => uniq_destinationPackages

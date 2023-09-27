@@ -1,7 +1,6 @@
 import process from 'node:process'
 import fs from 'fs-extra'
-import intersection from 'lodash-es/intersection.js'
-import merge from 'lodash-es/merge.js'
+import { intersection, merge } from 'lodash-es'
 import { join } from 'pathe'
 import { destr } from 'destr'
 import { CONFIG_FILE_NAME } from '../constants'
@@ -29,6 +28,9 @@ export function hasConfigFile() {
 
 const packageNameToFilePath = new Map<string, string>()
 
+/**
+ * Returns a map (package name to absolute file path) of packages inside the source repository
+ */
 export function getPackageNamesToFilePath() {
   return packageNameToFilePath
 }
@@ -36,7 +38,7 @@ export function getPackageNamesToFilePath() {
 interface GetPackagesArgs {
   sourcePath: Config['source']['path']
   sourceType: Config['source']['type']
-  sourceFolder?: Config['source']['folder']
+  sourceFolders?: Config['source']['folders']
 }
 
 /**
@@ -45,7 +47,7 @@ interface GetPackagesArgs {
  *
  * While iterating through the packages, save the package name and the absolute path to the packageNameToFilePath Map.
  */
-export function getPackages({ sourcePath, sourceType, sourceFolder }: GetPackagesArgs) {
+export function getPackages({ sourcePath, sourceType, sourceFolders }: GetPackagesArgs) {
   if (sourceType === 'single') {
     const pkgJsonPath = fs.readFileSync(join(sourcePath, 'package.json'), 'utf-8')
     const pkgJson = destr<{ name?: string }>(pkgJsonPath)
@@ -59,28 +61,32 @@ export function getPackages({ sourcePath, sourceType, sourceFolder }: GetPackage
   }
 
   if (sourceType === 'monorepo') {
-    if (!sourceFolder) {
-      logger.fatal('`source.folder` is required when `source.type` is `monorepo`')
+    if (!sourceFolders) {
+      logger.fatal('`source.folders` is required when `source.type` is `monorepo`')
       process.exit()
     }
 
-    // Get packagenames from sourceFolder
-    const monorepoPackages = fs.readdirSync(join(sourcePath, sourceFolder)).map((dirName) => {
-      // Try to get the package name from the package.json file
-      try {
-        const localPkg = destr<{ name?: string }>(fs.readFileSync(join(sourcePath, sourceFolder, dirName, 'package.json'), 'utf-8'))
+    // Users can provide multiple folders that they want to watch in their monorepo. Iterate through the source.folders and then collect the package names from each folder in a global monorepoPackages array.
+    const monorepoPackages = sourceFolders.flatMap((folder) => {
+      const monorepoPackageNames = fs.readdirSync(join(sourcePath, folder)).map((dirName) => {
+        // Try to get the package name from the package.json file
+        try {
+          const localPkg = destr<{ name?: string }>(fs.readFileSync(join(sourcePath, folder, dirName, 'package.json'), 'utf-8'))
 
-        if (localPkg?.name) {
-          packageNameToFilePath.set(localPkg.name, join(sourcePath, sourceFolder, dirName))
-          return localPkg.name
+          if (localPkg?.name) {
+            packageNameToFilePath.set(localPkg.name, join(sourcePath, folder, dirName))
+            return localPkg.name
+          }
         }
-      }
-      catch (error) {
-        // fallback to directory name
-      }
+        catch (error) {
+          // fallback to directory name
+        }
 
-      packageNameToFilePath.set(dirName, join(sourcePath, sourceFolder, dirName))
-      return dirName
+        packageNameToFilePath.set(dirName, join(sourcePath, folder, dirName))
+        return dirName
+      })
+
+      return monorepoPackageNames
     })
 
     return monorepoPackages
@@ -89,17 +95,17 @@ export function getPackages({ sourcePath, sourceType, sourceFolder }: GetPackage
   return []
 }
 
-export function getLocalPackages(sourcePackages: Array<string>) {
-  const localPkgJson = destr<{ dependencies?: Record<string, string>; devDependencies?: Record<string, string> }>(fs.readFileSync(join(currentDir, 'package.json'), 'utf-8'))
+export function getDestinationPackages(sourcePackages: Array<string>) {
+  const destPkgJson = destr<{ dependencies?: Record<string, string>; devDependencies?: Record<string, string> }>(fs.readFileSync(join(currentDir, 'package.json'), 'utf-8'))
 
-  if (!localPkgJson)
+  if (!destPkgJson)
     return []
 
-  // Intersect sourcePackages with local dependencies to get list of packages that are used
-  const localPackages = intersection(
+  // Intersect sourcePackages with destination dependencies to get list of packages that are used
+  const destinationPackages = intersection(
     sourcePackages,
-    Object.keys(merge({}, localPkgJson.dependencies, localPkgJson.devDependencies)),
+    Object.keys(merge({}, destPkgJson.dependencies, destPkgJson.devDependencies)),
   )
 
-  return localPackages
+  return destinationPackages
 }

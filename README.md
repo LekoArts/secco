@@ -6,7 +6,6 @@ TODO:
 
 - Add changesets
 - Add verdaccio handling
-- Add https://github.com/zkochan/packages/tree/main/preferred-pm
 - Add installation for diff package managers
 - Add file watching
 - Add docs site with Astro starlight

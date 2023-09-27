@@ -1,0 +1,68 @@
+import { createRequire } from 'node:module'
+import { difference, intersection } from 'lodash-es'
+import { join } from 'pathe'
+import { logger } from './logger'
+import type { PackageJson } from './file'
+
+const require = createRequire(import.meta.url)
+
+interface TraversePackageDependenciesArgs {
+  sourcePackages: Array<string>
+  packages: Array<string>
+  packageNamesToFilePath: Map<string, string>
+  seenPackages?: Array<string>
+  depTree?: Record<string, Set<string>>
+}
+
+export function traversePkgDeps({ sourcePackages, packages, packageNamesToFilePath, depTree = {}, seenPackages = [...packages] }: TraversePackageDependenciesArgs) {
+  packages.forEach((p) => {
+    let pkgJson!: PackageJson
+
+    try {
+      // Look up the absolute file path from the source location for that specific package
+      const pkgRoot = packageNamesToFilePath.get(p)
+      if (pkgRoot) {
+        pkgJson = require(join(pkgRoot, 'package.json'))
+      }
+      else {
+        logger.error(`"${p}" doesn't exist in source location`)
+        // Remove package from seenPackages
+        seenPackages = seenPackages.filter(seenPkg => seenPkg !== p)
+        return
+      }
+    }
+    catch (e) {
+      logger.error(`"${p}" doesn't exist in source location`, e)
+      // Remove package from seenPackages
+      seenPackages = seenPackages.filter(seenPkg => seenPkg !== p)
+      return
+    }
+
+    // Look at the dependencies of the package. Create an intersection of the dependencies and the source packages
+    const fromSource = intersection(Object.keys({ ...pkgJson.dependencies }), sourcePackages)
+
+    // Build dependency tree by using the package name as the key and the dependencies as a Set
+    fromSource.forEach((pkgName) => {
+      depTree[pkgName] = (depTree[pkgName] || new Set()).add(p)
+    })
+
+    // Only traverse dependencies that are not already in seenPackages to avoid infinite loops
+    const newPackages = difference(fromSource, seenPackages)
+
+    if (newPackages.length > 0) {
+      newPackages.forEach((depFromSource) => {
+        seenPackages.push(depFromSource)
+      })
+
+      traversePkgDeps({
+        packages: fromSource,
+        sourcePackages,
+        seenPackages,
+        depTree,
+        packageNamesToFilePath,
+      })
+    }
+  })
+
+  return { seenPackages, depTree }
+}

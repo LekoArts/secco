@@ -37,15 +37,20 @@
     "watch": "pnpm run build --watch",
     "prepare": "pnpm run build",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "test": "vitest run",
+    "test:watch": "vitest watch"
   },
   "dependencies": {
     "@lekoarts/filespy": "^1.0.0",
     "consola": "^3.2.3",
+    "del": "^7.1.0",
     "destr": "^2.0.1",
     "enquirer": "^2.4.1",
+    "execa": "^8.0.1",
     "fs-extra": "^11.1.1",
     "lodash-es": "^4.17.21",
+    "node-fetch": "^3.3.2",
     "nypm": "^0.3.3",
     "pathe": "^1.1.1",
     "rc9": "^2.1.1",

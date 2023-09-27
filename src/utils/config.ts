@@ -1,7 +1,7 @@
 import process from 'node:process'
 import { isAbsolute } from 'node:path'
 import { read, write } from 'rc9'
-import { type Output, ValiError, custom, enumType, object, optional, parse, safeParse, strict, string, toTrimmed } from 'valibot'
+import { type Output, ValiError, array, custom, enumType, object, optional, parse, safeParse, strict, string, toTrimmed } from 'valibot'
 import { CONFIG_FILE_NAME } from '../constants'
 import { logger } from './logger'
 
@@ -60,12 +60,12 @@ const ConfigSchema = strict(object({
       },
     ]),
     type: enumType(['single', 'monorepo'], 'source.type is required and must be either \`single\` or \`monorepo\`'),
-    folder: optional(string()),
+    folders: optional(array(string())),
     pm: enumType(['npm', 'yarn', 'pnpm'], 'source.pm is required and must be either \`npm\`, \`yarn\`, or \`pnpm\`'),
   }, [
     custom(
-      input => input.type !== 'monorepo' || typeof input.folder === 'string',
-      '\`folder\` is required when \`type\` is \`monorepo\`'
+      input => input.type !== 'monorepo' || Array.isArray(input.folders),
+      '\`folders\` is required when \`type\` is \`monorepo\`'
       ,
     ),
   ])),

@@ -1,4 +1,5 @@
 import { isAbsolute } from 'node:path'
+import process from 'node:process'
 import Enquirer from 'enquirer'
 import { serialize } from 'rc9'
 import { colors } from 'consola/utils'
@@ -7,8 +8,8 @@ import { logger } from '../utils/logger'
 import { CONFIG_FILE_NAME } from '../constants'
 import { hasConfigFile } from '../utils/initial-setup'
 
-type RequiredConfig = Omit<Config['source'], 'folder'>
-type OptionalConfig = Pick<Config['source'], 'folder'>
+type RequiredConfig = Omit<Config['source'], 'folders'>
+type OptionalConfig = Pick<Config['source'], 'folders'>
 
 /**
  * When running `secco init` we want to ask the user a few questions to create a new config file.
@@ -64,13 +65,13 @@ async function initialize() {
   }
 
   if (requiredQuestions.type === 'monorepo') {
-    const { folder } = await new Enquirer<OptionalConfig>().prompt({
-      type: 'input',
-      name: 'folder',
-      message: 'Which workspace folder in your source do you want to watch?',
+    const { folders } = await new Enquirer<OptionalConfig>().prompt({
+      type: 'list',
+      name: 'folders',
+      message: 'Which workspace folders in your source do you want to watch?',
     })
 
-    configValues.source.folder = folder
+    configValues.source.folders = folders
   }
 
   const optionsToDisplay = serialize(configValues)
@@ -91,12 +92,13 @@ ${optionsToDisplay}
 
   if (!confirm) {
     logger.info('Ok, bye!')
-    return
+    process.exit()
   }
 
   setConfig(configValues)
 
   logger.success(`Successfully created ${CONFIG_FILE_NAME}`)
+  process.exit()
 }
 
 export const command = 'init'
