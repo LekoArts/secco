@@ -1,5 +1,4 @@
 import { join } from 'pathe'
-import { vi } from 'vitest'
 import { traversePkgDeps } from '../traverse-pkg-deps'
 
 const FIXTURE_PATH = join(__dirname, 'fixtures', 'dependency-chains')
