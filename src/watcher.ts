@@ -13,6 +13,7 @@ import { setDefaultSpawnStdio } from './utils/promisified-spawn'
 import { traversePkgDeps } from './utils/traverse-pkg-deps'
 import { checkDepsChanges } from './utils/check-deps-changes'
 import { getDependantPackages } from './utils/get-dependant-packages'
+import { publishPackagesAndInstall } from './verdaccio'
 
 let numOfCopiedFiles = 0
 const MAX_COPY_RETRIES = 3
@@ -144,7 +145,13 @@ export async function watcher(source: Config['source'], packages: Array<string> 
   if (forceVerdaccio) {
     try {
       if (allPackagesToWatch.length > 0) {
-        const test = 'todo'
+        await publishPackagesAndInstall({
+          packagesToPublish: allPackagesToWatch,
+          packageNamesToFilePath,
+          destinationPackages,
+          ignorePackageJsonChanges,
+          source,
+        })
       }
       else {
         // Use package manager inside destination repository to install dependencies
@@ -166,7 +173,7 @@ export async function watcher(source: Config['source'], packages: Array<string> 
   }
 
   let allCopies: Array<Promise<void>> = []
-  const packagesToPublish = new Set()
+  const packagesToPublish: Set<string> = new Set()
   let isInitialScan = true
   let isPublishing = false
   const waitFor = new Set()
@@ -273,7 +280,13 @@ export async function watcher(source: Config['source'], packages: Array<string> 
       if (packagesToPublish.size > 0) {
         isPublishing = true
 
-        const todo = 'publishing'
+        await publishPackagesAndInstall({
+          packagesToPublish: Array.from(packagesToPublish),
+          packageNamesToFilePath,
+          destinationPackages,
+          ignorePackageJsonChanges,
+          source,
+        })
 
         packagesToPublish.clear()
         isPublishing = false

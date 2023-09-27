@@ -2,7 +2,7 @@ import fs from 'fs-extra'
 import fetch from 'node-fetch'
 import { isEqual, isObject, transform, uniq } from 'lodash-es'
 import destr from 'destr'
-import { NPM_DIST_TAG } from '../constants'
+import { CLI_NAME, NPM_DIST_TAG } from '../constants'
 import type { PackageJson } from './file'
 import { getPackageVersion, getSourcePackageJsonPath, readPackageJson } from './file'
 import { logger } from './logger'
@@ -44,7 +44,7 @@ export async function checkDepsChanges(args: CheckDependencyChangesArgs) {
     pkgNotInstalled = true
     // Didn't find the package in node_modules, so secco should install the package for users. But only on the first run/scan.
     if (!args.isInitialScan) {
-      logger.log(`\`${args.packageName}\` does not seem to be installed. Restart secco to publish it.`)
+      logger.log(`\`${args.packageName}\` does not seem to be installed. Restart ${CLI_NAME} to publish it.`)
 
       return {
         didDepsChange: false,
@@ -155,10 +155,10 @@ export async function checkDepsChanges(args: CheckDependencyChangesArgs) {
       logger.log(`Dependencies of \`${args.packageName}\` changed:\n${depsChangelog.join('\n')}`)
 
       if (args.isInitialScan)
-        logger.log(`Will ${!needsPublishing ? 'not ' : ''}publish to local verdaccio registry.`)
+        logger.log(`Will ${!needsPublishing ? 'not ' : ''}publish to local registry.`)
 
       else
-        logger.warn('Installation of dependencies after initial scan is not supported in secco.')
+        logger.warn(`Installation of dependencies after initial scan is not supported in ${CLI_NAME}.`)
 
       return {
         didDepsChange: needsPublishing,

@@ -2,7 +2,7 @@ import process from 'node:process'
 import { isAbsolute } from 'node:path'
 import { read, write } from 'rc9'
 import { type Output, ValiError, array, custom, enumType, object, optional, parse, safeParse, strict, string, toTrimmed } from 'valibot'
-import { CONFIG_FILE_NAME } from '../constants'
+import { CLI_NAME, CONFIG_FILE_NAME } from '../constants'
 import { logger } from './logger'
 
 const currentDir = process.cwd()
@@ -80,7 +80,7 @@ export function getConfig(): Config {
   if (isEmpty(unsafeConfig)) {
     logger.fatal(`No ${CONFIG_FILE_NAME} file found in ${configOptions.dir}
 
-Please run \`secco init\` to create a new ${CONFIG_FILE_NAME} file.`)
+Please run \`${CLI_NAME} init\` to create a new ${CONFIG_FILE_NAME} file.`)
 
     process.exit()
   }

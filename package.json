@@ -39,7 +39,8 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "test": "vitest run",
-    "test:watch": "vitest watch"
+    "test:watch": "vitest watch",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@lekoarts/filespy": "^1.0.0",
@@ -54,6 +55,7 @@
     "nypm": "^0.3.3",
     "pathe": "^1.1.1",
     "rc9": "^2.1.1",
+    "signal-exit": "^4.1.0",
     "valibot": "^0.17.0",
     "verdaccio": "^5.26.2",
     "yargs": "^17.7.2"
@@ -65,6 +67,7 @@
     "@types/lodash-es": "^4.17.9",
     "@types/node": "^20.6.3",
     "@types/yargs": "^17.0.24",
+    "@verdaccio/types": "^10.8.0",
     "eslint": "^8.50.0",
     "lint-staged": "^14.0.1",
     "simple-git-hooks": "^2.9.0",

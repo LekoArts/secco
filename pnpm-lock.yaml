@@ -41,6 +41,9 @@ dependencies:
   rc9:
     specifier: ^2.1.1
     version: 2.1.1
+  signal-exit:
+    specifier: ^4.1.0
+    version: 4.1.0
   valibot:
     specifier: ^0.17.0
     version: 0.17.0
@@ -70,6 +73,9 @@ devDependencies:
   '@types/yargs':
     specifier: ^17.0.24
     version: 17.0.24
+  '@verdaccio/types':
+    specifier: ^10.8.0
+    version: 10.8.0
   eslint:
     specifier: ^8.50.0
     version: 8.50.0
@@ -1009,6 +1015,10 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: false
+
+  /@verdaccio/types@10.8.0:
+    resolution: {integrity: sha512-FuJyCRFPdy+gqCi0v29dE1xKn99Ztq6fuY9fb7ezeP1SRbUL/hgDaNkpjYvSIMCyb+dLFKOFBeZPyIUBLOSdlA==}
+    dev: true
 
   /@verdaccio/ui-theme@7.0.0-next.1:
     resolution: {integrity: sha512-0Bp2M5oejxjXNzzMBB4qsXIES74hFecHw+QhGswcpViNYi1nM2Yl4nENHE+h2BFOE0Lk4m8NKOijyRM8yKDneg==}
