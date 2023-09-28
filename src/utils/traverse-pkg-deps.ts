@@ -1,8 +1,8 @@
 import { createRequire } from 'node:module'
 import { difference, intersection } from 'lodash-es'
 import { join } from 'pathe'
+import type { PackageJson } from '../types'
 import { logger } from './logger'
-import type { PackageJson } from './file'
 
 const require = createRequire(import.meta.url)
 

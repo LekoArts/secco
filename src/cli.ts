@@ -7,7 +7,7 @@ import { getConfig } from './utils/config'
 import { logger } from './utils/logger'
 import { commands } from './commands'
 import { checkDirHasPackageJson, getDestinationPackages, getPackageNamesToFilePath, getPackages } from './utils/initial-setup'
-import type { CliArguments } from './constants'
+import type { CliArguments } from './types'
 import { CLI_NAME, CONFIG_FILE_NAME } from './constants'
 import { watcher } from './watcher'
 

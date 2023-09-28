@@ -7,13 +7,13 @@ import { join, relative } from 'pathe'
 import { installDependencies } from 'nypm'
 import { deleteAsync } from 'del'
 import { logger } from './utils/logger'
-import type { Config } from './utils/config'
-import { CLI_NAME, type CliArguments, DEFAULT_IGNORED, WATCH_EVENTS } from './constants'
+import { CLI_NAME, DEFAULT_IGNORED, WATCH_EVENTS } from './constants'
 import { setDefaultSpawnStdio } from './utils/promisified-spawn'
 import { traversePkgDeps } from './utils/traverse-pkg-deps'
 import { checkDepsChanges } from './utils/check-deps-changes'
 import { getDependantPackages } from './utils/get-dependant-packages'
 import { publishPackagesAndInstall } from './verdaccio'
+import type { PackageNames, Source, WatcherOptions } from './types'
 
 let numOfCopiedFiles = 0
 const MAX_COPY_RETRIES = 3
@@ -35,13 +35,7 @@ interface PrivateCopyPathArgs extends CopyPathArgs {
   retry?: number
 }
 
-type WatcherOptions = Omit<CliArguments, 'packageNames'> & {
-  packageNamesToFilePath: Map<string, string>
-  sourcePackages: Array<string>
-  destinationPackages: Array<string>
-}
-
-export async function watcher(source: Config['source'], packages: Array<string> | undefined, options: WatcherOptions) {
+export async function watcher(source: Source, packages: PackageNames | undefined, options: WatcherOptions) {
   const { verbose: isVerbose, scanOnce, destinationPackages, packageNamesToFilePath, sourcePackages } = options
   let { forceVerdaccio } = options
 

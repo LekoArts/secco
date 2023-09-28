@@ -47,11 +47,11 @@ export async function installPackages({ newlyPublishedPackageVersions, packagesT
   try {
     await promisifiedSpawn(installCmd)
 
-    logger.log('Installation finished successfully!')
+    logger.success('Installation finished successfully!')
   }
   catch (e) {
     if (e instanceof Error) {
-      logger.fatal('Installation failed.', e)
+      logger.fatal('Installation failed', e)
       process.exit()
     }
   }

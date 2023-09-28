@@ -1,10 +1,10 @@
 import os from 'node:os'
 import { join } from 'pathe'
-import type { Config } from '@verdaccio/types'
+import type { Config as VerdaccioConfig } from '@verdaccio/types'
 import { CLI_NAME } from '../constants'
 
 // @ts-expect-error: Verdaccio's types are wrong
-export const VERDACCIO_CONFIG: Config = {
+export const VERDACCIO_CONFIG: VerdaccioConfig = {
   storage: join(os.tmpdir(), 'verdaccio', 'storage'),
   port: 4873, // Default
   max_body_size: '100mb',

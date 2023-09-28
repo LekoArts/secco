@@ -4,8 +4,8 @@ import { intersection, merge } from 'lodash-es'
 import { join } from 'pathe'
 import { destr } from 'destr'
 import { CONFIG_FILE_NAME } from '../constants'
+import type { Source, SourcePackages } from '../types'
 import { logger } from './logger'
-import type { Config } from './config'
 
 const currentDir = process.cwd()
 
@@ -36,9 +36,9 @@ export function getPackageNamesToFilePath() {
 }
 
 interface GetPackagesArgs {
-  sourcePath: Config['source']['path']
-  sourceType: Config['source']['type']
-  sourceFolders?: Config['source']['folders']
+  sourcePath: Source['path']
+  sourceType: Source['type']
+  sourceFolders?: Source['folders']
 }
 
 /**
@@ -95,7 +95,7 @@ export function getPackages({ sourcePath, sourceType, sourceFolders }: GetPackag
   return []
 }
 
-export function getDestinationPackages(sourcePackages: Array<string>) {
+export function getDestinationPackages(sourcePackages: SourcePackages) {
   const destPkgJson = destr<{ dependencies?: Record<string, string>; devDependencies?: Record<string, string> }>(fs.readFileSync(join(currentDir, 'package.json'), 'utf-8'))
 
   if (!destPkgJson)

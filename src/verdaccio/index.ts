@@ -3,7 +3,7 @@ import { runServer } from 'verdaccio'
 import fs from 'fs-extra'
 import { intersection } from 'lodash-es'
 import { logger } from '../utils/logger'
-import type { Config } from '../utils/config'
+import type { DestinationPackages, PackageNamesToFilePath, Source } from '../types'
 import { VERDACCIO_CONFIG } from './verdaccio-config'
 import { publishPackage } from './publish-package'
 import { installPackages } from './install-packages'
@@ -38,12 +38,12 @@ async function startVerdaccio() {
   ]) as Promise<Server>
 }
 
-interface PublishPackagesAndInstallArgs {
+export interface PublishPackagesAndInstallArgs {
   packagesToPublish: Array<string>
-  destinationPackages: Array<string>
-  packageNamesToFilePath: Map<string, string>
+  destinationPackages: DestinationPackages
+  packageNamesToFilePath: PackageNamesToFilePath
   ignorePackageJsonChanges: (packageName: string, contentArray: Array<string>) => () => void
-  source: Config['source']
+  source: Source
 }
 
 export async function publishPackagesAndInstall({ packageNamesToFilePath, destinationPackages, ignorePackageJsonChanges, packagesToPublish, source }: PublishPackagesAndInstallArgs) {

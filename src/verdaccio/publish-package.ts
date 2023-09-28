@@ -1,26 +1,23 @@
 import process from 'node:process'
 import path from 'node:path'
 import fs from 'fs-extra'
+import { execaSync } from 'execa'
 import destr from 'destr'
 import { join } from 'pathe'
 import { promisifiedSpawn } from '../utils/promisified-spawn'
-import type { PackageJson } from '../utils/file'
+import type { PackageJson } from '../types'
 import { getSourcePackageJsonPath } from '../utils/file'
 import { CLI_NAME } from '../constants'
 import { logger } from '../utils/logger'
-import type { Config } from '../utils/config'
 import { REGISTRY_URL } from './verdaccio-config'
 import { registerCleanupTask } from './cleanup-tasks'
+import type { PublishPackagesAndInstallArgs } from '.'
 
-const NpmRcContent = `${REGISTRY_URL.replace(/https?:/g, '')}/:_authToken="${CLI_NAME}"`
+const NpmRcConfigKey = `${REGISTRY_URL.replace(/https?:/g, '')}/:_authToken`
+const NpmRcContent = `${NpmRcConfigKey}="${CLI_NAME}"`
 
-interface AdjustPackageJsonArgs {
+type AdjustPackageJsonArgs = Omit<PublishPackageArgs, 'source'> & {
   sourcePkgJsonPath: string
-  packageName: string
-  packageNamesToFilePath: Map<string, string>
-  versionPostfix: number
-  packagesToPublish: Array<string>
-  ignorePackageJsonChanges: (packageName: string, contentArray: Array<string>) => () => void
 }
 
 /**
@@ -73,30 +70,44 @@ interface CreateTempNpmRcArgs {
 }
 
 /**
- * Anonymous publishing requires a dummy .npmrc file. This is a requirement for npm and yarn 🤷🏻‍♀️
+ * Anonymous publishing requires a dummy .npmrc file. This is a requirement for npm and yarn 🤷🏻‍♀️. Creates an .npmrc file in the source package directory and in the source directory. If an .npmrc file already exists, it will edit the file.
  */
 function createTempNpmRc({ pathToPkg, sourcePath }: CreateTempNpmRcArgs) {
-  // TODO(feature): If .npmrc already exists, recover that file
-
   const npmRcPathInPkg = join(pathToPkg, '.npmrc')
-  fs.outputFileSync(npmRcPathInPkg, NpmRcContent)
-
   const npmRcPathInSource = join(sourcePath, '.npmrc')
-  fs.outputFileSync(npmRcPathInSource, NpmRcContent)
+  let revertPkg = false
+  let revertSource = false
+
+  // If an .npmrc file already exists in the pkg and/or source root, we should use "npm config set key=value"
+
+  if (fs.existsSync(npmRcPathInPkg)) {
+    execaSync('npm', ['config', 'set', NpmRcContent], { cwd: pathToPkg })
+    revertPkg = true
+  }
+  else { fs.outputFileSync(npmRcPathInPkg, NpmRcContent) }
+
+  if (fs.existsSync(npmRcPathInSource)) {
+    execaSync('npm', ['config', 'set', NpmRcContent], { cwd: sourcePath })
+    revertSource = true
+  }
+  else { fs.outputFileSync(npmRcPathInSource, NpmRcContent) }
 
   return registerCleanupTask(() => {
-    fs.removeSync(npmRcPathInPkg)
-    fs.removeSync(npmRcPathInSource)
+    if (revertPkg)
+      execaSync('npm', ['config', 'delete', NpmRcConfigKey], { cwd: pathToPkg })
+    else
+      fs.removeSync(npmRcPathInPkg)
+
+    if (revertSource)
+      execaSync('npm', ['config', 'delete', NpmRcConfigKey], { cwd: sourcePath })
+    else
+      fs.removeSync(npmRcPathInSource)
   })
 }
 
-interface PublishPackageArgs {
+type PublishPackageArgs = Omit<PublishPackagesAndInstallArgs, 'destinationPackages'> & {
   packageName: string
-  packagesToPublish: Array<string>
-  packageNamesToFilePath: Map<string, string>
   versionPostfix: number
-  ignorePackageJsonChanges: (packageName: string, contentArray: Array<string>) => () => void
-  source: Config['source']
 }
 
 export async function publishPackage({ packageName, packagesToPublish, packageNamesToFilePath, versionPostfix, source, ignorePackageJsonChanges }: PublishPackageArgs) {
@@ -128,7 +139,7 @@ export async function publishPackage({ packageName, packagesToPublish, packageNa
   }
   catch (e) {
     if (e instanceof Error) {
-      logger.fatal(`Failed to publish \`${packageName}@${newPackageVersion}\` to local registry.`, e)
+      logger.fatal(`Failed to publish \`${packageName}@${newPackageVersion}\` to local registry`, e)
       process.exit()
     }
   }

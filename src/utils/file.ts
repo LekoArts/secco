@@ -1,6 +1,7 @@
 import { destr } from 'destr'
 import fs from 'fs-extra'
 import { join } from 'pathe'
+import type { PackageJson } from '../types'
 
 export async function pathExists(p: string) {
   try {
@@ -10,15 +11,6 @@ export async function pathExists(p: string) {
   catch {
     return false
   }
-}
-
-export interface PackageJson {
-  name?: string
-  version?: string
-  dependencies?: Record<string, string>
-  devDependencies?: Record<string, string>
-  peerDependencies?: Record<string, string>
-  workspaces?: Array<string> | { packages: Array<string> }
 }
 
 /**

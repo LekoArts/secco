@@ -7,9 +7,10 @@ import { type Config, setConfig } from '../utils/config'
 import { logger } from '../utils/logger'
 import { CONFIG_FILE_NAME } from '../constants'
 import { hasConfigFile } from '../utils/initial-setup'
+import type { Source } from '../types'
 
-type RequiredConfig = Omit<Config['source'], 'folders'>
-type OptionalConfig = Pick<Config['source'], 'folders'>
+type RequiredSourceConfig = Omit<Source, 'folders'>
+type OptionalSourceConfig = Pick<Source, 'folders'>
 
 /**
  * When running `secco init` we want to ask the user a few questions to create a new config file.
@@ -19,7 +20,7 @@ async function initialize() {
   if (hasConfigFile())
     logger.warn(`${CONFIG_FILE_NAME} file already exists in this directory. If you continue this wizard the file will be overwritten.`)
 
-  const requiredQuestions = await new Enquirer<RequiredConfig>().prompt([
+  const requiredQuestions = await new Enquirer<RequiredSourceConfig>().prompt([
     {
       type: 'input',
       name: 'path',
@@ -66,7 +67,7 @@ async function initialize() {
 
   if (requiredQuestions.type === 'monorepo') {
     // TODO(feature): Parse the top-level folders inside the source and give them a multi-select prompt instead. If possible, respect .gitignore
-    const { folders } = await new Enquirer<OptionalConfig>().prompt({
+    const { folders } = await new Enquirer<OptionalSourceConfig>().prompt({
       type: 'list',
       name: 'folders',
       message: 'Which workspace folders in your source do you want to watch?',

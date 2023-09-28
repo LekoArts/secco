@@ -20,6 +20,7 @@
     "cli",
     "dev-cli"
   ],
+  "main": "dist/cli.mjs",
   "bin": {
     "secco": "dist/cli.mjs"
   },

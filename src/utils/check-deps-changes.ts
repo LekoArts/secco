@@ -3,7 +3,7 @@ import fetch from 'node-fetch'
 import { isEqual, isObject, transform, uniq } from 'lodash-es'
 import destr from 'destr'
 import { CLI_NAME, NPM_DIST_TAG } from '../constants'
-import type { PackageJson } from './file'
+import type { PackageJson } from '../types'
 import { getPackageVersion, getSourcePackageJsonPath } from './file'
 import { logger } from './logger'
 
