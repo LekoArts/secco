@@ -40,6 +40,7 @@ const parser = yargsInstace
   ])
   .wrap(yargsInstace.terminalWidth())
   .showHelpOnFail(false)
+  .detectLocale(false)
   .parseAsync()
 
 async function run() {

@@ -2,7 +2,7 @@
   "name": "secco",
   "type": "module",
   "version": "0.0.2",
-  "description": "A command-line tool for local development. Uses verdaccio to easily copy changes from your package(s) to test sites.",
+  "description": "A command-line tool for local development. Uses Verdaccio and direct file copying to apply changes to test sites.",
   "author": "LekoArts",
   "license": "MIT",
   "homepage": "TODO",
@@ -18,7 +18,8 @@
     "verdaccio",
     "local",
     "cli",
-    "dev-cli"
+    "dev-cli",
+    "developer-tools"
   ],
   "main": "dist/cli.mjs",
   "bin": {
