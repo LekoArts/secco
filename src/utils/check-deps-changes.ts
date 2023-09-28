@@ -4,7 +4,7 @@ import { isEqual, isObject, transform, uniq } from 'lodash-es'
 import destr from 'destr'
 import { CLI_NAME, NPM_DIST_TAG } from '../constants'
 import type { PackageJson } from './file'
-import { getPackageVersion, getSourcePackageJsonPath, readPackageJson } from './file'
+import { getPackageVersion, getSourcePackageJsonPath } from './file'
 import { logger } from './logger'
 
 function difference(object: Record<string, string>, base: Record<string, string>) {
@@ -38,7 +38,7 @@ export async function checkDepsChanges(args: CheckDependencyChangesArgs) {
 
   try {
     // The package might already be installed (e.g. the "latest" version)
-    nodeModulePkgJson = readPackageJson(args.nodeModulesFilePath) as PackageJson
+    nodeModulePkgJson = destr<PackageJson>(fs.readFileSync(args.nodeModulesFilePath, 'utf8'))
   }
   catch {
     pkgNotInstalled = true

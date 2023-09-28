@@ -86,13 +86,3 @@ If you only want to use \`${CLI_NAME}\` you'll need to add the dependencies to y
 }
 
 run()
-
-// watch(gatsbyLocation, argv.packages, { localPackages, monoRepoPackages })
-// => source.path, destinationPackages, sourcePackages
-
-// traversePackages(root, packages: uniq_localPackages, monoRepoPackages, packageNamesToFilePath)
-// => source.path, uniq_destinationPackages, sourcePackages, packageNamesToFilePath)
-
-// localPackages => destinationPackages
-// monoRepoPackages => sourcePackages
-// packages => uniq_destinationPackages

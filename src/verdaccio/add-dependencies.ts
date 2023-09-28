@@ -11,7 +11,7 @@ interface GetAddDependenciesCmdArgs {
 }
 
 export function getAddDependenciesCmd({ packages, pm, externalRegistry = false }: GetAddDependenciesCmdArgs) {
-  const commands: PromisifiedSpawnArgs = [pm.command, [pm.name === 'npm' ? 'install' : 'add', ...packages, '--exact', externalRegistry ? `--registry=${REGISTRY_URL}` : '']]
+  const commands: PromisifiedSpawnArgs = [pm.command, [pm.name === 'npm' ? 'install' : 'add', ...packages, '--exact', !externalRegistry ? `--registry=${REGISTRY_URL}` : null].filter(Boolean)]
 
   return commands
 }

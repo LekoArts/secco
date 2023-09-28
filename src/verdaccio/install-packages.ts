@@ -3,16 +3,14 @@ import { detectPackageManager } from 'nypm'
 import { logger } from '../utils/logger'
 import type { PromisifiedSpawnArgs } from '../utils/promisified-spawn'
 import { promisifiedSpawn } from '../utils/promisified-spawn'
-import type { Config } from '../utils/config'
 import { getAddDependenciesCmd } from './add-dependencies'
 
 interface InstallPackagesArgs {
   packagesToInstall: Array<string>
   newlyPublishedPackageVersions: Record<string, string>
-  source: Config['source']
 }
 
-export async function installPackages({ newlyPublishedPackageVersions, packagesToInstall, source }: InstallPackagesArgs) {
+export async function installPackages({ newlyPublishedPackageVersions, packagesToInstall }: InstallPackagesArgs) {
   const cwd = process.cwd()
   const pm = await detectPackageManager(cwd, { includeParentDirs: false })
 
@@ -35,9 +33,8 @@ export async function installPackages({ newlyPublishedPackageVersions, packagesT
 
   let installCmd!: PromisifiedSpawnArgs
 
-  if (source.type === 'monorepo') {
-    // TODO(feature): Support workspace
-    logger.warn('Workspaces not supported yet :(')
+  if (false) {
+    // TODO(feature): Support workspace in destination repository
   }
   else {
     const packages = packagesToInstall.map((p) => {

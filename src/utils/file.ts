@@ -21,22 +21,12 @@ export interface PackageJson {
   workspaces?: Array<string> | { packages: Array<string> }
 }
 
-export function readPackageJson(dir: string) {
-  const file = join(dir, 'package.json')
-  if (fs.existsSync(file))
-    return destr<PackageJson>(fs.readFileSync(file, 'utf8'))
-
-  return null
-}
-
 /**
  * Reads the package.json file in the current working directory and returns the version of the given package name.
  * Falls back to 'latest' if no version is found.
  */
 export function getPackageVersion(packageName: string) {
-  const pkgJson = readPackageJson('./')
-  if (!pkgJson)
-    return 'latest'
+  const pkgJson = destr<PackageJson>(fs.readFileSync('./package.json', 'utf8'))
 
   const { dependencies = {}, devDependencies = {} } = pkgJson
   const version = dependencies[packageName] || devDependencies[packageName]

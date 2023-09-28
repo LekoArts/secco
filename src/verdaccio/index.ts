@@ -68,6 +68,5 @@ export async function publishPackagesAndInstall({ packageNamesToFilePath, destin
   await installPackages({
     packagesToInstall,
     newlyPublishedPackageVersions,
-    source,
   })
 }

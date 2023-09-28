@@ -1,14 +1,14 @@
 /* eslint-disable prefer-const */
 import process from 'node:process'
 import fs from 'fs-extra'
-import { filespy } from '@lekoarts/filespy'
+import chokidar from 'chokidar'
 import { intersection, uniq } from 'lodash-es'
 import { join, relative } from 'pathe'
 import { installDependencies } from 'nypm'
 import { deleteAsync } from 'del'
 import { logger } from './utils/logger'
 import type { Config } from './utils/config'
-import { type CliArguments, FILESPY_SKIP, WATCH_EVENTS } from './constants'
+import { type CliArguments, DEFAULT_IGNORED, WATCH_EVENTS } from './constants'
 import { setDefaultSpawnStdio } from './utils/promisified-spawn'
 import { traversePkgDeps } from './utils/traverse-pkg-deps'
 import { checkDepsChanges } from './utils/check-deps-changes'
@@ -47,10 +47,11 @@ export async function watcher(source: Config['source'], packages: Array<string> 
 
   setDefaultSpawnStdio(isVerbose ? 'inherit' : 'ignore')
 
-  // Current logic of copying files from source to destination doesn't work yet with workspaces, so force verdaccio usage for now.
-  // TODO(feature): Support workspaces
-  if (source.type === 'monorepo')
+  if (false) {
+    // Current logic of copying files from source to destination doesn't work yet with workspaces (inside destination), so force verdaccio usage for now.
+    // TODO(feature): Support workspaces in destination
     forceVerdaccio = true
+  }
 
   let afterPackageInstallation = false
   let queuedCopies: Array<PrivateCopyPathArgs> = []
@@ -77,7 +78,7 @@ export async function watcher(source: Config['source'], packages: Array<string> 
       // TODO(feature): Handle case where copied file needs to be executable. Use fs.chmodSync(newPath, '0755') for that.
 
       numOfCopiedFiles += 1
-      logger.debug(`Copied ${oldPath} to ${newPath}`)
+      logger.log(`Copied \`${relative(source.path, oldPath)}\` to \`${newPath}\``)
 
       resolve()
     })
@@ -172,6 +173,17 @@ export async function watcher(source: Config['source'], packages: Array<string> 
     return
   }
 
+  const ignored = DEFAULT_IGNORED.concat(
+    allPackagesToWatch.map(
+      p => new RegExp(`${p}[\\/\\\\]src[\\/\\\\]`, 'i'),
+    ),
+  )
+  const watchers = uniq(
+    allPackagesToWatch
+      .map(p => join(packageNamesToFilePath.get(p) as string))
+      .filter(p => fs.existsSync(p)),
+  )
+
   let allCopies: Array<Promise<void>> = []
   const packagesToPublish: Set<string> = new Set()
   let isInitialScan = true
@@ -181,133 +193,121 @@ export async function watcher(source: Config['source'], packages: Array<string> 
 
   const pkgPathMatchingEntries = Array.from(packageNamesToFilePath.entries())
 
-  const allPackagesToWatchSrcFolders = allPackagesToWatch.map(p => `${p}/src/`)
-
-  const skip = FILESPY_SKIP.concat(allPackagesToWatchSrcFolders)
-  const only = uniq(allPackagesToWatch.map((p) => {
-    const path = packageNamesToFilePath.get(p)
-    if (path)
-      return join(path)
-
-    return undefined
-  }).filter(Boolean).filter(p => fs.existsSync(p)))
-
-  const spy = filespy(source.path, {
-    only,
-    skip,
-  }).on('all', async (event, file) => {
-    if (!WATCH_EVENTS.includes(event))
-      return
-
-    // Match name against package path
-    let packageName
-
-    for (const [_packageName, packagePath] of pkgPathMatchingEntries) {
-      const relativePath = relative(packagePath, file)
-      if (!relativePath.startsWith('..')) {
-        packageName = _packageName
-        break
-      }
-    }
-
-    if (!packageName)
-      return
-
-    const prefix = packageNamesToFilePath.get(packageName)
-
-    if (!prefix)
-      return
-
-    const relativePackageFile = relative(prefix, file)
-    const nodeModulesFilePath = join(`./node_modules/${packageName}`, relativePackageFile)
-
-    if (relativePackageFile === 'package.json') {
-      // package.json files will change during publishing to adjust version of package and dependencies. Ignore those changes during publishing.
-      if (isPublishing)
+  chokidar
+    .watch(watchers, {
+      ignored: [filePath => ignored.some(i => i.test(filePath))],
+    })
+    .on('all', async (event, file) => {
+      if (!WATCH_EVENTS.includes(event))
         return
 
-      // Compare source dependencies with the ones in the destination package.json
-      const didDependenciesChangePromise = checkDepsChanges({
-        nodeModulesFilePath,
-        packageName,
-        sourcePackages,
-        packageNamesToFilePath,
-        isInitialScan,
-        ignoredPackageJson,
-      })
+      // Match name against package path
+      let packageName
 
-      if (isInitialScan) {
-        // checkDepsChanges can do async GET requests to unpkg.com. We need to make sure that we wait for those requests before attempting to install the dependencies.
-        waitFor.add(didDependenciesChangePromise)
-      }
-
-      const { didDepsChange, pkgNotInstalled } = await didDependenciesChangePromise
-
-      if (pkgNotInstalled)
-        anyPackageNotInstalled = true
-
-      if (didDepsChange) {
-        if (isInitialScan) {
-          waitFor.delete(didDependenciesChangePromise)
-
-          // TODO(feature): Handle case where dependency change happens (e.g. added or removed package) during 'watch' mode.
-          // secco currently doesn't handle this case. It will only pick those changes up during its initial scan.
-
-          // At this stage secco knows which dependency changed. But now it needs to figure out which packages it needs to publish. If e.g. package-b changed (but package-a depends on it), then both package-a and package-b need to be published and installed.
-
-          getDependantPackages({
-            packageName,
-            depTree,
-          }).forEach((pkg) => {
-            packagesToPublish.add(pkg)
-          })
+      for (const [_packageName, packagePath] of pkgPathMatchingEntries) {
+        const relativePath = relative(packagePath, file)
+        if (!relativePath.startsWith('..')) {
+          packageName = _packageName
+          break
         }
       }
 
-      // Do not copy package.json files as this will mess up future dependency checks. So if code reaches this path, do nothing.
-    }
+      if (!packageName)
+        return
 
-    const localCopies = [copyPath({ oldPath: file, newPath: nodeModulesFilePath, packageName })]
+      const prefix = packageNamesToFilePath.get(packageName)
 
-    allCopies = allCopies.concat(localCopies)
-  }).on('ready', async () => {
-    // Wait for all async work to finish before attempting to publish & install
-    await Promise.all(Array.from(waitFor))
+      if (!prefix)
+        return
 
-    if (isInitialScan) {
-      isInitialScan = false
+      const relativePackageFile = relative(prefix, file)
+      const nodeModulesFilePath = join(`./node_modules/${packageName}`, relativePackageFile)
 
-      if (packagesToPublish.size > 0) {
-        isPublishing = true
+      if (relativePackageFile === 'package.json') {
+      // package.json files will change during publishing to adjust version of package and dependencies. Ignore those changes during publishing.
+        if (isPublishing)
+          return
 
-        await publishPackagesAndInstall({
-          packagesToPublish: Array.from(packagesToPublish),
+        // Compare source dependencies with the ones in the destination package.json
+        const didDependenciesChangePromise = checkDepsChanges({
+          nodeModulesFilePath,
+          packageName,
+          sourcePackages,
           packageNamesToFilePath,
-          destinationPackages,
-          ignorePackageJsonChanges,
-          source,
+          isInitialScan,
+          ignoredPackageJson,
         })
 
-        packagesToPublish.clear()
-        isPublishing = false
+        if (isInitialScan) {
+        // checkDepsChanges can do async GET requests to unpkg.com. We need to make sure that we wait for those requests before attempting to install the dependencies.
+          waitFor.add(didDependenciesChangePromise)
+        }
+
+        const { didDepsChange, pkgNotInstalled } = await didDependenciesChangePromise
+
+        if (pkgNotInstalled)
+          anyPackageNotInstalled = true
+
+        if (didDepsChange) {
+          if (isInitialScan) {
+            waitFor.delete(didDependenciesChangePromise)
+
+            // TODO(feature): Handle case where dependency change happens (e.g. added or removed package) during 'watch' mode.
+            // secco currently doesn't handle this case. It will only pick those changes up during its initial scan.
+
+            // At this stage secco knows which dependency changed. But now it needs to figure out which packages it needs to publish. If e.g. package-b changed (but package-a depends on it), then both package-a and package-b need to be published and installed.
+
+            getDependantPackages({
+              packageName,
+              depTree,
+            }).forEach((pkg) => {
+              packagesToPublish.add(pkg)
+            })
+          }
+        }
+
+      // Do not copy package.json files as this will mess up future dependency checks. So if code reaches this path, do nothing.
       }
-      else if (anyPackageNotInstalled) {
+
+      const localCopies = [copyPath({ oldPath: file, newPath: nodeModulesFilePath, packageName })]
+
+      allCopies = allCopies.concat(localCopies)
+    }).on('ready', async () => {
+    // Wait for all async work to finish before attempting to publish & install
+      await Promise.all(Array.from(waitFor))
+
+      if (isInitialScan) {
+        isInitialScan = false
+
+        if (packagesToPublish.size > 0) {
+          isPublishing = true
+
+          await publishPackagesAndInstall({
+            packagesToPublish: Array.from(packagesToPublish),
+            packageNamesToFilePath,
+            destinationPackages,
+            ignorePackageJsonChanges,
+            source,
+          })
+
+          packagesToPublish.clear()
+          isPublishing = false
+        }
+        else if (anyPackageNotInstalled) {
         // Use package manager inside destination repository to install dependencies
-        logger.log('Installing dependencies from public npm registry...')
-        await installDependencies({ cwd: process.cwd(), silent: !isVerbose })
-        logger.log('Installation complete')
+          logger.log('Installing dependencies from public npm registry...')
+          await installDependencies({ cwd: process.cwd(), silent: !isVerbose })
+          logger.log('Installation complete')
+        }
+
+        await clearStaleJsFileFromNodeModules()
+        runQueuedCopies()
       }
 
-      await clearStaleJsFileFromNodeModules()
-      runQueuedCopies()
-    }
-
-    // All files watched, quit once all files are copied and scanOnce is true
-    Promise.all(allCopies).then(() => {
-      if (scanOnce) {
-        spy.close()
-        quit()
-      }
+      // All files watched, quit once all files are copied and scanOnce is true
+      Promise.all(allCopies).then(() => {
+        if (scanOnce)
+          quit()
+      })
     })
-  })
 }

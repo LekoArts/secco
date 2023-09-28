@@ -43,7 +43,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@lekoarts/filespy": "^1.0.0",
+    "chokidar": "^3.5.3",
     "consola": "^3.2.3",
     "del": "^7.1.0",
     "destr": "^2.0.1",

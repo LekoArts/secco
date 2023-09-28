@@ -76,6 +76,8 @@ interface CreateTempNpmRcArgs {
  * Anonymous publishing requires a dummy .npmrc file. This is a requirement for npm and yarn 🤷🏻‍♀️
  */
 function createTempNpmRc({ pathToPkg, sourcePath }: CreateTempNpmRcArgs) {
+  // TODO(feature): If .npmrc already exists, recover that file
+
   const npmRcPathInPkg = join(pathToPkg, '.npmrc')
   fs.outputFileSync(npmRcPathInPkg, NpmRcContent)
 
@@ -117,16 +119,16 @@ export async function publishPackage({ packageName, packagesToPublish, packageNa
   const pathToPkg = path.dirname(sourcePkgJsonPath)
   const revertCreateTempNpmRc = createTempNpmRc({ pathToPkg, sourcePath: source.path })
 
-  logger.log(`Publishing ${packageName}@${newPackageVersion} to local registry...`)
+  logger.log(`Publishing \`${packageName}@${newPackageVersion}\` to local registry...`)
 
   try {
     await promisifiedSpawn(['npm', ['publish', '--tag', CLI_NAME, `--registry=${REGISTRY_URL}`], { cwd: pathToPkg }])
 
-    logger.log(`Published ${packageName}@${newPackageVersion} to local registry`)
+    logger.log(`Published \`${packageName}@${newPackageVersion}\` to local registry`)
   }
   catch (e) {
     if (e instanceof Error) {
-      logger.fatal(`Failed to publish ${packageName}@${newPackageVersion} to local registry.`, e)
+      logger.fatal(`Failed to publish \`${packageName}@${newPackageVersion}\` to local registry.`, e)
       process.exit()
     }
   }
