@@ -65,6 +65,7 @@ async function initialize() {
   }
 
   if (requiredQuestions.type === 'monorepo') {
+    // TODO(feature): Parse the top-level folders inside the source and give them a multi-select prompt instead. If possible, respect .gitignore
     const { folders } = await new Enquirer<OptionalConfig>().prompt({
       type: 'list',
       name: 'folders',

@@ -7,14 +7,14 @@ import type { PackageJson } from './file'
 import { getPackageVersion, getSourcePackageJsonPath } from './file'
 import { logger } from './logger'
 
-function difference(object: Record<string, string>, base: Record<string, string>) {
-  function changes(object: Record<string, string>, base: Record<string, string>) {
-    return transform(object, (result, value, key) => {
+type ObjWithAny = Record<string, any>
+
+export function difference(object: ObjWithAny, base: ObjWithAny) {
+  function changes(object: ObjWithAny, base: ObjWithAny) {
+    return transform(object, (result: ObjWithAny, value, key) => {
       if (!isEqual(value, base[key])) {
-        // @ts-expect-error - TODO: Fix this
         result[key]
           = isObject(value) && isObject(base[key])
-            // @ts-expect-error - TODO: Fix this
             ? changes(value, base[key])
             : value
       }
@@ -38,13 +38,14 @@ export async function checkDepsChanges(args: CheckDependencyChangesArgs) {
 
   try {
     // The package might already be installed (e.g. the "latest" version)
+    // nodeModulesFilePath might not exist, but this is okay since we catch the resulting error
     nodeModulePkgJson = destr<PackageJson>(fs.readFileSync(args.nodeModulesFilePath, 'utf8'))
   }
   catch {
     pkgNotInstalled = true
     // Didn't find the package in node_modules, so secco should install the package for users. But only on the first run/scan.
     if (!args.isInitialScan) {
-      logger.log(`\`${args.packageName}\` does not seem to be installed. Restart ${CLI_NAME} to publish it.`)
+      logger.info(`\`${args.packageName}\` does not seem to be installed. Restart ${CLI_NAME} to publish it.`)
 
       return {
         didDepsChange: false,
@@ -66,7 +67,7 @@ export async function checkDepsChanges(args: CheckDependencyChangesArgs) {
     }
     catch (e) {
       if (e instanceof Error)
-        logger.log(`\`${args.packageName}\` does not seem to be installed and is also not published on npm. Error: ${e.message}`)
+        logger.error(`\`${args.packageName}\` does not seem to be installed and is also not published on npm. Error: ${e.message}`)
 
       return {
         didDepsChange: true,
@@ -106,9 +107,8 @@ export async function checkDepsChanges(args: CheckDependencyChangesArgs) {
   const areDepsEqual = isEqual(sourcePkgJson.dependencies, nodeModulePkgJson.dependencies)
 
   if (!areDepsEqual) {
-    // TODO: Fix types
-    const diff = difference(sourcePkgJson.dependencies, nodeModulePkgJson.dependencies) as any
-    const diff2 = difference(nodeModulePkgJson.dependencies, sourcePkgJson.dependencies) as any
+    const diff = difference(sourcePkgJson.dependencies, nodeModulePkgJson.dependencies)
+    const diff2 = difference(nodeModulePkgJson.dependencies, sourcePkgJson.dependencies)
 
     let needsPublishing = false
     let isPublishing = false
@@ -155,7 +155,7 @@ export async function checkDepsChanges(args: CheckDependencyChangesArgs) {
       logger.log(`Dependencies of \`${args.packageName}\` changed:\n${depsChangelog.join('\n')}`)
 
       if (args.isInitialScan)
-        logger.log(`Will ${!needsPublishing ? 'not ' : ''}publish to local registry.`)
+        logger.info(`Will ${!needsPublishing ? 'not ' : ''}publish to local registry.`)
 
       else
         logger.warn(`Installation of dependencies after initial scan is not supported in ${CLI_NAME}.`)

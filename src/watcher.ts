@@ -8,7 +8,7 @@ import { installDependencies } from 'nypm'
 import { deleteAsync } from 'del'
 import { logger } from './utils/logger'
 import type { Config } from './utils/config'
-import { type CliArguments, DEFAULT_IGNORED, WATCH_EVENTS } from './constants'
+import { CLI_NAME, type CliArguments, DEFAULT_IGNORED, WATCH_EVENTS } from './constants'
 import { setDefaultSpawnStdio } from './utils/promisified-spawn'
 import { traversePkgDeps } from './utils/traverse-pkg-deps'
 import { checkDepsChanges } from './utils/check-deps-changes'
@@ -145,6 +145,8 @@ export async function watcher(source: Config['source'], packages: Array<string> 
 
   if (forceVerdaccio) {
     try {
+      logger.debug(`Running ${CLI_NAME} with --forceVerdaccio flag. Packages to watch: ${allPackagesToWatch.join(', ')}`)
+
       if (allPackagesToWatch.length > 0) {
         await publishPackagesAndInstall({
           packagesToPublish: allPackagesToWatch,
@@ -158,7 +160,7 @@ export async function watcher(source: Config['source'], packages: Array<string> 
         // Use package manager inside destination repository to install dependencies
         logger.log('Installing dependencies from public npm registry...')
         await installDependencies({ cwd: process.cwd(), silent: !isVerbose })
-        logger.log('Installation complete')
+        logger.success('Installation complete')
       }
     }
     catch (e) {
@@ -169,7 +171,7 @@ export async function watcher(source: Config['source'], packages: Array<string> 
   }
 
   if (allPackagesToWatch.length === 0) {
-    logger.error('No packages to watch.')
+    logger.error('No packages to watch')
     return
   }
 
@@ -279,6 +281,8 @@ export async function watcher(source: Config['source'], packages: Array<string> 
       if (isInitialScan) {
         isInitialScan = false
 
+        logger.debug(`Initial scan complete. Trying to publish: ${Array.from(packagesToPublish).join(', ')}`)
+
         if (packagesToPublish.size > 0) {
           isPublishing = true
 
@@ -294,10 +298,10 @@ export async function watcher(source: Config['source'], packages: Array<string> 
           isPublishing = false
         }
         else if (anyPackageNotInstalled) {
-        // Use package manager inside destination repository to install dependencies
+          // Use package manager inside destination repository to install dependencies
           logger.log('Installing dependencies from public npm registry...')
           await installDependencies({ cwd: process.cwd(), silent: !isVerbose })
-          logger.log('Installation complete')
+          logger.success('Installation complete')
         }
 
         await clearStaleJsFileFromNodeModules()
