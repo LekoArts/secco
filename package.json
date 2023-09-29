@@ -1,20 +1,29 @@
 {
-  "name": "verdaccio-dev-cli",
+  "name": "secco",
   "type": "module",
-  "version": "0.0.1",
-  "description": "A command-line tool for local development. Uses verdaccio to easily copy changes from your packages to sites you're testing your changes on.",
+  "version": "0.0.2",
+  "description": "A command-line tool for local development. Uses Verdaccio and direct file copying to apply changes to test sites.",
   "author": "LekoArts",
   "license": "MIT",
   "homepage": "TODO",
   "repository": {
     "type": "git",
-    "url": "TODO"
+    "url": "https://github.com/LekoArts/secco"
   },
   "bugs": {
-    "url": "TODO"
+    "url": "https://github.com/LekoArts/secco/issues"
   },
+  "keywords": [
+    "secco",
+    "verdaccio",
+    "local",
+    "cli",
+    "dev-cli",
+    "developer-tools"
+  ],
+  "main": "dist/cli.mjs",
   "bin": {
-    "verdaccio-dev-cli": "dist/cli.mjs"
+    "secco": "dist/cli.mjs"
   },
   "files": [
     "CHANGELOG.md",
@@ -28,20 +37,51 @@
   "scripts": {
     "build": "tsup",
     "watch": "pnpm run build --watch",
-    "prepare": "pnpm run build",
+    "prepublishOnly": "pnpm run build",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "test": "vitest run",
+    "test:watch": "vitest watch",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "chokidar": "^3.5.3",
+    "consola": "^3.2.3",
+    "del": "^7.1.0",
+    "destr": "^2.0.1",
+    "enquirer": "^2.4.1",
+    "execa": "^8.0.1",
+    "fs-extra": "^11.1.1",
+    "lodash-es": "^4.17.21",
+    "node-fetch": "^3.3.2",
+    "nypm": "^0.3.3",
+    "pathe": "^1.1.1",
+    "rc9": "^2.1.1",
+    "signal-exit": "^4.1.0",
+    "valibot": "^0.17.0",
+    "verdaccio": "^5.26.2",
     "yargs": "^17.7.2"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "1.0.0-beta.6",
+    "@antfu/eslint-config": "1.0.0-beta.13",
+    "@total-typescript/ts-reset": "^0.5.1",
+    "@types/fs-extra": "^11.0.2",
+    "@types/lodash-es": "^4.17.9",
     "@types/node": "^20.6.3",
     "@types/yargs": "^17.0.24",
+    "@verdaccio/types": "^10.8.0",
     "eslint": "^8.50.0",
+    "eslint-plugin-vitest": "^0.3.1",
+    "lint-staged": "^14.0.1",
+    "simple-git-hooks": "^2.9.0",
     "tsup": "^7.2.0",
     "typescript": "^5.2.2",
     "vitest": "^0.34.5"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "pnpm lint-staged"
+  },
+  "lint-staged": {
+    "*": "eslint --fix"
   }
 }
