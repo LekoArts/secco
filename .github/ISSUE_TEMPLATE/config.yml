@@ -3,3 +3,6 @@ contact_links:
   - name: Documentation
     url: https://github.com/LekoArts/secco
     about: Learn more about secco and how to use it
+  - name: Feature Request
+    url: https://github.com/LekoArts/secco/discussions/categories/feature-requests
+    about: Share ideas for new features
