@@ -46,6 +46,7 @@
     "typecheck": "tsc --noEmit",
     "changeset": "changeset",
     "version": "changeset version",
+    "version:ci": "changeset version && pnpm install --lockfile-only",
     "release": "pnpm build && changeset publish"
   },
   "dependencies": {
