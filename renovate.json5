@@ -32,6 +32,10 @@
   "updateNotScheduled": false,
   "packageRules": [
     {
+      "depTypeList": ["engines"],
+      "enabled": false
+    },
+    {
       "groupName": "Dependencies",
       "commitMessageTopic": "Dependencies",
       "groupSlug": "dependencies",
