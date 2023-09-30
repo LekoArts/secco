@@ -23,6 +23,7 @@
   "automerge": false,
   "ignorePaths": [
     "**/node_modules/**",
+    "**/__tests__/**",
     ".nvmrc"
   ],
   "postUpdateOptions": [
