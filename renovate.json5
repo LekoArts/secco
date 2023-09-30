@@ -1,0 +1,119 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:base",
+    ":disablePeerDependencies",
+    ":ignoreModulesAndTests",
+    ":separateMajorReleases",
+    ":combinePatchMinorReleases"
+  ],
+  "dependencyDashboard": true,
+  "labels": [
+    "renovate"
+  ],
+  "prHourlyLimit": 4,
+  "prConcurrentLimit": 16,
+  "rangeStrategy": "bump",
+  "bumpVersion": null,
+  "semanticCommits": "enabled",
+  "timezone": "GMT",
+  "schedule": [
+    "before 10am on the first day of the month"
+  ],
+  "automerge": false,
+  "ignorePaths": [
+    "**/node_modules/**",
+    "**/__tests__/**",
+    ".nvmrc"
+  ],
+  "postUpdateOptions": [
+    "pnpmDedupe"
+  ],
+  "updateNotScheduled": false,
+  "packageRules": [
+    {
+      "depTypeList": ["engines"],
+      "enabled": false
+    },
+    {
+      "groupName": "Dependencies",
+      "commitMessageTopic": "Dependencies",
+      "groupSlug": "dependencies",
+      "matchPaths": [
+        "+(package.json)"
+      ],
+      "matchUpdateTypes": [
+        "patch",
+        "minor"
+      ],
+      "matchDepTypes": [
+        "dependencies",
+        "devDependencies"
+      ]
+    },
+    {
+      "groupName": "Dependencies (Major)",
+      "commitMessageTopic": "Dependencies (Major)",
+      "groupSlug": "dependencies-major",
+      "matchPaths": [
+        "+(package.json)"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "matchDepTypes": [
+        "dependencies",
+        "devDependencies"
+      ]
+    },
+    {
+      "groupName": "Linting",
+      "commitMessageTopic": "Linting",
+      "matchPaths": [
+        "+(package.json)"
+      ],
+      "matchPackageNames": [
+        "eslint",
+        "@antfu/eslint-config",
+        "lint-staged",
+        "simple-git-hooks"
+      ],
+      "matchPackagePatterns": [
+        "^eslint-"
+      ],
+      "matchUpdateTypes": [
+        "major",
+        "minor",
+        "patch"
+      ],
+      "matchDepTypes": [
+        "dependencies",
+        "devDependencies"
+      ],
+      "automerge": true
+    },
+    {
+      "groupName": "TypeScript",
+      "matchPaths": [
+        "+(package.json)"
+      ],
+      "matchPackageNames": [
+        "typescript",
+        "@total-typescript/ts-reset",
+        "@verdaccio/types"
+      ],
+      "matchPackagePatterns": [
+        "^@types"
+      ],
+      "matchUpdateTypes": [
+        "major",
+        "minor",
+        "patch"
+      ],
+      "matchDepTypes": [
+        "devDependencies"
+      ],
+      "automerge": true
+    }
+  ]
+}
