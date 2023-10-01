@@ -1,5 +1,11 @@
 # secco
 
+## 1.0.1
+
+### Patch Changes
+
+- [#8](https://github.com/LekoArts/secco/pull/8) [`79bf441`](https://github.com/LekoArts/secco/commit/79bf441ff1cce1683cb910fa4c5c7df7dfc77aaf) Thanks [@LekoArts](https://github.com/LekoArts)! - Refactor the internal usage of `fs-extra` to use named imports, not the default import. Things should continue to work as usual.
+
 ## 1.0.0
 
 ### Major Changes
