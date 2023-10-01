@@ -1,5 +1,5 @@
 import process from 'node:process'
-import fs from 'fs-extra'
+import { existsSync, readFileSync } from 'fs-extra'
 import { intersection, merge } from 'lodash-es'
 import { findWorkspaces } from 'find-workspaces'
 import { join } from 'pathe'
@@ -12,7 +12,7 @@ const currentDir = process.cwd()
 
 export function checkDirHasPackageJson() {
   const packageJsonPath = `${currentDir}/package.json`
-  const hasFile = fs.existsSync(packageJsonPath)
+  const hasFile = existsSync(packageJsonPath)
 
   if (!hasFile) {
     logger.fatal(`No \`package.json\` found in ${currentDir}
@@ -33,7 +33,7 @@ export function findWorkspacesInSource(sourcePath: Source['path']) {
 
 export function hasConfigFile() {
   const configPath = join(currentDir, CONFIG_FILE_NAME)
-  return fs.existsSync(configPath)
+  return existsSync(configPath)
 }
 
 const packageNameToFilePath = new Map<string, string>()
@@ -57,7 +57,7 @@ export function getPackageNamesToFilePath() {
 export function getPackages(sourcePath: Source['path'], workspaces: ReturnType<typeof findWorkspacesInSource>['workspaces']) {
   // If workspaces is an empty Array or null, it means it's not a monorepo
   if (!workspaces) {
-    const pkgJsonPath = fs.readFileSync(join(sourcePath, 'package.json'), 'utf-8')
+    const pkgJsonPath = readFileSync(join(sourcePath, 'package.json'), 'utf-8')
     const pkgJson = destr<{ name?: string }>(pkgJsonPath)
 
     if (pkgJson?.name) {
@@ -85,7 +85,7 @@ export function getPackages(sourcePath: Source['path'], workspaces: ReturnType<t
 }
 
 export function getDestinationPackages(sourcePackages: SourcePackages) {
-  const destPkgJson = destr<{ dependencies?: Record<string, string>; devDependencies?: Record<string, string> }>(fs.readFileSync(join(currentDir, 'package.json'), 'utf-8'))
+  const destPkgJson = destr<{ dependencies?: Record<string, string>; devDependencies?: Record<string, string> }>(readFileSync(join(currentDir, 'package.json'), 'utf-8'))
 
   if (!destPkgJson)
     return []
