@@ -1,15 +1,20 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:base",
+    "config:recommended",
     ":disablePeerDependencies",
     ":ignoreModulesAndTests",
     ":separateMajorReleases",
-    ":combinePatchMinorReleases"
+    ":combinePatchMinorReleases",
+    ":ignoreModulesAndTests",
+    ":enableVulnerabilityAlerts"
   ],
   "dependencyDashboard": true,
   "labels": [
     "renovate"
+  ],
+  "includePaths": [
+    "package.json"
   ],
   "prHourlyLimit": 4,
   "prConcurrentLimit": 16,
@@ -21,18 +26,16 @@
     "before 10am on the first day of the month"
   ],
   "automerge": false,
-  "ignorePaths": [
-    "**/node_modules/**",
-    "**/__tests__/**",
-    ".nvmrc"
-  ],
   "postUpdateOptions": [
     "pnpmDedupe"
   ],
   "updateNotScheduled": false,
   "packageRules": [
     {
-      "depTypeList": ["engines"],
+      "matchDepTypes": [
+        "engines",
+        "@types/node"
+      ],
       "enabled": false
     },
     {
