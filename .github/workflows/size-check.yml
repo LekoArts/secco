@@ -8,4 +8,13 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: ⚙️ Enable Corepack
+        shell: bash
+        run: |
+          corepack enable
+          echo "Corepack enabled"
       - uses: preactjs/compressed-size-action@master

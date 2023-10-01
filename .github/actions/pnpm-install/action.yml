@@ -22,7 +22,7 @@ runs:
       shell: bash
       run: |
         corepack enable
-        echo "corepack enabled"
+        echo "Corepack enabled"
 
     - uses: pnpm/action-setup@v2.4.0
       if: ${{ inputs.enable-corepack == 'false' }}
