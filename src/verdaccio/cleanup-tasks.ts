@@ -1,4 +1,3 @@
-/* eslint-disable ts/ban-types */
 import { onExit } from 'signal-exit'
 import { logger } from '../utils/logger'
 

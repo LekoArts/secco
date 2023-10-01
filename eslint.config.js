@@ -1,5 +1,4 @@
 import antfu from '@antfu/eslint-config'
-import vitest from 'eslint-plugin-vitest'
 
 export default antfu(
   {
@@ -22,24 +21,11 @@ export default antfu(
             'object': {
               fixWith: 'Record<string, unknown>',
             },
+            'Function': false,
           },
         },
       ],
       'ts/array-type': ['error', { default: 'generic' }],
-    },
-  },
-  {
-    files: ['src/**/__tests__/*.ts'],
-    plugins: {
-      vitest,
-    },
-    rules: {
-      ...vitest.configs.recommended.rules,
-    },
-    languageOptions: {
-      globals: {
-        ...vitest.environments.env.globals,
-      },
     },
   },
 )
