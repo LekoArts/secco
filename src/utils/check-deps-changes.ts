@@ -3,7 +3,7 @@ import fetch from 'node-fetch'
 import { isEqual, isObject, transform, uniq } from 'lodash-es'
 import destr from 'destr'
 import { CLI_NAME, NPM_DIST_TAG } from '../constants'
-import type { PackageJson } from '../types'
+import type { PackageJson, PackageNamesToFilePath, SourcePackages } from '../types'
 import { getPackageVersion, getSourcePackageJsonPath } from './file'
 import { logger } from './logger'
 
@@ -26,12 +26,16 @@ export function difference(object: ObjWithAny, base: ObjWithAny) {
 interface CheckDependencyChangesArgs {
   nodeModulesFilePath: string
   packageName: string
-  sourcePackages: Array<string>
+  sourcePackages: SourcePackages
   ignoredPackageJson: Map<string, Array<string>>
-  packageNamesToFilePath: Map<string, string>
+  packageNamesToFilePath: PackageNamesToFilePath
   isInitialScan: boolean
 }
 
+/**
+ * Go through the process of figuring out if both source and destination package.json files exist.
+ * If they do, compare the dependencies and see what changed. Create a changelog of the changes.
+ */
 export async function checkDepsChanges(args: CheckDependencyChangesArgs) {
   let nodeModulePkgJson: PackageJson
   let pkgNotInstalled = false

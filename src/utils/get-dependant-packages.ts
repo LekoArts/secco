@@ -1,6 +1,8 @@
+import type { DepTree } from '../types'
+
 interface getDependantPackagesArgs {
   packageName: string
-  depTree: Record<string, Set<string>>
+  depTree: DepTree
   packagesToPublish?: Set<string>
 }
 

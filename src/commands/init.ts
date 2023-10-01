@@ -9,7 +9,7 @@ import { CONFIG_FILE_NAME } from '../constants'
 import { hasConfigFile } from '../utils/initial-setup'
 import type { Source } from '../types'
 
-type RequiredSourceConfig = Omit<Source, 'folders'>
+type RequiredSourceConfig = Pick<Source, 'path'>
 
 /**
  * When running `secco init` we want to ask the user a few questions to create a new config file.

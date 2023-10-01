@@ -5,6 +5,7 @@ export type PackageNames = Array<string>
 export type PackageNamesToFilePath = Map<string, string>
 export type SourcePackages = Array<string>
 export type DestinationPackages = Array<string>
+export type DepTree = Record<string, Set<string>>
 
 export interface CliArguments {
   scanOnce: boolean

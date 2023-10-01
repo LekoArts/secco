@@ -1,4 +1,3 @@
-/* eslint-disable prefer-const */
 import process from 'node:process'
 import fs from 'fs-extra'
 import chokidar from 'chokidar'

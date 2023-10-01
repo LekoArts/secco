@@ -1,17 +1,17 @@
 import { createRequire } from 'node:module'
 import { difference, intersection } from 'lodash-es'
 import { join } from 'pathe'
-import type { PackageJson } from '../types'
+import type { DepTree, PackageJson, PackageNamesToFilePath, SourcePackages } from '../types'
 import { logger } from './logger'
 
 const require = createRequire(import.meta.url)
 
 interface TraversePackageDependenciesArgs {
-  sourcePackages: Array<string>
+  sourcePackages: SourcePackages
   packages: Array<string>
-  packageNamesToFilePath: Map<string, string>
+  packageNamesToFilePath: PackageNamesToFilePath
   seenPackages?: Array<string>
-  depTree?: Record<string, Set<string>>
+  depTree?: DepTree
 }
 
 export function traversePkgDeps({ sourcePackages, packages, packageNamesToFilePath, depTree = {}, seenPackages = [...packages] }: TraversePackageDependenciesArgs) {
