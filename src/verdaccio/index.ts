@@ -1,6 +1,6 @@
 import type { Server } from 'node:http'
 import { runServer } from 'verdaccio'
-import fs from 'fs-extra'
+import { removeSync } from 'fs-extra'
 import { intersection } from 'lodash-es'
 import { logger } from '../utils/logger'
 import type { DestinationPackages, PackageNamesToFilePath, Source } from '../types'
@@ -14,7 +14,7 @@ async function startVerdaccio() {
   logger.log('[Verdaccio] Starting server...')
 
   // Clear Verdaccio storage
-  fs.removeSync(VERDACCIO_CONFIG.storage as string)
+  removeSync(VERDACCIO_CONFIG.storage as string)
 
   return Promise.race([
     new Promise<void>((resolve) => {
