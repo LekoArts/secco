@@ -1,7 +1,7 @@
 {
   "name": "secco",
   "type": "module",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "packageManager": "pnpm@8.8.0",
   "description": "secco is a command-line tool for local development. It uses Verdaccio and direct file copying to apply your latest changes to other projects",
   "author": "LekoArts",
