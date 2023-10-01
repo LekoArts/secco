@@ -1,6 +1,0 @@
-{
-  "dependencies": {
-    "package-a-dep1": "*",
-    "unrelated-package": "*"
-  }
-}

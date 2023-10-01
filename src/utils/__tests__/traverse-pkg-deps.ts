@@ -1,7 +1,45 @@
 import { join } from 'pathe'
+import { vi } from 'vitest'
 import { traversePkgDeps } from '../traverse-pkg-deps'
 
-const FIXTURE_PATH = join(__dirname, 'fixtures', 'dependency-chains')
+function mockReadJsonSync(path: string) {
+  if (path === join(...'<root>/packages/package-a/package.json'.split('/'))) {
+    return {
+      dependencies: {
+        'unrelated-package': '*',
+        'package-a-dep1': '*',
+      },
+    }
+  }
+
+  if (path === join(
+    ...'<root>/packages/package-a-dep1/package.json'.split('/'),
+  )) {
+    return {
+      dependencies: {
+        'package-a-dep1-dep1': '*',
+      },
+    }
+  }
+
+  if (path === join(
+    ...'<root>/packages/package-a-dep1-dep1/package.json'.split('/'),
+  )) {
+    return {
+      dependencies: {},
+    }
+  }
+}
+
+vi.mock('fs-extra', async () => {
+  const actual = await vi.importActual('fs-extra') as any
+  return {
+    ...actual,
+    readJsonSync: vi.fn((path) => {
+      return mockReadJsonSync(path)
+    }),
+  }
+})
 
 describe('traversePkgDeps', () => {
   it('handles deep dependency chains', () => {
@@ -15,7 +53,7 @@ describe('traversePkgDeps', () => {
     for (const packageName of sourcePackages) {
       packageNamesToFilePath.set(
         packageName,
-        join(FIXTURE_PATH, packageName),
+        join(...`<root>/packages/${packageName}`.split('/')),
       )
     }
 
