@@ -13,13 +13,9 @@
   "labels": [
     "renovate"
   ],
-  "includePaths": [
-    "package.json"
-  ],
   "prHourlyLimit": 4,
   "prConcurrentLimit": 16,
   "rangeStrategy": "bump",
-  "bumpVersion": null,
   "semanticCommits": "enabled",
   "timezone": "GMT",
   "schedule": [
@@ -43,7 +39,7 @@
       "commitMessageTopic": "Dependencies",
       "groupSlug": "dependencies",
       "matchPaths": [
-        "+(package.json)"
+        "package.json"
       ],
       "matchUpdateTypes": [
         "patch",
@@ -59,7 +55,7 @@
       "commitMessageTopic": "Dependencies (Major)",
       "groupSlug": "dependencies-major",
       "matchPaths": [
-        "+(package.json)"
+        "package.json"
       ],
       "matchUpdateTypes": [
         "major"
@@ -73,7 +69,7 @@
       "groupName": "Linting",
       "commitMessageTopic": "Linting",
       "matchPaths": [
-        "+(package.json)"
+        "package.json"
       ],
       "matchPackageNames": [
         "eslint",
@@ -98,7 +94,7 @@
     {
       "groupName": "TypeScript",
       "matchPaths": [
-        "+(package.json)"
+        "package.json"
       ],
       "matchPackageNames": [
         "typescript",
