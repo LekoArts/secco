@@ -27,13 +27,11 @@
     "secco": "dist/cli.mjs"
   },
   "files": [
-    "CHANGELOG.md",
-    "LICENSE",
-    "README.md",
     "dist/"
   ],
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=18.0.0",
+    "pnpm": ">=8.8.0"
   },
   "scripts": {
     "build": "tsup",
