@@ -62,8 +62,8 @@
     "pathe": "^1.1.1",
     "rc9": "^2.1.1",
     "signal-exit": "^4.1.0",
-    "valibot": "^0.17.0",
-    "verdaccio": "^5.26.2",
+    "valibot": "^0.18.0",
+    "verdaccio": "^5.26.3",
     "yargs": "^17.7.2"
   },
   "devDependencies": {
@@ -82,7 +82,7 @@
     "simple-git-hooks": "^2.9.0",
     "tsup": "^7.2.0",
     "typescript": "^5.2.2",
-    "vitest": "^0.34.5"
+    "vitest": "^0.34.6"
   },
   "simple-git-hooks": {
     "pre-commit": "pnpm lint-staged"
