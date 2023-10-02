@@ -7,7 +7,9 @@
 
 Hi! We're excited that you are interested in contributing to secco. Before submitting your contribution, please read through the follow guide. Thanks!
 
-Make sure that you have at least [Node.js](https://nodejs.dev/en/) 18 or later installed. The secco repository uses [pnpm](https://pnpm.io/installation) as its package manager.
+## Setup
+
+Make sure that you have at least [Node.js](https://nodejs.dev/en/) 18 or later installed. The secco repository uses [pnpm](https://pnpm.io/installation) as its package manager so you'll also need to [install pnpm](https://pnpm.io/installation). We'd recommend using `corepack enable`.
 
 To develop and test secco:
 
