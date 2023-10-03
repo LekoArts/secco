@@ -1,0 +1,34 @@
+/* Dark mode colors. */
+:root {
+	--sl-color-accent-low: #3e150e;
+	--sl-color-accent: #c12300;
+	--sl-color-accent-high: #f0baae;
+	--sl-color-white: #ffffff;
+	--sl-color-gray-1: #efedec;
+	--sl-color-gray-2: #c4c1c1;
+	--sl-color-gray-3: #908a89;
+	--sl-color-gray-4: #5c5756;
+	--sl-color-gray-5: #3c3736;
+	--sl-color-gray-6: #2a2625;
+	--sl-color-black: #1d1715;
+}
+/* Light mode colors. */
+:root[data-theme='light'] {
+	--sl-color-accent-low: #f5ccc3;
+	--sl-color-accent: #c32603;
+	--sl-color-accent-high: #5a190d;
+	--sl-color-white: #1d1715;
+	--sl-color-gray-1: #2a2625;
+	--sl-color-gray-2: #3c3736;
+	--sl-color-gray-3: #5c5756;
+	--sl-color-gray-4: #908a89;
+	--sl-color-gray-5: #c4c1c1;
+	--sl-color-gray-6: #efedec;
+	--sl-color-gray-7: #f7f6f6;
+	--sl-color-black: #ffffff;
+}
+
+.hero img {
+	max-width: 15rem;
+	filter: drop-shadow(0.35rem 0.35rem 0.4rem rgba(0, 0, 0, 0.5));
+}

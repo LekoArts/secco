@@ -1,0 +1,39 @@
+---
+title: secco
+description: Local package testing made easy. secco is a command-line tool for local development. It uses Verdaccio and direct file copying to apply your latest changes to other projects.
+template: splash
+hero:
+  tagline: Local package testing made easy
+  image:
+    file: ../../assets/secco.png
+  actions:
+    - text: Get Started
+      link: /guide/
+      icon: right-arrow
+      variant: primary
+    - text: View on GitHub
+      link: https://github.com/LekoArts/secco
+      icon: external
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+import Footer from '@components/Footer.astro';
+
+## Features
+
+<CardGrid>
+	<Card title="File Sync & Package Publishing" icon="random">
+		By default, changes will be copied over from the source into the destination's `node_modules` folder. If necessary, changes are published to a local [Verdaccio](https://verdaccio.org/) registry first, so that you don't have to worry about symlinks or dependency hell.
+	</Card>
+	<Card title="Link Multiple Projects" icon="add-document">
+		`secco` reads the `.seccorc` file to make the connection between destination and source. This allows you to use `secco` with as many source folders as you wish.
+	</Card>
+	<Card title="npm, yarn, and pnpm support" icon="setting">
+		You can use any of these package managers in your source and destination projects.
+	</Card>
+	<Card title="Watch and CI mode" icon="forward-slash">
+		By default, `secco` starts a watch task. But you can also only run it once, enabling CI End-To-End testing use cases.
+	</Card>
+</CardGrid>
+
+<Footer />

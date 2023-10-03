@@ -41,5 +41,8 @@
     "json",
     "jsonc",
     "yaml"
-  ]
+  ],
+
+  "recommendations": ["astro-build.astro-vscode"],
+  "unwantedRecommendations": []
 }
