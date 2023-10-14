@@ -3,7 +3,7 @@ name: Integration Testing
 on: workflow_call
 
 jobs:
-  unit-testing:
+  integration-testing:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
