@@ -94,6 +94,9 @@ devDependencies:
   simple-git-hooks:
     specifier: ^2.9.0
     version: 2.9.0
+  strip-ansi:
+    specifier: ^7.1.0
+    version: 7.1.0
   tsup:
     specifier: ^7.2.0
     version: 7.2.0(typescript@5.2.2)
