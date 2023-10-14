@@ -3,9 +3,10 @@ import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
   test: {
-    name: 'Unit tests',
-    include: ['src/**/__tests__/*.ts'],
+    name: 'Integration tests',
+    include: ['integration/__tests__/*.ts'],
     globals: true,
     reporters: [process.env.CI ? 'default' : 'verbose'],
+    testTimeout: 2147483647,
   },
 })
