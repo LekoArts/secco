@@ -18,3 +18,7 @@ jobs:
     name: Unit Testing
     needs: build-cli
     uses: ./.github/workflows/unit-testing.yml
+  integration-testing:
+    name: Integration Testing
+    needs: build-cli
+    uses: ./.github/workflows/integration-testing.yml
