@@ -11,4 +11,4 @@ jobs:
       - name: Install dependencies
         uses: ./.github/actions/pnpm-install
       - name: Run Vitest
-        run: pnpm run test
+        run: pnpm run test:integration
