@@ -1,0 +1,20 @@
+name: CI
+
+on: pull_request
+
+concurrency:
+  group: ci-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  build-cli:
+    name: Build CLI
+    uses: ./.github/workflows/build-cli.yml
+  size-check:
+    name: Compressed Size
+    needs: build-cli
+    uses: ./.github/workflows/size-check.yml
+  unit-testing:
+    name: Unit Testing
+    needs: build-cli
+    uses: ./.github/workflows/unit-testing.yml

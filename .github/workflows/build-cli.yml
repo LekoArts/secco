@@ -1,10 +1,6 @@
 name: Build CLI
 
-on: pull_request
-
-concurrency:
-  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
-  cancel-in-progress: true
+on: workflow_call
 
 jobs:
   build_cli:
@@ -16,3 +12,9 @@ jobs:
         uses: ./.github/actions/pnpm-install
       - name: Build CLI
         run: pnpm run build
+      - name: Upload dist
+        uses: actions/upload-artifact@v3
+        with:
+          name: dist
+          path: dist
+          retention-days: 1
