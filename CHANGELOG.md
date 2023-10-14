@@ -1,5 +1,11 @@
 # secco
 
+## 1.0.2
+
+### Patch Changes
+
+- [`78528e5`](https://github.com/LekoArts/secco/commit/78528e581eaa47ecc5d7ed35a6de9af3c7c2cadc) Thanks [@LekoArts](https://github.com/LekoArts)! - Revert previous change in 1.0.1 as fs-extra has no full ESM support
+
 ## 1.0.1
 
 ### Patch Changes
