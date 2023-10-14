@@ -1,4 +1,4 @@
-import { readFile, readFileSync } from 'fs-extra'
+import fs from 'fs-extra'
 import fetch from 'node-fetch'
 import { isEqual, isObject, transform, uniq } from 'lodash-es'
 import destr from 'destr'
@@ -43,7 +43,7 @@ export async function checkDepsChanges(args: CheckDependencyChangesArgs) {
   try {
     // The package might already be installed (e.g. the "latest" version)
     // nodeModulesFilePath might not exist, but this is okay since we catch the resulting error
-    nodeModulePkgJson = destr<PackageJson>(readFileSync(args.nodeModulesFilePath, 'utf8'))
+    nodeModulePkgJson = destr<PackageJson>(fs.readFileSync(args.nodeModulesFilePath, 'utf8'))
   }
   catch {
     pkgNotInstalled = true
@@ -89,7 +89,7 @@ export async function checkDepsChanges(args: CheckDependencyChangesArgs) {
     }
   }
 
-  const sourcePkgJsonString = await readFile(sourcePkgJsonPath, 'utf8')
+  const sourcePkgJsonString = await fs.readFile(sourcePkgJsonPath, 'utf8')
   const sourcePkgJson = destr<PackageJson>(sourcePkgJsonString)
 
   if (args.ignoredPackageJson.has(args.packageName)) {

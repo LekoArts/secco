@@ -1,5 +1,5 @@
 import process from 'node:process'
-import { copy, existsSync } from 'fs-extra'
+import fs from 'fs-extra'
 import chokidar from 'chokidar'
 import { intersection, uniq } from 'lodash-es'
 import { join, relative } from 'pathe'
@@ -55,7 +55,7 @@ export async function watcher(source: Source, destination: Destination, packages
   function _copyPath(args: PrivateCopyPathArgs) {
     const { oldPath, newPath, resolve, reject, retry = 0 } = args
 
-    copy(oldPath, newPath, (err) => {
+    fs.copy(oldPath, newPath, (err) => {
       if (err) {
         if (retry >= MAX_COPY_RETRIES) {
           logger.error(err)
@@ -179,7 +179,7 @@ export async function watcher(source: Source, destination: Destination, packages
   const watchers = uniq(
     allPackagesToWatch
       .map(p => join(packageNamesToFilePath.get(p) as string))
-      .filter(p => existsSync(p)),
+      .filter(p => fs.existsSync(p)),
   )
 
   let allCopies: Array<Promise<void>> = []
