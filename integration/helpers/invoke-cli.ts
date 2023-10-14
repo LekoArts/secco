@@ -24,7 +24,6 @@ export const SeccoCLI = {
             {
               cwd: join(fixturesLocation, relativeCwd),
               env: { NODE_ENV },
-              all: true,
             },
           )
           return [
