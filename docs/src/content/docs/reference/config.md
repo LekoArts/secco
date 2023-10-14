@@ -7,7 +7,7 @@ sidebar:
 
 ## Configuration
 
-TODO
+`secco` will read your root `.seccorc` file when it is present.
 
 ## Options
 
