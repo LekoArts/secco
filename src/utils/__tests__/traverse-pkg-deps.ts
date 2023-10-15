@@ -31,8 +31,8 @@ function mockReadJsonSync(path: string) {
   }
 }
 
-vi.mock('fs-extra', async () => {
-  const actual = await vi.importActual('fs-extra') as any
+vi.mock('fs-extra/esm', async () => {
+  const actual = await vi.importActual('fs-extra/esm') as any
   return {
     ...actual,
     readJsonSync: vi.fn((path) => {
