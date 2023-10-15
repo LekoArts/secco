@@ -16,6 +16,7 @@ To develop and test secco:
 1. Run `pnmp install` to install the dependencies
 1. Run `pnpm run watch` to build sources in watch mode
 1. Run `pnpm run test` to run all unit tests
+1. Run `pnpm run test:integration` to run all integration tests
 
 If you want to test secco in an example project of yours, do the following:
 

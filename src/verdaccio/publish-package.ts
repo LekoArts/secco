@@ -1,6 +1,6 @@
 import process from 'node:process'
 import path from 'node:path'
-import { existsSync, outputFileSync, readFileSync, removeSync } from 'fs-extra'
+import fs from 'fs-extra'
 import { execaSync } from 'execa'
 import destr from 'destr'
 import { join } from 'pathe'
@@ -28,7 +28,7 @@ type AdjustPackageJsonArgs = Omit<PublishPackageArgs, 'source'> & {
 function adjustPackageJson({ sourcePkgJsonPath, packageName, packageNamesToFilePath, packagesToPublish, ignorePackageJsonChanges, versionPostfix }: AdjustPackageJsonArgs) {
   // Check if package depends on any other package that will be published. Adjust version selector to point to "secco" version so that local registry is used for those dependencies.
 
-  const sourcePkgJsonString = readFileSync(sourcePkgJsonPath, 'utf-8')
+  const sourcePkgJsonString = fs.readFileSync(sourcePkgJsonPath, 'utf-8')
   const sourcePkgJson = destr<PackageJson>(sourcePkgJsonString)
 
   // Overwrite version with "secco" name
@@ -41,7 +41,7 @@ function adjustPackageJson({ sourcePkgJsonPath, packageName, packageNamesToFileP
       if (!srcPath)
         return
 
-      const currentVersion = destr<PackageJson>(readFileSync(srcPath, 'utf-8'))?.version
+      const currentVersion = destr<PackageJson>(fs.readFileSync(srcPath, 'utf-8'))?.version
 
       if (currentVersion)
         sourcePkgJson.dependencies[pkgToPublish] = `${currentVersion}-${CLI_NAME}-${versionPostfix}`
@@ -52,13 +52,13 @@ function adjustPackageJson({ sourcePkgJsonPath, packageName, packageNamesToFileP
 
   const revertIgnorePackageJsonChanges = ignorePackageJsonChanges(packageName, [sourcePkgJsonString, tempSourcePkgJsonString])
 
-  outputFileSync(sourcePkgJsonPath, tempSourcePkgJsonString)
+  fs.outputFileSync(sourcePkgJsonPath, tempSourcePkgJsonString)
 
   return {
     newPackageVersion: sourcePkgJson.version,
     revertAdjustPackageJson: registerCleanupTask(() => {
       // Restore original package.json file
-      outputFileSync(sourcePkgJsonPath, sourcePkgJsonString)
+      fs.outputFileSync(sourcePkgJsonPath, sourcePkgJsonString)
       revertIgnorePackageJsonChanges()
     }),
   }
@@ -80,28 +80,28 @@ function createTempNpmRc({ pathToPkg, sourcePath }: CreateTempNpmRcArgs) {
 
   // If an .npmrc file already exists in the pkg and/or source root, we should use "npm config set key=value"
 
-  if (existsSync(npmRcPathInPkg)) {
+  if (fs.existsSync(npmRcPathInPkg)) {
     execaSync('npm', ['config', 'set', NpmRcContent], { cwd: pathToPkg })
     revertPkg = true
   }
-  else { outputFileSync(npmRcPathInPkg, NpmRcContent) }
+  else { fs.outputFileSync(npmRcPathInPkg, NpmRcContent) }
 
-  if (existsSync(npmRcPathInSource)) {
+  if (fs.existsSync(npmRcPathInSource)) {
     execaSync('npm', ['config', 'set', NpmRcContent], { cwd: sourcePath })
     revertSource = true
   }
-  else { outputFileSync(npmRcPathInSource, NpmRcContent) }
+  else { fs.outputFileSync(npmRcPathInSource, NpmRcContent) }
 
   return registerCleanupTask(() => {
     if (revertPkg)
       execaSync('npm', ['config', 'delete', NpmRcConfigKey], { cwd: pathToPkg })
     else
-      removeSync(npmRcPathInPkg)
+      fs.removeSync(npmRcPathInPkg)
 
     if (revertSource)
       execaSync('npm', ['config', 'delete', NpmRcConfigKey], { cwd: sourcePath })
     else
-      removeSync(npmRcPathInSource)
+      fs.removeSync(npmRcPathInSource)
   })
 }
 

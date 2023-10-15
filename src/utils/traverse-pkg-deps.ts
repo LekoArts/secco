@@ -1,4 +1,4 @@
-import { readJsonSync } from 'fs-extra'
+import * as fs from 'fs-extra'
 import { difference, intersection } from 'lodash-es'
 import { join } from 'pathe'
 import type { DepTree, PackageJson, PackageNamesToFilePath, SourcePackages } from '../types'
@@ -20,7 +20,7 @@ export function traversePkgDeps({ sourcePackages, packages, packageNamesToFilePa
       // Look up the absolute file path from the source location for that specific package
       const pkgRoot = packageNamesToFilePath.get(p)
       if (pkgRoot) {
-        pkgJson = readJsonSync(join(pkgRoot, 'package.json'))
+        pkgJson = fs.readJsonSync(join(pkgRoot, 'package.json'))
       }
       else {
         logger.error(`"${p}" doesn't exist in source location`)

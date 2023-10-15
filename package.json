@@ -1,7 +1,7 @@
 {
   "name": "secco",
   "type": "module",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "packageManager": "pnpm@8.8.0",
   "description": "Local package testing made easy. secco is a command-line tool for local development. It uses Verdaccio and direct file copying to apply your latest changes to other projects.",
   "author": "LekoArts",
@@ -22,7 +22,7 @@
     "dev-cli",
     "developer-tools"
   ],
-  "main": "dist/cli.mjs",
+  "exports": "dist/cli.mjs",
   "bin": {
     "secco": "dist/cli.mjs"
   },
@@ -41,6 +41,7 @@
     "lint:fix": "eslint . --fix",
     "test": "vitest run",
     "test:watch": "vitest watch",
+    "test:integration": "vitest run --config integration/vitest.config.ts",
     "typecheck": "tsc --noEmit",
     "changeset": "changeset",
     "version": "changeset version",
@@ -79,6 +80,7 @@
     "eslint": "^8.50.0",
     "lint-staged": "^14.0.1",
     "simple-git-hooks": "^2.9.0",
+    "strip-ansi": "^7.1.0",
     "tsup": "^7.2.0",
     "typescript": "^5.2.2",
     "vitest": "^0.34.6"
