@@ -11,7 +11,7 @@ describe('getAddDependenciesCmd', () => {
 
     const result = getAddDependenciesCmd({ packages, pm, externalRegistry })
 
-    expect(result).toEqual(['npm', ['install', 'package1', 'package2', '--exact', registryUrlFlag]])
+    expect(result).toEqual(['npm', ['install', 'package1', 'package2', '--save-exact', registryUrlFlag]])
   })
 
   it('returns the correct command for yarn', () => {
@@ -31,6 +31,6 @@ describe('getAddDependenciesCmd', () => {
 
     const result = getAddDependenciesCmd({ packages, pm, externalRegistry })
 
-    expect(result).toEqual(['npm', ['install', 'package1', 'package2', '--exact']])
+    expect(result).toEqual(['npm', ['install', 'package1', 'package2', '--save-exact']])
   })
 })
