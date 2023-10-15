@@ -7,7 +7,7 @@ sidebar:
 
 ## Configuration
 
-`secco` will read your root `.seccorc` file when it is present.
+`secco` will read your root `.seccorc` file when it is present. Using a configuration file is the recommended approach. In some cases (like [Continuous Integration](/guide/continuous-integration/)).
 
 ## Options
 

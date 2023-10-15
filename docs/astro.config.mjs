@@ -30,6 +30,7 @@ export default defineConfig({
             { label: 'Getting Started', link: '/guide/' },
             { label: 'Features', link: '/guide/features/' },
             { label: 'How It Works', link: '/guide/how-it-works/' },
+            { label: 'Continuous Integration', link: '/guide/continuous-integration/' },
           ],
         },
         {
