@@ -1,6 +1,6 @@
 ---
-title: How It Works
-description: An under the hood explanation on how secco works
+title: Learn secco
+description: A step-by-step tutorial for secco
 ---
 
 Hello 👋🏻 Please come back later to this guide, this is a work-in-progress!

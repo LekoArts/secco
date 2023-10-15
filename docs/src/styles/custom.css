@@ -1,3 +1,30 @@
+/* Font sizes */
+:root {
+ 	--sl-text-base: 1rem; /* 16px */
+	--sl-text-lg: 1.125rem; /* 18px */
+	--sl-text-xl: 1.25rem; /* 20px */
+	--sl-text-2xl: 1.5rem; /* 24px */
+	--sl-text-3xl: 1.8125rem; /* 29px */
+	--sl-text-4xl: 2.1875rem; /* 35px */
+	--sl-text-5xl: 2.625rem; /* 42px */
+	--sl-text-6xl: 4rem; /* 64px */
+
+	--sl-text-h1: var(--sl-text-4xl);
+	--sl-text-h2: var(--sl-text-3xl);
+	--sl-text-h3: var(--sl-text-2xl);
+	--sl-text-h4: var(--sl-text-xl);
+	--sl-text-h5: var(--sl-text-lg);
+}
+
+@media (min-width: 50em) {
+	:root {
+		--sl-text-h1: var(--sl-text-5xl);
+		--sl-text-h2: var(--sl-text-3xl);
+		--sl-text-h3: var(--sl-text-2xl);
+		--sl-text-h4: var(--sl-text-xl);
+	}
+}
+
 /* Dark mode colors. */
 :root {
 	--sl-color-accent-low: #3e150e;
