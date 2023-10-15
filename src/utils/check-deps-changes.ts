@@ -71,7 +71,7 @@ export async function checkDepsChanges(args: CheckDependencyChangesArgs) {
     }
     catch (e) {
       if (e instanceof Error)
-        logger.error(`\`${args.packageName}\` does not seem to be installed and is also not published on npm. Error: ${e.message}`)
+        logger.warn(`\`${args.packageName}\` does not seem to be installed and is also not published on npm. Error: ${e.message}`)
 
       return {
         didDepsChange: true,

@@ -1,5 +1,13 @@
 # secco
 
+## 1.0.3
+
+### Patch Changes
+
+- [#12](https://github.com/LekoArts/secco/pull/12) [`a4153eb`](https://github.com/LekoArts/secco/commit/a4153ebde78659e67291c1f78491a1de932f0a21) Thanks [@LekoArts](https://github.com/LekoArts)! - Use correct `fs-extra/esm` subpath were needed to mitigate `fs.readJsonSync is not a function`
+
+- [`516b96a`](https://github.com/LekoArts/secco/commit/516b96a35cec793aa25635347cabb1831b1e9438) Thanks [@LekoArts](https://github.com/LekoArts)! - Use correct `save-exact` flag for pnpm
+
 ## 1.0.2
 
 ### Patch Changes

@@ -277,10 +277,12 @@ export async function watcher(source: Source, destination: Destination, packages
       if (isInitialScan) {
         isInitialScan = false
 
-        logger.debug(`Initial scan complete. Trying to publish: ${Array.from(packagesToPublish).join(', ')}`)
+        logger.debug(`Initial scan complete.`)
 
         if (packagesToPublish.size > 0) {
           isPublishing = true
+
+          logger.debug(`Trying to publish: ${Array.from(packagesToPublish).join(', ')}`)
 
           await publishPackagesAndInstall({
             packagesToPublish: Array.from(packagesToPublish),
