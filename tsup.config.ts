@@ -10,6 +10,7 @@ export default defineConfig((options) => {
     format: 'esm',
     minify: !options.watch,
     clean: true,
+    cjsInterop: true,
     outExtension() {
       return {
         js: '.mjs',
