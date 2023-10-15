@@ -1,0 +1,61 @@
+/* Font sizes */
+:root {
+ 	--sl-text-base: 1rem; /* 16px */
+	--sl-text-lg: 1.125rem; /* 18px */
+	--sl-text-xl: 1.25rem; /* 20px */
+	--sl-text-2xl: 1.5rem; /* 24px */
+	--sl-text-3xl: 1.8125rem; /* 29px */
+	--sl-text-4xl: 2.1875rem; /* 35px */
+	--sl-text-5xl: 2.625rem; /* 42px */
+	--sl-text-6xl: 4rem; /* 64px */
+
+	--sl-text-h1: var(--sl-text-4xl);
+	--sl-text-h2: var(--sl-text-3xl);
+	--sl-text-h3: var(--sl-text-2xl);
+	--sl-text-h4: var(--sl-text-xl);
+	--sl-text-h5: var(--sl-text-lg);
+}
+
+@media (min-width: 50em) {
+	:root {
+		--sl-text-h1: var(--sl-text-5xl);
+		--sl-text-h2: var(--sl-text-3xl);
+		--sl-text-h3: var(--sl-text-2xl);
+		--sl-text-h4: var(--sl-text-xl);
+	}
+}
+
+/* Dark mode colors. */
+:root {
+	--sl-color-accent-low: #3e150e;
+	--sl-color-accent: #c12300;
+	--sl-color-accent-high: #f0baae;
+	--sl-color-white: #ffffff;
+	--sl-color-gray-1: #efedec;
+	--sl-color-gray-2: #c4c1c1;
+	--sl-color-gray-3: #908a89;
+	--sl-color-gray-4: #5c5756;
+	--sl-color-gray-5: #3c3736;
+	--sl-color-gray-6: #2a2625;
+	--sl-color-black: #1d1715;
+}
+/* Light mode colors. */
+:root[data-theme='light'] {
+	--sl-color-accent-low: #f5ccc3;
+	--sl-color-accent: #c32603;
+	--sl-color-accent-high: #5a190d;
+	--sl-color-white: #1d1715;
+	--sl-color-gray-1: #2a2625;
+	--sl-color-gray-2: #3c3736;
+	--sl-color-gray-3: #5c5756;
+	--sl-color-gray-4: #908a89;
+	--sl-color-gray-5: #c4c1c1;
+	--sl-color-gray-6: #efedec;
+	--sl-color-gray-7: #f7f6f6;
+	--sl-color-black: #ffffff;
+}
+
+.hero img {
+	max-width: 15rem;
+	filter: drop-shadow(0.35rem 0.35rem 0.4rem rgba(0, 0, 0, 0.5));
+}
