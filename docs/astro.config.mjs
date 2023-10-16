@@ -1,9 +1,11 @@
 import { defineConfig } from 'astro/config'
 import starlight from '@astrojs/starlight'
 
+const site = 'https://secco.lekoarts.de'
+
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://secco.lekoarts.de',
+  site,
   integrations: [
     starlight({
       title: 'secco',
@@ -19,6 +21,16 @@ export default defineConfig({
         mastodon: 'https://mastodon.social/@lekoarts',
         twitter: 'https://twitter.com/lekoarts_de',
       },
+      head: [
+        {
+          tag: 'meta',
+          attrs: { property: 'og:image', content: `${site}/og.png?v=1` },
+        },
+        {
+          tag: 'meta',
+          attrs: { property: 'twitter:image', content: `${site}/og.png?v=1` },
+        },
+      ],
       favicon: '/favicon.png',
       lastUpdated: true,
       pagination: false,
