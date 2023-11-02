@@ -52,7 +52,7 @@
     "chokidar": "^3.5.3",
     "consola": "^3.2.3",
     "del": "^7.1.0",
-    "destr": "^2.0.1",
+    "destr": "^2.0.2",
     "enquirer": "^2.4.1",
     "execa": "^8.0.1",
     "find-workspaces": "^0.2.0",
@@ -63,8 +63,8 @@
     "pathe": "^1.1.1",
     "rc9": "^2.1.1",
     "signal-exit": "^4.1.0",
-    "valibot": "^0.18.0",
-    "verdaccio": "^5.26.3",
+    "valibot": "^0.20.0",
+    "verdaccio": "^5.27.0",
     "yargs": "^17.7.2"
   },
   "devDependencies": {
