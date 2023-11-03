@@ -9,7 +9,7 @@
   "homepage": "https://github.com/LekoArts/secco",
   "repository": {
     "type": "git",
-    "url": "https://github.com/LekoArts/secco"
+    "url": "git+https://github.com/LekoArts/secco"
   },
   "bugs": {
     "url": "https://github.com/LekoArts/secco/issues"
@@ -22,7 +22,11 @@
     "dev-cli",
     "developer-tools"
   ],
-  "exports": "./dist/cli.mjs",
+  "exports": {
+    ".": {
+      "import": "./dist/cli.mjs"
+    }
+  },
   "bin": {
     "secco": "dist/cli.mjs"
   },
@@ -68,7 +72,7 @@
     "yargs": "^17.7.2"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "1.0.0",
+    "@antfu/eslint-config": "^1.1.0",
     "@changesets/changelog-github": "^0.4.8",
     "@changesets/cli": "^2.26.2",
     "@total-typescript/ts-reset": "^0.5.1",
