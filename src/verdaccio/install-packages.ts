@@ -15,7 +15,9 @@ export async function installPackages({ newlyPublishedPackageVersions, packagesT
   const pm = await detectPackageManager(cwd, { includeParentDirs: false })
 
   if (!pm) {
-    logger.fatal(`Failed to detect package manager in ${cwd}`)
+    logger.fatal(`Failed to detect package manager in ${cwd}
+
+If you have control over the destination, manually add the "packageManager" key to its \`package.json\` file.`)
     process.exit()
   }
 

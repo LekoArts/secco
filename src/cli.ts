@@ -81,7 +81,7 @@ If you only want to use \`${CLI_NAME}\` you'll need to add the dependencies to y
       process.exit()
 
     else
-      logger.info('Continuing other dependency installation due to \`--forceVerdaccio\` flag')
+      logger.info('Continuing other dependency installation due to \`--force-verdaccio\` flag')
   }
 
   const source: Source = {

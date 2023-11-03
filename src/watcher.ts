@@ -141,7 +141,7 @@ export async function watcher(source: Source, destination: Destination, packages
 
   if (forceVerdaccio) {
     try {
-      logger.debug(`Running ${CLI_NAME} with --forceVerdaccio flag. Packages to watch: ${allPackagesToWatch.join(', ')}`)
+      logger.debug(`Running ${CLI_NAME} with --force-verdaccio flag. Packages to watch: ${allPackagesToWatch.join(', ')}`)
 
       if (allPackagesToWatch.length > 0) {
         await publishPackagesAndInstall({
