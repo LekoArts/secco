@@ -5,7 +5,7 @@ import { findWorkspaces } from 'find-workspaces'
 import { join } from 'pathe'
 import { destr } from 'destr'
 import { CONFIG_FILE_NAME } from '../constants'
-import type { Source, SourcePackages } from '../types'
+import type { PackageJson, Source, SourcePackages } from '../types'
 import { logger } from './logger'
 
 const currentDir = process.cwd()
@@ -36,6 +36,10 @@ export function hasConfigFile() {
   return fs.existsSync(configPath)
 }
 
+export function isPrivate(pkgJson: PackageJson) {
+  return Boolean(pkgJson.private)
+}
+
 const packageNameToFilePath = new Map<string, string>()
 
 /**
@@ -58,9 +62,14 @@ export function getPackages(sourcePath: Source['path'], workspaces: ReturnType<t
   // If workspaces is an empty Array or null, it means it's not a monorepo
   if (!workspaces) {
     const pkgJsonPath = fs.readFileSync(join(sourcePath, 'package.json'), 'utf-8')
-    const pkgJson = destr<{ name?: string }>(pkgJsonPath)
+    const pkgJson = destr<PackageJson>(pkgJsonPath)
 
     if (pkgJson?.name) {
+      if (isPrivate(pkgJson)) {
+        logger.info(`Skipping private package \`${pkgJson.name}\`. If you need to use it, remove the \`private\` flag from its package.json file.`)
+        return []
+      }
+
       packageNameToFilePath.set(pkgJson.name, sourcePath)
       return [pkgJson.name]
     }
@@ -73,12 +82,17 @@ export function getPackages(sourcePath: Source['path'], workspaces: ReturnType<t
       const absolutePath = workspace.location
       const pkgJson = workspace.package
 
+      if (isPrivate(pkgJson)) {
+        logger.info(`Skipping private package \`${pkgJson.name}\`. If you need to use it, remove the \`private\` flag from its package.json file.`)
+        return null
+      }
+
       packageNameToFilePath.set(pkgJson.name, absolutePath)
 
       return pkgJson.name
     })
 
-    return monorepoPackages
+    return monorepoPackages.filter(Boolean)
   }
 
   return []
