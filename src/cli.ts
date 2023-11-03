@@ -11,6 +11,7 @@ import { checkDirHasPackageJson, findWorkspacesInSource, getDestinationPackages,
 import type { CliArguments, Destination, Source } from './types'
 import { CLI_NAME } from './constants'
 import { watcher } from './watcher'
+import { isTruthy } from './utils/is-truthy'
 
 const input = hideBin(process.argv)
 const yargsInstace = yargs(input)
@@ -47,7 +48,7 @@ const parser = yargsInstace
 async function run() {
   const argv: CliArguments = await parser
 
-  if (argv.verbose)
+  if (argv.verbose || isTruthy(process.env.VERBOSE))
     logger.level = 4
 
   const seccoConfig = getConfig()

@@ -13,6 +13,7 @@ interface InstallPackagesArgs {
 export async function installPackages({ newlyPublishedPackageVersions, packagesToInstall }: InstallPackagesArgs) {
   const cwd = process.cwd()
   const pm = await detectPackageManager(cwd, { includeParentDirs: false })
+  logger.debug(`Detected package manager in destination: ${pm?.name}`)
 
   if (!pm) {
     logger.fatal(`Failed to detect package manager in ${cwd}
