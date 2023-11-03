@@ -48,8 +48,8 @@ dependencies:
     specifier: ^4.1.0
     version: 4.1.0
   valibot:
-    specifier: ^0.20.0
-    version: 0.20.0
+    specifier: ^0.20.1
+    version: 0.20.1
   verdaccio:
     specifier: ^5.27.0
     version: 5.27.0(typanion@3.14.0)
@@ -5642,8 +5642,8 @@ packages:
     hasBin: true
     dev: false
 
-  /valibot@0.20.0:
-    resolution: {integrity: sha512-a2Vy4oPIHvrwfPZF0Cl83yBn17Zgekp6IQ0PzdUFTPWtlwWFCJNHtOm/nypzv5o/6llKBsIEErswWHbvjNGzNw==}
+  /valibot@0.20.1:
+    resolution: {integrity: sha512-7lToTLG5wtK76u32gq8dUK0bAw7bknTGbeNSKRJunAC2soGVnNrKngg+38Jjt6FOwH+MshUONHoFz+LgmjeYKQ==}
     dev: false
 
   /validate-npm-package-license@3.0.4:

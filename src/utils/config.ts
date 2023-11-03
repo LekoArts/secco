@@ -1,7 +1,7 @@
 import process from 'node:process'
 import { isAbsolute } from 'node:path'
 import { read, write } from 'rc9'
-import { type Output, ValiError, object, parse, safeParse, strict, string, toTrimmed } from 'valibot'
+import { type Output, ValiError, never, object, parse, safeParse, string, toTrimmed } from 'valibot'
 import { CLI_NAME, CONFIG_FILE_NAME } from '../constants'
 import { logger } from './logger'
 
@@ -13,7 +13,7 @@ export const configOptions = {
   flat: false,
 }
 
-const EmptyObjectSchema = strict(object({}))
+const EmptyObjectSchema = object({}, never())
 
 function isEmpty(input: unknown) {
   const result = safeParse(EmptyObjectSchema, input)
@@ -60,11 +60,11 @@ function sourcePathSchema(name: string) {
   ])
 }
 
-const ConfigSchema = strict(object({
-  source: strict(object({
+const ConfigSchema = object({
+  source: object({
     path: sourcePathSchema('source.path'),
-  })),
-}))
+  }, never()),
+}, never())
 
 const envSchema = object({
   SECCO_SOURCE_PATH: sourcePathSchema('SECCO_SOURCE_PATH'),

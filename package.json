@@ -22,7 +22,7 @@
     "dev-cli",
     "developer-tools"
   ],
-  "exports": "dist/cli.mjs",
+  "exports": "./dist/cli.mjs",
   "bin": {
     "secco": "dist/cli.mjs"
   },
@@ -63,7 +63,7 @@
     "pathe": "^1.1.1",
     "rc9": "^2.1.1",
     "signal-exit": "^4.1.0",
-    "valibot": "^0.20.0",
+    "valibot": "^0.20.1",
     "verdaccio": "^5.27.0",
     "yargs": "^17.7.2"
   },
