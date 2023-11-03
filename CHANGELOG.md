@@ -1,5 +1,19 @@
 # secco
 
+## 1.1.0
+
+### Minor Changes
+
+- [`f482749`](https://github.com/LekoArts/secco/commit/f4827499b030b3450cb3ef00f638321cb5e7972b) Thanks [@LekoArts](https://github.com/LekoArts)! - Support `VERBOSE` environment variable to enable verbose logging. You can use this as an alternative to `--verbose` flag.
+
+- [`ba49078`](https://github.com/LekoArts/secco/commit/ba490783a18b3160185725c0084800ab328e0b08) Thanks [@LekoArts](https://github.com/LekoArts)! - Skip packages that have `"private": true` set in their `package.json`. npm and by extension Verdaccio will refuse to publish it. If your package is a `devDependency` then this will be fine but if it's a `dependency` you'll need to remove `private`. [Learn more in npm's docs](https://docs.npmjs.com/cli/v10/configuring-npm/package-json#private).
+
+### Patch Changes
+
+- [`f0a80f8`](https://github.com/LekoArts/secco/commit/f0a80f89af7c7f1bb710f3b283716823df55e1ab) Thanks [@LekoArts](https://github.com/LekoArts)! - Improve some logs to make them more accurate and helpful
+
+- [`b591967`](https://github.com/LekoArts/secco/commit/b5919678e8af4b8b02bfe253d5bddf79062889a6) Thanks [@LekoArts](https://github.com/LekoArts)! - Update `valibot` to latest version and handle deprecations
+
 ## 1.0.3
 
 ### Patch Changes
