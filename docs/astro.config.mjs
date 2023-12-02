@@ -6,6 +6,7 @@ const site = 'https://secco.lekoarts.de'
 // https://astro.build/config
 export default defineConfig({
   site,
+  trailingSlash: 'always',
   integrations: [
     starlight({
       title: 'secco',

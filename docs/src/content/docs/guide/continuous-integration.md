@@ -17,7 +17,7 @@ Regardless of your CI provider or overall setup, you should use the `--force-ver
 
 Let's say you have the following setup:
 
-```shell
+```shell title="File tree"
 dist/
 ├─ index.js
 e2e-tests/
@@ -49,7 +49,7 @@ Generally speaking, you'll want to run the script like so:
 
 ### Bash
 
-```sh
+```bash title="e2e-test.sh"
 #!/bin/bash
 set -e # Bail on errors
 
@@ -99,9 +99,9 @@ Install the necessary dependencies:
 npm install zx @actions/core
 ```
 
-Create a new file, e.g. called `install-site-in-isolation-mjs`:
+Create a new file, e.g. called `install-site-in-isolation.mjs`:
 
-```js
+```js title="install-site-in-isolation.mjs"
 #!/usr/bin/env zx
 
 import { cp, mkdir, mkdtemp } from 'node:fs/promises'
@@ -162,9 +162,7 @@ This script won't run your tests yet, you'd need to add the functionality to the
 
 You could run the [bash script](#bash-script) inside CircleCI like so:
 
-```yml
-# .circleci/config.yml
-
+```yml title=".circleci/config.yml"
 commands:
   e2e-test:
     parameters:
@@ -184,9 +182,7 @@ commands:
 
 You could use the [zx](#zx) script inside GitHub actions like so:
 
-```yml
-# .github/workflows/e2e-test.yml
-
+```yml title=".github/workflows/e2e-test.yml"
 name: E2E Tests
 on: pull_request
 

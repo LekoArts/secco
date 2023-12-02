@@ -35,7 +35,7 @@ secco uses the terms **source** and **destination** throughout its docs and mess
 
 :::note[Example]
 
-```shell
+```shell title="File tree"
 repositories
 ├── test-project
 │   ├── cli.mjs
