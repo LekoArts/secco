@@ -99,7 +99,7 @@ export function getPackages(sourcePath: Source['path'], workspaces: ReturnType<t
 }
 
 export function getDestinationPackages(sourcePackages: SourcePackages) {
-  const destPkgJson = destr<{ dependencies?: Record<string, string>; devDependencies?: Record<string, string> }>(fs.readFileSync(join(currentDir, 'package.json'), 'utf-8'))
+  const destPkgJson = destr<{ dependencies?: Record<string, string>, devDependencies?: Record<string, string> }>(fs.readFileSync(join(currentDir, 'package.json'), 'utf-8'))
 
   if (!destPkgJson)
     return []
