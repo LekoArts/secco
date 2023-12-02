@@ -31,6 +31,14 @@ export default defineConfig({
           tag: 'meta',
           attrs: { property: 'twitter:image', content: `${site}/og.png?v=1` },
         },
+        {
+          tag: 'script',
+          attrs: {
+            'src': '/js/script.js',
+            'data-domain': 'secco.lekoarts.de',
+            'defer': true,
+          },
+        },
       ],
       favicon: '/favicon.png',
       lastUpdated: true,
