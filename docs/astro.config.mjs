@@ -54,6 +54,7 @@ export default defineConfig({
             { label: 'Learn secco', link: '/guide/learn-secco/' },
             { label: 'Features', link: '/guide/features/' },
             { label: 'Continuous Integration', link: '/guide/continuous-integration/' },
+            { label: 'Terminology', link: '/guide/terminology/' },
           ],
         },
         {

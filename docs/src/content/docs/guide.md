@@ -29,33 +29,9 @@ For secco to work correctly you'll need to have [Node.js](https://nodejs.dev) 18
 
 :::
 
-## Terminology
-
-secco uses the terms **source** and **destination** throughout its docs and messages. The **source** refers to the root folder that contains the package(s) that you want to test in other places. The **destination** refers to the folder you want to test your package(s) in. So your destination's `package.json` should have the source as a dependency.
-
-:::note[Example]
-
-```shell title="File tree"
-repositories
-├── test-project
-│   ├── cli.mjs
-│   ├── node_modules
-│   │   └── ai-magic
-│   │       ├── index.mjs
-│   │       └── package.json
-│   └── package.json
-└── ai-magic
-    ├── index.mjs
-    └── package.json
-```
-
-The `ai-magic` repository is your fancy, new AI powered package that you publish to npm. This is your **source**. You now want to test your package inside a `test-project`. This is your **destination**.
-
-:::
-
 ## Initialize a `.seccorc` file
 
-In order to link the destination to your source, secco utitlizes its own `.seccorc` configuration file. This way you only need to provide that information once, on all consecutive runs `secco` automatically looks in the right spot.
+In order to link the destination to your source ([terminology explainer](/guide/terminology/)), secco utitlizes its own `.seccorc` configuration file. This way you only need to provide that information once, on all consecutive runs `secco` automatically looks in the right spot.
 
 1. Navigate to your destination and run the following command in your terminal:
 
@@ -76,13 +52,13 @@ You should have a new `.seccorc` file inside your destination.
 
 :::caution
 
-secco **requires** to either find a `.seccorc` file in the destination (with [`source.path`](/reference/config/#sourcepath) set) or that the [`SECCO_SOURCE_PATH`](/reference/config/#secco_source_path) environment variable is defined.
+secco **requires** to either find a `.seccorc` file (with [`source.path`](/reference/config/#sourcepath) set) or that the [`SECCO_SOURCE_PATH`](/reference/config/#secco_source_path) environment variable is defined in the destination.
 
 :::
 
 ## Start secco
 
-**Before starting secco**, you should ensure that your source is either built or that you have started your compilation in watch mode. Otherwise `secco` won't find anything to copy over.
+**Before starting secco**, you should ensure that your source's entrypoints are available. This could mean that you have to compile your source files (ideally in watch mode). Otherwise `secco` won't find anything to copy over.
 
 Inside your destination, start `secco` like so:
 
@@ -121,4 +97,4 @@ We also have a [Learn secco](/guide/learn-secco/) guide that goes into more deta
 
 ## What's next?
 
-Browse the CLI reference: [commands](/reference/commands/), [config options](/reference/config/), and [flags](/reference/flags/). You can also check out the advanced guides like [How It Works](/guide/how-it-works/) or [Continuous Integration](/guide/continuous-integration/).
+Browse the CLI reference: [commands](/reference/commands/), [config options](/reference/config/), and [flags](/reference/flags/). You can also check out the advanced guides like [Continuous Integration](/guide/continuous-integration/).
