@@ -1,7 +1,8 @@
 import process from 'node:process'
 import { isAbsolute } from 'node:path'
 import { read, write } from 'rc9'
-import { type Output, ValiError, never, object, parse, safeParse, string, toTrimmed } from 'valibot'
+import { ValiError, custom, flatten, never, object, parse, safeParse, string, toTrimmed } from 'valibot'
+import type { FlatErrors, Output } from 'valibot'
 import { CLI_NAME, CONFIG_FILE_NAME } from '../constants'
 import { logger } from './logger'
 
@@ -20,20 +21,21 @@ function isEmpty(input: unknown) {
   return result.success
 }
 
-function logErrors(input: ValiError['issues']) {
-  // Generate an array of all errors from input
-  const listOfErrors = input.map((value) => {
-    if (value)
-      return `- ${value.message}`
+function logErrors(input: FlatErrors) {
+  const listOfErrors = Object.entries(input.nested).map(([key, value]) => {
+    if (value) {
+      return `- ${key}
+  ${value.filter(Boolean).map(t => `- ${t}`).join('\n')}`
+    }
 
     return null
   })
 
-  logger.fatal(`Errors parsing your ${CONFIG_FILE_NAME} file in ${configOptions.dir}
+  logger.fatal(`Errors parsing your \`${CONFIG_FILE_NAME}\` file in ${configOptions.dir}
 
 ${listOfErrors.filter(Boolean).join('\n')}
 
-Make sure that your ${CONFIG_FILE_NAME} file only contains valid key/value pairs.`)
+Make sure that your \`${CONFIG_FILE_NAME}\` file only contains valid key/value pairs.`)
 
   process.exit()
 }
@@ -41,23 +43,7 @@ Make sure that your ${CONFIG_FILE_NAME} file only contains valid key/value pairs
 function sourcePathSchema(name: string) {
   return string(`${name} is required and must be a string`, [
     toTrimmed(),
-    // @ts-expect-error - Upstream type issue
-    (input) => {
-    // The source path must be an abssolute path
-      if (!isAbsolute(input)) {
-        return {
-          issues: [
-            {
-              input,
-              validation: 'custom',
-              message: `${name} must be an absolute path`,
-            },
-          ],
-        }
-      }
-
-      return { output: input }
-    },
+    custom(input => isAbsolute(input), `${name} must be an absolute path`),
   ])
 }
 
@@ -97,9 +83,9 @@ export function getConfig(): Config {
 
   // If the file doesn't exist, the unsafeConfig will be an empty object
   if (isEmpty(unsafeConfig)) {
-    logger.fatal(`No ${CONFIG_FILE_NAME} file found in ${configOptions.dir}
+    logger.fatal(`No \`${CONFIG_FILE_NAME}\` file found in ${configOptions.dir}
 
-Please run \`${CLI_NAME} init\` to create a new ${CONFIG_FILE_NAME} file.
+Please run \`${CLI_NAME} init\` to create a new \`${CONFIG_FILE_NAME}\` file.
 Alternatively you can define the required config through environment variables.`)
 
     process.exit()
@@ -112,7 +98,7 @@ Alternatively you can define the required config through environment variables.`
   }
   catch (error) {
     if (error instanceof ValiError)
-      logErrors(error.issues)
+      logErrors(flatten(error))
   }
 
   return config
