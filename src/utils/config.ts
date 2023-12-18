@@ -41,6 +41,7 @@ Make sure that your ${CONFIG_FILE_NAME} file only contains valid key/value pairs
 function sourcePathSchema(name: string) {
   return string(`${name} is required and must be a string`, [
     toTrimmed(),
+    // @ts-expect-error - Upstream type issue
     (input) => {
     // The source path must be an abssolute path
       if (!isAbsolute(input)) {

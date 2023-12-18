@@ -1,6 +1,6 @@
 ## Description
 
-<!-- 
+<!--
   Thanks for contributing to secco. Make sure to read the contributing guide before opening a PR! You can find it here: https://github.com/LekoArts/secco/blob/main/CONTRIBUTING.md
 
   **Please create a feature request before starting work on any significant change.**
