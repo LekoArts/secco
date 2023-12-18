@@ -1,5 +1,11 @@
 # secco
 
+## 1.1.1
+
+### Patch Changes
+
+- [#34](https://github.com/LekoArts/secco/pull/34) [`08ad44e`](https://github.com/LekoArts/secco/commit/08ad44ef05783c0edcd5fb7da4c9b5bf05d24033) Thanks [@LekoArts](https://github.com/LekoArts)! - After updating `valibot` to the latest version, the validation for environment variables wasn't behaving correctly. The custom validation is fixed now.
+
 ## 1.1.0
 
 ### Minor Changes
