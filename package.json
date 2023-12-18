@@ -67,7 +67,7 @@
     "pathe": "^1.1.1",
     "rc9": "^2.1.1",
     "signal-exit": "^4.1.0",
-    "valibot": "^0.22.0",
+    "valibot": "^0.24.1",
     "verdaccio": "^5.29.0",
     "yargs": "^17.7.2"
   },
@@ -87,7 +87,7 @@
     "strip-ansi": "^7.1.0",
     "tsup": "^8.0.1",
     "typescript": "^5.3.3",
-    "vitest": "^0.34.6"
+    "vitest": "^1.0.4"
   },
   "simple-git-hooks": {
     "pre-commit": "pnpm lint-staged"
