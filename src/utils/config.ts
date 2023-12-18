@@ -82,7 +82,8 @@ export function getConfig(): Config {
   const unsafeConfig = read<Partial<Config>>(configOptions)
 
   // If the file doesn't exist, the unsafeConfig will be an empty object
-  if (isEmpty(unsafeConfig)) {
+  // Also error if unsafeConfig is falsy
+  if (isEmpty(unsafeConfig) || !unsafeConfig) {
     logger.fatal(`No \`${CONFIG_FILE_NAME}\` file found in ${configOptions.dir}
 
 Please run \`${CLI_NAME} init\` to create a new \`${CONFIG_FILE_NAME}\` file.

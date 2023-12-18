@@ -1,6 +1,8 @@
 import { join } from 'pathe'
 import { vi } from 'vitest'
+import type { Mock } from 'vitest'
 import { traversePkgDeps } from '../traverse-pkg-deps'
+import { logger } from '../logger'
 
 function mockReadJsonSync(path: string) {
   if (path === join(...'<root>/packages/package-a/package.json'.split('/'))) {
@@ -32,7 +34,7 @@ function mockReadJsonSync(path: string) {
 }
 
 vi.mock('fs-extra/esm', async () => {
-  const actual = await vi.importActual('fs-extra/esm') as any
+  const actual = await vi.importActual<typeof import('fs-extra/esm')>('fs-extra/esm')
   return {
     ...actual,
     readJsonSync: vi.fn((path) => {
@@ -42,6 +44,10 @@ vi.mock('fs-extra/esm', async () => {
 })
 
 describe('traversePkgDeps', () => {
+  beforeEach(() => {
+    logger.mockTypes(() => vi.fn())
+  })
+
   it('handles deep dependency chains', () => {
     const sourcePackages = [
       'package-a',
@@ -63,6 +69,8 @@ describe('traversePkgDeps', () => {
       packageNamesToFilePath,
     })
 
+    const mockLoggerError = ((logger.error as unknown as Mock).mock).calls[0][0]
+
     expect(seenPackages).toEqual([
       'package-a',
       'package-a-dep1',
@@ -73,5 +81,7 @@ describe('traversePkgDeps', () => {
       'package-a-dep1': new Set(['package-a']),
       'package-a-dep1-dep1': new Set(['package-a-dep1']),
     })
+
+    expect(mockLoggerError).toContain('"doesnt-exist" doesn\'t exist in source location')
   })
 })

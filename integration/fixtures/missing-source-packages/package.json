@@ -1,0 +1,9 @@
+{
+  "name": "missing-source-packages",
+  "version": "1.0.0",
+  "private": true,
+  "packageManager": "npm@9.6.7",
+  "dependencies": {
+    "say-hello-world": "^1.0.0"
+  }
+}
