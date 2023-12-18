@@ -71,12 +71,12 @@ ${JSON.stringify(seccoConfig, null, 2)}`)
   logger.debug(`Found ${destinationPackages.length} destination packages.`)
 
   if (!argv?.packageNames && destinationPackages.length === 0) {
-    logger.error(`You haven't got any source dependencies in your current package.json.
+    logger.error(`You haven't got any source dependencies in your current \`package.json\`.
 You probably want to use the packages command to start developing. Example:
 
 ${CLI_NAME} packages package-a package-b
 
-If you only want to use \`${CLI_NAME}\` you'll need to add the dependencies to your package.json`)
+If you only want to use \`${CLI_NAME}\` you'll need to add the dependencies to your \`package.json\`.`)
 
     if (!argv.forceVerdaccio)
       process.exit()
