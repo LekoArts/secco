@@ -1,0 +1,12 @@
+{
+  "name": "destination",
+  "version": "1.0.0",
+  "packageManager": "npm@9.6.7",
+  "main": "bin.mjs",
+  "scripts": {
+    "start": "node bin.mjs"
+  },
+  "dependencies": {
+    "say-hello-world": "^1.0.0"
+  }
+}

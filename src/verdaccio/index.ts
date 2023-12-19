@@ -49,7 +49,7 @@ export interface PublishPackagesAndInstallArgs {
 export async function publishPackagesAndInstall({ packageNamesToFilePath, destinationPackages, ignorePackageJsonChanges, packagesToPublish, source }: PublishPackagesAndInstallArgs) {
   await startVerdaccio()
 
-  const versionPostfix = Date.now()
+  const versionPostfix = Date.now() + Math.floor(Math.random() * 1000)
   const newlyPublishedPackageVersions: Record<string, string> = {}
 
   for (const packageName of packagesToPublish) {

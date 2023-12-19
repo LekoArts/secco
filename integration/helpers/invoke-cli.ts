@@ -9,11 +9,12 @@ const builtCliLocation = join(__dirname, '..', '..', 'dist', 'cli.mjs')
 const fixturesLocation = join(__dirname, '..', 'fixtures')
 
 type CreateLogsMatcherReturn = ReturnType<typeof createLogsMatcher>
-type InvokeResult = [exitCode: number, logsMatcher: CreateLogsMatcherReturn]
+export type InvokeResult = [exitCode: number, logsMatcher: CreateLogsMatcherReturn]
 
 export function SeccoCLI() {
   let env: Record<string, string> = {}
   let cwd = ''
+  let cliLocation = builtCliLocation
 
   const self = {
     setEnv: (_env: Record<string, string>) => {
@@ -24,15 +25,23 @@ export function SeccoCLI() {
       cwd = _cwd
       return self
     },
+    setFixture: (_fixture: string) => {
+      cwd = join(fixturesLocation, _fixture)
+      return self
+    },
+    setCliLocation: (_cliLocation: string) => {
+      cliLocation = _cliLocation
+      return self
+    },
     invoke: (args: Array<string>): InvokeResult => {
       const NODE_ENV = 'production'
 
       try {
         const results = execaSync(
           process.execPath,
-          [builtCliLocation].concat(args),
+          [cliLocation].concat(args),
           {
-            cwd: join(fixturesLocation, cwd),
+            cwd,
             env: { NODE_ENV, ...env },
           },
         )
@@ -53,42 +62,3 @@ export function SeccoCLI() {
 
   return self
 }
-
-/*
-export const SeccoCLI = {
-  // Set environment variables
-  setEnv(env: Record<string, string>): void {
-    customEnv = env
-  },
-  from(relativeCwd: string) {
-    return {
-      // Run the CLI with the given arguments
-      invoke(args: Array<string>): InvokeResult {
-        const NODE_ENV = 'production'
-
-        try {
-          const results = execaSync(
-            process.execPath,
-            [builtCliLocation].concat(args),
-            {
-              cwd: join(fixturesLocation, relativeCwd),
-              env: { NODE_ENV, ...customEnv },
-            },
-          )
-          return [
-            results.exitCode,
-            createLogsMatcher(strip(results.stderr.toString() + results.stdout.toString())),
-          ]
-        }
-        catch (e) {
-          const execaError = e as ExecaSyncError
-          return [
-            execaError.exitCode,
-            createLogsMatcher(strip(execaError.stdout?.toString() || ``)),
-          ]
-        }
-      },
-    }
-  },
-}
-*/
