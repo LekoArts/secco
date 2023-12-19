@@ -81,6 +81,7 @@
     "@types/node": "^20.10.5",
     "@types/yargs": "^17.0.32",
     "@verdaccio/types": "^10.8.0",
+    "@vitest/coverage-v8": "^1.0.4",
     "eslint": "^8.56.0",
     "lint-staged": "^15.2.0",
     "simple-git-hooks": "^2.9.0",

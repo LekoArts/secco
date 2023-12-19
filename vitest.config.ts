@@ -7,5 +7,10 @@ export default defineConfig({
     include: ['src/**/__tests__/*.ts'],
     globals: true,
     reporters: [process.env.CI ? 'default' : 'verbose'],
+    coverage: {
+      include: ['src/**'],
+      exclude: ['src/commands/**', '**/*.d.ts', '**/__tests__/**', '**/vitest.config.ts'],
+      reporter: ['html', 'text'],
+    },
   },
 })
