@@ -107,7 +107,7 @@ function createTempNpmRc({ pathToPkg, sourcePath }: CreateTempNpmRcArgs) {
 
 type PublishPackageArgs = Omit<PublishPackagesAndInstallArgs, 'destinationPackages'> & {
   packageName: string
-  versionPostfix: number
+  versionPostfix: string
 }
 
 export async function publishPackage({ packageName, packagesToPublish, packageNamesToFilePath, versionPostfix, source, ignorePackageJsonChanges }: PublishPackageArgs) {

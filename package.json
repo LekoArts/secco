@@ -63,6 +63,7 @@
     "find-workspaces": "^0.3.0",
     "fs-extra": "^11.2.0",
     "lodash-es": "^4.17.21",
+    "nanoid": "^5.0.4",
     "node-fetch": "^3.3.2",
     "nypm": "^0.3.3",
     "pathe": "^1.1.1",

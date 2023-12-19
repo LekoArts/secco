@@ -1,5 +1,6 @@
 import type { Server } from 'node:http'
 import { runServer } from 'verdaccio'
+import { customAlphabet } from 'nanoid/non-secure'
 import fs from 'fs-extra'
 import { intersection } from 'lodash-es'
 import { logger } from '../utils/logger'
@@ -7,6 +8,8 @@ import type { DestinationPackages, PackageNamesToFilePath, Source } from '../typ
 import { VERDACCIO_CONFIG } from './verdaccio-config'
 import { publishPackage } from './publish-package'
 import { installPackages } from './install-packages'
+
+const nanoid = customAlphabet('0123456789abcdefghijklmnopqrstuvwxyz', 4)
 
 async function startVerdaccio() {
   let resolved = false
@@ -49,7 +52,7 @@ export interface PublishPackagesAndInstallArgs {
 export async function publishPackagesAndInstall({ packageNamesToFilePath, destinationPackages, ignorePackageJsonChanges, packagesToPublish, source }: PublishPackagesAndInstallArgs) {
   await startVerdaccio()
 
-  const versionPostfix = Date.now() + Math.floor(Math.random() * 1000)
+  const versionPostfix = `${Date.now()}-${nanoid()}`
   const newlyPublishedPackageVersions: Record<string, string> = {}
 
   for (const packageName of packagesToPublish) {
