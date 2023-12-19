@@ -163,7 +163,8 @@ export async function watcher(source: Source, destination: Destination, packages
       logger.error(e)
     }
 
-    process.exit()
+    if (scanOnce)
+      quit()
   }
 
   if (allPackagesToWatch.length === 0) {
