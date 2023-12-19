@@ -1,5 +1,17 @@
 # secco
 
+## 1.1.2
+
+### Patch Changes
+
+- [`62fa0c6`](https://github.com/LekoArts/secco/commit/62fa0c64bb696ba277e8ab8d74775e86ce2791f2) Thanks [@LekoArts](https://github.com/LekoArts)! - When secco publishes a package to the local Verdaccio registry it's in the format `<pkg-name>@1.0.0-secco-1702997119379` where `1702997119379` is the `Date.now()` timestamp. The postfix got extended by using [`nanoid`](https://github.com/ai/nanoid) to add 4 characters at the end, e.g. `<pkg-name>@1.0.0-secco-1702998721042-9hax`.
+
+  The goal of this is to mitigate collisions during publishing when at the same timestamp publishing happens to the instance.
+
+- [`3a7b8e5`](https://github.com/LekoArts/secco/commit/3a7b8e502cabcf163b71428d2e18d2be763f1860) Thanks [@LekoArts](https://github.com/LekoArts)! - Adjust the default list of ignored files and directories to include lock files of popular package managers. Also a bug was fixed to now correctly exclude `src` when copying over changes from source to destination. Your logs (e.g. `Copied X to Y`) now **not** include any files inside `src`.
+
+  Also a small bug was fixed that occurred when using the `--force-verdaccio` flag. Previously, the process ended even without the `--scan-once` flag.
+
 ## 1.1.1
 
 ### Patch Changes
