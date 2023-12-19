@@ -5,14 +5,14 @@ const warning = '.seccorc file already exists in this directory'
 
 describe('init', () => {
   it('should work in directory without .seccorc file', () => {
-    const [exitCode, logs] = SeccoCLI().setCwd('empty').invoke(['init'])
+    const [exitCode, logs] = SeccoCLI().setFixture('empty').invoke(['init'])
 
     logs.should.contain(initQuestion)
     logs.should.not.contain(warning)
     expect(exitCode).toBe(0)
   })
   it('should warn in directory with .seccorc file', () => {
-    const [exitCode, logs] = SeccoCLI().setCwd('existing-config-file').invoke(['init'])
+    const [exitCode, logs] = SeccoCLI().setFixture('existing-config-file').invoke(['init'])
 
     logs.should.contain(initQuestion)
     logs.should.contain(warning)
