@@ -65,11 +65,11 @@
     "lodash-es": "^4.17.21",
     "nanoid": "^5.0.4",
     "node-fetch": "^3.3.2",
-    "nypm": "^0.3.3",
-    "pathe": "^1.1.1",
+    "nypm": "^0.3.6",
+    "pathe": "^1.1.2",
     "rc9": "^2.1.1",
     "signal-exit": "^4.1.0",
-    "valibot": "^0.24.1",
+    "valibot": "^0.27.1",
     "verdaccio": "^5.29.0",
     "yargs": "^17.7.2"
   },
@@ -83,14 +83,14 @@
     "@types/node": "^20.11.15",
     "@types/yargs": "^17.0.32",
     "@verdaccio/types": "^10.8.0",
-    "@vitest/coverage-v8": "^1.0.4",
+    "@vitest/coverage-v8": "^1.2.2",
     "eslint": "^8.56.0",
     "lint-staged": "^15.2.1",
     "simple-git-hooks": "^2.9.0",
     "strip-ansi": "^7.1.0",
     "tsup": "^8.0.1",
     "typescript": "^5.3.3",
-    "vitest": "^1.0.4"
+    "vitest": "^1.2.2"
   },
   "simple-git-hooks": {
     "pre-commit": "pnpm lint-staged"
