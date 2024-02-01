@@ -48,7 +48,8 @@
       "matchDepTypes": [
         "dependencies",
         "devDependencies"
-      ]
+      ],
+      "automerge": true
     },
     {
       "groupName": "Dependencies (Major)",
@@ -113,6 +114,13 @@
         "devDependencies"
       ],
       "automerge": true
+    },
+    {
+      "groupName": "Download/Upload Artifact",
+      "matchPackageNames": [
+        "actions/upload-artifact",
+        "actions/download-artifact"
+      ]
     }
   ]
 }
