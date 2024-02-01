@@ -2,6 +2,6 @@
   "name": "missing-source-packages",
   "version": "1.0.0",
   "private": true,
-  "packageManager": "npm@9.9.2",
+  "packageManager": "npm@10.4.0",
   "dependencies": {}
 }
