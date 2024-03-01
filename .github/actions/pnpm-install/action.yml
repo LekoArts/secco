@@ -24,7 +24,7 @@ runs:
         corepack enable
         echo "Corepack enabled"
 
-    - uses: pnpm/action-setup@v2.4.0
+    - uses: pnpm/action-setup@v3.0.0
       if: ${{ inputs.enable-corepack == 'false' }}
       with:
         run_install: false
