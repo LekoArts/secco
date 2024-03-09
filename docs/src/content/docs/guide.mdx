@@ -3,6 +3,8 @@ title: Getting Started
 description: New to secco? Get started here to get up and running!
 ---
 
+import { Steps } from '@astrojs/starlight/components';
+
 secco is a command-line tool for local development. It uses [Verdaccio](https://verdaccio.org/) and direct file copying to apply your latest changes to other projects.
 
 When developing and maintaining (multiple) packages, it's a real hassle to use something like `npm link`. But you also don't want to publish your changes to npm's remote registry. Both have a lot of pitfalls as they might break on complicated dependency chains or symlinking.
@@ -33,6 +35,8 @@ For secco to work correctly you'll need to have [Node.js](https://nodejs.dev) 18
 
 In order to link the destination to your source ([terminology explainer](/guide/terminology/)), secco utitlizes its own `.seccorc` configuration file. This way you only need to provide that information once, on all consecutive runs `secco` automatically looks in the right spot.
 
+<Steps>
+
 1. Navigate to your destination and run the following command in your terminal:
 
     ```shell
@@ -47,6 +51,8 @@ In order to link the destination to your source ([terminology explainer](/guide/
     ```
 
 1. The prompt will show you a summary of what `secco init` will do. When the prompt asks, **"Do you want to create the file?"**, enter **"Y"**.
+
+</Steps>
 
 You should have a new `.seccorc` file inside your destination.
 

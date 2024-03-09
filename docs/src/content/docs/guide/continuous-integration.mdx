@@ -3,6 +3,8 @@ title: Continuous Integration (CI)
 description: Tutorial on how to use secco in CI environments
 ---
 
+import { FileTree } from '@astrojs/starlight/components';
+
 A great use case for secco is to copy over changes from your package to a test site used for End-to-End testing. This way you can verify that your published and built package works consistently.
 
 In this guide you'll learn which secco CLI options to use and how to set up your CI workflow.
@@ -17,17 +19,19 @@ Regardless of your CI provider or overall setup, you should use the `--force-ver
 
 Let's say you have the following setup:
 
-```shell title="File tree"
-dist/
-├─ index.js
-e2e-tests/
-├─ kitchen-sink/
-scripts/
-├─ e2e-test.sh
-src/
-├─ index.ts
-package.json
-```
+<FileTree>
+
+- dist
+  - index.js
+- e2e-tests
+  - kitchen-sink/
+- scripts
+  - e2e-test.sh
+- src
+  - index.ts
+- package.json
+
+</FileTree>
 
 Your source file lives inside `src` and is compiled to the `dist` folder. You created one of many test sites for End-to-End testing purposes inside `e2e-tests`.
 

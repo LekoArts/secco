@@ -4,6 +4,7 @@ description: A step-by-step tutorial for secco
 ---
 
 import { Tabs, TabItem } from '@astrojs/starlight/components';
+import { Steps } from '@astrojs/starlight/components';
 
 Welcome to the secco tutorial! We're excited you're here.
 
@@ -94,6 +95,8 @@ On the left side you have `secco-demo/source`, on the right side `secco-demo/des
 
 When authoring a npm package you most often have to compile your source code to different formats. Either to support older formats like CommonJS or because you write your code in TypeScript. Either way, if you want to continuously copy over your changes to an example project, you need to run your bundler in watch mode. This tutorial uses [tsup](https://tsup.egoist.dev/) but your bundler will also have such an option.
 
+<Steps>
+
 1. Inside `secco-demo/source` install the required dependencies:
 
     ```shell frame="terminal" title="secco-demo/source"
@@ -125,6 +128,8 @@ When authoring a npm package you most often have to compile your source code to 
     CLI Ignoring changes in "**/{.git,node_modules}/**" | "dist"
     ```
 
+</Steps>
+
 For the rest of this tutorial keep this script running. In your own projects you should do the same. Once you edit the file `secco-demo/source/src/index.ts` tsup will recompile it and output it into the `dist` folder.
 
 :::note[No watch mode needed?]
@@ -138,6 +143,8 @@ If you're authoring your code in a way that a compilation step is unnecessary (e
 Before running secco inside `secco-demo/destination` it needs to know where to look for the source files. You can provide that information by creating a `.seccorc` configuration file. On all consecutive runs of secco it'll reuse that information.
 
 You don't have to create that file on your own as secco provides its own command for it.
+
+<Steps>
 
 1. Inside `secco-demo/destination`, run the following command in your terminal:
 
@@ -153,6 +160,8 @@ You don't have to create that file on your own as secco provides its own command
     ```
 
 1. The prompt will show you a summary of what `secco init` will do. When the prompt asks, **"Do you want to create the file?"**, enter **"Y"**.
+
+</Steps>
 
 You should have a new `.seccorc` file inside your `secco-demo/destination` folder.
 
@@ -233,6 +242,8 @@ secco packages say-hello-world
 
 You reached the last part of the tutorial, great! Now that everything is set up, it's time to see secco in action. You'll be changing the source files and notice the before and after differences. The applied changes from source to destination will be near instantaneous.
 
+<Steps>
+
 1. Inside `secco-demo/destination` run the `start` script:
 
     ```shell frame="terminal" title="secco-demo/destination"
@@ -273,6 +284,8 @@ You reached the last part of the tutorial, great! Now that everything is set up,
     ```
 
     Great, it worked! 🎉
+
+</Steps>
 
 From now on every time you make a change to your source file it'll be reflected inside your test project. Depending on your setup this will also work with hot reloading (so no restart of script/server necessary).
 
