@@ -1,5 +1,13 @@
 # secco
 
+## 1.1.3
+
+### Patch Changes
+
+- [#58](https://github.com/LekoArts/secco/pull/58) [`94eb6be`](https://github.com/LekoArts/secco/commit/94eb6be8f120e576ebe0b3d617c841a95c276274) Thanks [@renovate](https://github.com/apps/renovate)! - Update dependencies
+
+- [`b92cdbd`](https://github.com/LekoArts/secco/commit/b92cdbdd2de0b332b72ff866a01920f22a92e411) Thanks [@LekoArts](https://github.com/LekoArts)! - Improve config parsing error messages and write unit tests for Valibot logic
+
 ## 1.1.2
 
 ### Patch Changes
