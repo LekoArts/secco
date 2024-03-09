@@ -16,7 +16,7 @@ runs:
     - name: Install Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: 18
+        node-version: 20
     - name: ⚙️ Enable Corepack
       if: ${{ inputs.enable-corepack == 'true' }}
       shell: bash
