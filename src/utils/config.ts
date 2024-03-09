@@ -16,7 +16,7 @@ export const configOptions = {
 
 const EmptyObjectSchema = object({}, never())
 
-function isEmpty(input: unknown) {
+export function isEmpty(input: unknown) {
   const result = safeParse(EmptyObjectSchema, input)
   return result.success
 }
@@ -40,18 +40,18 @@ Make sure that your \`${CONFIG_FILE_NAME}\` file only contains valid key/value p
   process.exit()
 }
 
-function sourcePathSchema(name: string) {
-  return string(`${name} is required and must be a string`, [
+export function sourcePathSchema(name: string) {
+  return string(`\`${name}\` is required and must be a string`, [
     toTrimmed(),
-    custom(input => isAbsolute(input), `${name} must be an absolute path`),
+    custom(input => isAbsolute(input), `\`${name}\` must be an absolute path`),
   ])
 }
 
-const ConfigSchema = object({
+export const ConfigSchema = object({
   source: object({
     path: sourcePathSchema('source.path'),
-  }, never()),
-}, never())
+  }, never(), 'Only the key `source` is allowed'),
+}, never(), 'You must pass an object')
 
 const envSchema = object({
   SECCO_SOURCE_PATH: sourcePathSchema('SECCO_SOURCE_PATH'),
