@@ -63,14 +63,14 @@
     "find-workspaces": "^0.3.1",
     "fs-extra": "^11.2.0",
     "lodash-es": "^4.17.21",
-    "nanoid": "^5.0.6",
+    "nanoid": "^5.0.7",
     "node-fetch": "^3.3.2",
     "nypm": "^0.3.8",
     "pathe": "^1.1.2",
-    "rc9": "^2.1.1",
+    "rc9": "^2.1.2",
     "signal-exit": "^4.1.0",
     "valibot": "^0.30.0",
-    "verdaccio": "^5.30.2",
+    "verdaccio": "^5.30.3",
     "yargs": "^17.7.2"
   },
   "devDependencies": {
@@ -83,14 +83,14 @@
     "@types/node": "^20.12.7",
     "@types/yargs": "^17.0.32",
     "@verdaccio/types": "^10.8.0",
-    "@vitest/coverage-v8": "^1.4.0",
+    "@vitest/coverage-v8": "^1.5.3",
     "eslint": "^8.57.0",
     "lint-staged": "^15.2.2",
     "simple-git-hooks": "^2.11.1",
     "strip-ansi": "^7.1.0",
     "tsup": "^8.0.2",
     "typescript": "^5.4.5",
-    "vitest": "^1.4.0"
+    "vitest": "^1.5.3"
   },
   "simple-git-hooks": {
     "pre-commit": "pnpm lint-staged"
