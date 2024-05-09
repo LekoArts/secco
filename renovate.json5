@@ -26,6 +26,13 @@
     "pnpmDedupe"
   ],
   "updateNotScheduled": false,
+  "ignorePaths": [
+    "**/node_modules/**",
+    "**/integration/**"
+  ],
+  "nvm": {
+    "enabled": false
+  },
   "packageRules": [
     {
       "matchDepTypes": [
