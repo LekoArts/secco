@@ -84,7 +84,7 @@
     "@types/yargs": "^17.0.32",
     "@verdaccio/types": "^10.8.0",
     "@vitest/coverage-v8": "^1.5.3",
-    "eslint": "^8.57.0",
+    "eslint": "^9.1.1",
     "lint-staged": "^15.2.2",
     "simple-git-hooks": "^2.11.1",
     "strip-ansi": "^7.1.0",
