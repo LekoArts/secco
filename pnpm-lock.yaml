@@ -65,7 +65,7 @@ importers:
     devDependencies:
       '@antfu/eslint-config':
         specifier: ^2.21.1
-        version: 2.21.1(@vue/compiler-sfc@3.3.12)(eslint@9.5.0)(typescript@5.4.5)(vitest@1.6.0(@types/node@20.12.7))
+        version: 2.21.1(@vue/compiler-sfc@3.3.12)(eslint@9.5.0)(typescript@5.4.5)(vitest@1.6.0(@types/node@20.14.5))
       '@changesets/changelog-github':
         specifier: ^0.5.0
         version: 0.5.0
@@ -82,8 +82,8 @@ importers:
         specifier: ^4.17.12
         version: 4.17.12
       '@types/node':
-        specifier: ^20.12.7
-        version: 20.12.7
+        specifier: ^20.14.5
+        version: 20.14.5
       '@types/yargs':
         specifier: ^17.0.32
         version: 17.0.32
@@ -92,7 +92,7 @@ importers:
         version: 10.8.0
       '@vitest/coverage-v8':
         specifier: ^1.6.0
-        version: 1.6.0(vitest@1.6.0(@types/node@20.12.7))
+        version: 1.6.0(vitest@1.6.0(@types/node@20.14.5))
       eslint:
         specifier: ^9.5.0
         version: 9.5.0
@@ -113,7 +113,7 @@ importers:
         version: 5.4.5
       vitest:
         specifier: ^1.6.0
-        version: 1.6.0(@types/node@20.12.7)
+        version: 1.6.0(@types/node@20.14.5)
 
 packages:
 
@@ -768,8 +768,8 @@ packages:
   '@types/node@12.20.55':
     resolution: {integrity: sha512-J8xLz7q2OFulZ2cyGTLE1TbbZcjpno7FaN6zdJNrgAdrJ+DZzh/uFR6YrTb4C+nXakvud8Q4+rbhoIWlYQbUFQ==}
 
-  '@types/node@20.12.7':
-    resolution: {integrity: sha512-wq0cICSkRLVaf3UGLMGItu/PtdY7oaXaI/RVU+xliKVOtRna3PRY57ZDfztpDL0n11vfymMUnXv8QwYCO7L1wg==}
+  '@types/node@20.14.5':
+    resolution: {integrity: sha512-aoRR+fJkZT2l0aGOJhuA8frnCSoNX6W7U2mpNq63+BxBIj5BQFt8rHy627kijCmm63ijdSdwvGgpUsU6MBsZZA==}
 
   '@types/normalize-package-data@2.4.1':
     resolution: {integrity: sha512-Gj7cI7z+98M282Tqmp2K5EIsoouUEzbBJhQQzDE3jSIRk6r9gsz0oUokqIUR4u1R3dMHo0pDHM7sNOHyhulypw==}
@@ -3980,7 +3980,7 @@ snapshots:
       '@jridgewell/gen-mapping': 0.3.3
       '@jridgewell/trace-mapping': 0.3.25
 
-  '@antfu/eslint-config@2.21.1(@vue/compiler-sfc@3.3.12)(eslint@9.5.0)(typescript@5.4.5)(vitest@1.6.0(@types/node@20.12.7))':
+  '@antfu/eslint-config@2.21.1(@vue/compiler-sfc@3.3.12)(eslint@9.5.0)(typescript@5.4.5)(vitest@1.6.0(@types/node@20.14.5))':
     dependencies:
       '@antfu/install-pkg': 0.3.3
       '@clack/prompts': 0.7.0
@@ -4005,7 +4005,7 @@ snapshots:
       eslint-plugin-toml: 0.11.0(eslint@9.5.0)
       eslint-plugin-unicorn: 53.0.0(eslint@9.5.0)
       eslint-plugin-unused-imports: 3.2.0(@typescript-eslint/eslint-plugin@7.13.1(@typescript-eslint/parser@7.13.1(eslint@9.5.0)(typescript@5.4.5))(eslint@9.5.0)(typescript@5.4.5))(eslint@9.5.0)
-      eslint-plugin-vitest: 0.5.4(@typescript-eslint/eslint-plugin@7.13.1(@typescript-eslint/parser@7.13.1(eslint@9.5.0)(typescript@5.4.5))(eslint@9.5.0)(typescript@5.4.5))(eslint@9.5.0)(typescript@5.4.5)(vitest@1.6.0(@types/node@20.12.7))
+      eslint-plugin-vitest: 0.5.4(@typescript-eslint/eslint-plugin@7.13.1(@typescript-eslint/parser@7.13.1(eslint@9.5.0)(typescript@5.4.5))(eslint@9.5.0)(typescript@5.4.5))(eslint@9.5.0)(typescript@5.4.5)(vitest@1.6.0(@types/node@20.14.5))
       eslint-plugin-vue: 9.26.0(eslint@9.5.0)
       eslint-plugin-yml: 1.14.0(eslint@9.5.0)
       eslint-processor-vue-blocks: 0.1.2(@vue/compiler-sfc@3.3.12)(eslint@9.5.0)
@@ -4605,13 +4605,13 @@ snapshots:
   '@types/fs-extra@11.0.4':
     dependencies:
       '@types/jsonfile': 6.1.2
-      '@types/node': 20.12.7
+      '@types/node': 20.14.5
 
   '@types/json-schema@7.0.15': {}
 
   '@types/jsonfile@6.1.2':
     dependencies:
-      '@types/node': 20.12.7
+      '@types/node': 20.14.5
 
   '@types/lodash-es@4.17.12':
     dependencies:
@@ -4627,7 +4627,7 @@ snapshots:
 
   '@types/node@12.20.55': {}
 
-  '@types/node@20.12.7':
+  '@types/node@20.14.5':
     dependencies:
       undici-types: 5.26.5
 
@@ -4882,7 +4882,7 @@ snapshots:
       minimatch: 7.4.6
       semver: 7.6.0
 
-  '@vitest/coverage-v8@1.6.0(vitest@1.6.0(@types/node@20.12.7))':
+  '@vitest/coverage-v8@1.6.0(vitest@1.6.0(@types/node@20.14.5))':
     dependencies:
       '@ampproject/remapping': 2.2.1
       '@bcoe/v8-coverage': 0.2.3
@@ -4897,7 +4897,7 @@ snapshots:
       std-env: 3.6.0
       strip-literal: 2.0.0
       test-exclude: 6.0.0
-      vitest: 1.6.0(@types/node@20.12.7)
+      vitest: 1.6.0(@types/node@20.14.5)
     transitivePeerDependencies:
       - supports-color
 
@@ -5837,13 +5837,13 @@ snapshots:
     optionalDependencies:
       '@typescript-eslint/eslint-plugin': 7.13.1(@typescript-eslint/parser@7.13.1(eslint@9.5.0)(typescript@5.4.5))(eslint@9.5.0)(typescript@5.4.5)
 
-  eslint-plugin-vitest@0.5.4(@typescript-eslint/eslint-plugin@7.13.1(@typescript-eslint/parser@7.13.1(eslint@9.5.0)(typescript@5.4.5))(eslint@9.5.0)(typescript@5.4.5))(eslint@9.5.0)(typescript@5.4.5)(vitest@1.6.0(@types/node@20.12.7)):
+  eslint-plugin-vitest@0.5.4(@typescript-eslint/eslint-plugin@7.13.1(@typescript-eslint/parser@7.13.1(eslint@9.5.0)(typescript@5.4.5))(eslint@9.5.0)(typescript@5.4.5))(eslint@9.5.0)(typescript@5.4.5)(vitest@1.6.0(@types/node@20.14.5)):
     dependencies:
       '@typescript-eslint/utils': 7.13.1(eslint@9.5.0)(typescript@5.4.5)
       eslint: 9.5.0
     optionalDependencies:
       '@typescript-eslint/eslint-plugin': 7.13.1(@typescript-eslint/parser@7.13.1(eslint@9.5.0)(typescript@5.4.5))(eslint@9.5.0)(typescript@5.4.5)
-      vitest: 1.6.0(@types/node@20.12.7)
+      vitest: 1.6.0(@types/node@20.14.5)
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -8029,13 +8029,13 @@ snapshots:
       core-util-is: 1.0.2
       extsprintf: 1.3.0
 
-  vite-node@1.6.0(@types/node@20.12.7):
+  vite-node@1.6.0(@types/node@20.14.5):
     dependencies:
       cac: 6.7.14
       debug: 4.3.4
       pathe: 1.1.2
       picocolors: 1.0.1
-      vite: 5.0.10(@types/node@20.12.7)
+      vite: 5.0.10(@types/node@20.14.5)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -8046,16 +8046,16 @@ snapshots:
       - supports-color
       - terser
 
-  vite@5.0.10(@types/node@20.12.7):
+  vite@5.0.10(@types/node@20.14.5):
     dependencies:
       esbuild: 0.19.9
       postcss: 8.4.32
       rollup: 4.9.1
     optionalDependencies:
-      '@types/node': 20.12.7
+      '@types/node': 20.14.5
       fsevents: 2.3.3
 
-  vitest@1.6.0(@types/node@20.12.7):
+  vitest@1.6.0(@types/node@20.14.5):
     dependencies:
       '@vitest/expect': 1.6.0
       '@vitest/runner': 1.6.0
@@ -8074,11 +8074,11 @@ snapshots:
       strip-literal: 2.0.0
       tinybench: 2.5.1
       tinypool: 0.8.4
-      vite: 5.0.10(@types/node@20.12.7)
-      vite-node: 1.6.0(@types/node@20.12.7)
+      vite: 5.0.10(@types/node@20.14.5)
+      vite-node: 1.6.0(@types/node@20.14.5)
       why-is-node-running: 2.2.2
     optionalDependencies:
-      '@types/node': 20.12.7
+      '@types/node': 20.14.5
     transitivePeerDependencies:
       - less
       - lightningcss
