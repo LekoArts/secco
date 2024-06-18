@@ -1,4 +1,4 @@
-import { sayHelloWorld } from 'say-hello-world-secco'
+import { sayHelloWorld } from 'say-hello-world'
 
 function run() {
   sayHelloWorld()

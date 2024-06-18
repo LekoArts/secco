@@ -16,13 +16,13 @@ describe.sequential('mode: sequential', () => {
     await cleanup()
   })
 
-  it('should run Verdaccio on first run', () => {
-    const [exitCode, logs] = cli(['--scan-once'], { verbose: true })
+  it('should run Verdaccio with --force-verdaccio', () => {
+    const [exitCode, logs] = cli(['--scan-once', '--force-verdaccio'], { verbose: true })
 
     logs.should.contain('[log] [Verdaccio] Starting server...')
     logs.should.contain('[log] [Verdaccio] Started successfully!')
-    logs.should.contain('[log] Publishing `say-hello-world-secco@1.0.0-secco-')
-    logs.should.contain('[log] Published `say-hello-world-secco@1.0.0-secco-')
+    logs.should.contain('[log] Publishing `say-hello-world@0.0.2-secco-')
+    logs.should.contain('[log] Published `say-hello-world@0.0.2-secco-')
     logs.should.contain('[log] Installing packages from local registry:')
     logs.should.contain('[success] Installation finished successfully!')
 
@@ -52,8 +52,8 @@ describe.sequential('mode: sequential', () => {
 
     logs.should.not.contain('[log] [Verdaccio] Starting server...')
     logs.should.not.contain('[success] Installation finished successfully!')
-    logs.should.contain('[log] Copied `index.mjs` to `node_modules/say-hello-world-secco/index.mjs`')
-    logs.should.contain('[log] Copied `package.json` to `node_modules/say-hello-world-secco/package.json`')
+    logs.should.contain('[log] Copied `index.mjs` to `node_modules/say-hello-world/index.mjs`')
+    logs.should.contain('[log] Copied `package.json` to `node_modules/say-hello-world/package.json`')
     logs.should.contain('[info] Copied 2 files. Exiting...')
 
     expect(exitCode).toBe(0)

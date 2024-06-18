@@ -92,15 +92,6 @@
     "typescript": "^5.4.5",
     "vitest": "^1.5.3"
   },
-  "pnpm": {
-    "packageExtensions": {
-      "destination": {
-        "optionalDependencies": {
-          "say-hello-world-secco": "^1.0.0"
-        }
-      }
-    }
-  },
   "simple-git-hooks": {
     "pre-commit": "pnpm lint-staged"
   },

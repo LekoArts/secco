@@ -8,6 +8,6 @@
     "start": "node bin.mjs"
   },
   "dependencies": {
-    "say-hello-world-secco": "^1.0.0"
+    "say-hello-world": "^0.0.2"
   }
 }
