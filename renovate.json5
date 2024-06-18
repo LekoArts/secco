@@ -45,7 +45,7 @@
       "groupName": "Dependencies",
       "commitMessageTopic": "Dependencies",
       "groupSlug": "dependencies",
-      "matchPaths": [
+      "matchFileNames": [
         "package.json"
       ],
       "matchUpdateTypes": [
@@ -62,7 +62,7 @@
       "groupName": "Dependencies (Major)",
       "commitMessageTopic": "Dependencies (Major)",
       "groupSlug": "dependencies-major",
-      "matchPaths": [
+      "matchFileNames": [
         "package.json"
       ],
       "matchUpdateTypes": [
@@ -76,7 +76,7 @@
     {
       "groupName": "Linting",
       "commitMessageTopic": "Linting",
-      "matchPaths": [
+      "matchFileNames": [
         "package.json"
       ],
       "matchPackageNames": [
@@ -101,7 +101,7 @@
     },
     {
       "groupName": "TypeScript",
-      "matchPaths": [
+      "matchFileNames": [
         "package.json"
       ],
       "matchPackageNames": [

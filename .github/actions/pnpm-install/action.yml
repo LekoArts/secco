@@ -35,7 +35,7 @@ runs:
       id: pnpm-config
       shell: bash
       run: |
-        echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+        echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
 
     - name: Cache rotation keys
       id: cache-rotation
