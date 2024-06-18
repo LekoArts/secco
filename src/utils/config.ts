@@ -1,8 +1,19 @@
 import process from 'node:process'
 import { isAbsolute } from 'node:path'
 import { read, write } from 'rc9'
-import { ValiError, custom, flatten, never, object, parse, safeParse, string, toTrimmed } from 'valibot'
-import type { FlatErrors, Output } from 'valibot'
+import type { FlatErrors, InferOutput } from 'valibot'
+import {
+  ValiError,
+  check,
+  flatten,
+  object,
+  parse,
+  pipe,
+  safeParse,
+  strictObject,
+  string,
+  trim,
+} from 'valibot'
 import { CLI_NAME, CONFIG_FILE_NAME } from '../constants'
 import { logger } from './logger'
 
@@ -14,22 +25,29 @@ export const configOptions = {
   flat: false,
 }
 
-const EmptyObjectSchema = object({}, never())
+const EmptyObjectSchema = strictObject({})
 
 export function isEmpty(input: unknown) {
   const result = safeParse(EmptyObjectSchema, input)
   return result.success
 }
 
-function logErrors(input: FlatErrors) {
-  const listOfErrors = Object.entries(input.nested).map(([key, value]) => {
-    if (value) {
-      return `- ${key}
-  ${value.filter(Boolean).map(t => `- ${t}`).join('\n')}`
-    }
+function logErrors(input: FlatErrors<typeof ConfigSchema>) {
+  let listOfErrors: Array<string | null> = []
 
-    return null
-  })
+  if (input.nested?.source || input.nested?.['source.path']) {
+    listOfErrors = Object.entries(input.nested).map(([key, value]) => {
+      if (value) {
+        return `- ${key}
+${value
+  .filter(Boolean)
+  .map(t => `  - ${t}`)
+  .join('\n')}`
+      }
+
+      return null
+    })
+  }
 
   logger.fatal(`Errors parsing your \`${CONFIG_FILE_NAME}\` file in ${configOptions.dir}
 
@@ -41,23 +59,33 @@ Make sure that your \`${CONFIG_FILE_NAME}\` file only contains valid key/value p
 }
 
 export function sourcePathSchema(name: string) {
-  return string(`\`${name}\` is required and must be a string`, [
-    toTrimmed(),
-    custom(input => isAbsolute(input), `\`${name}\` must be an absolute path`),
-  ])
+  return pipe(
+    string(`\`${name}\` is required and must be a string`),
+    trim(),
+    check(
+      input => isAbsolute(input),
+`\`${name}\` must be an absolute path`,
+    ),
+  )
 }
 
-export const ConfigSchema = object({
-  source: object({
-    path: sourcePathSchema('source.path'),
-  }, never(), 'Only the key `source` is allowed'),
-}, never(), 'You must pass an object')
+export const ConfigSchema = strictObject(
+  {
+    source: strictObject(
+      {
+        path: sourcePathSchema('source.path'),
+      },
+      'Only the key `source.path` is allowed',
+    ),
+  },
+  'You must pass an object',
+)
 
 const envSchema = object({
   SECCO_SOURCE_PATH: sourcePathSchema('SECCO_SOURCE_PATH'),
 })
 
-export type Config = Output<typeof ConfigSchema>
+export type Config = InferOutput<typeof ConfigSchema>
 
 /**
  * Tries to load the config values from process.env and .seccorc file.
@@ -99,7 +127,7 @@ Alternatively you can define the required config through environment variables.`
   }
   catch (error) {
     if (error instanceof ValiError)
-      logErrors(flatten(error))
+      logErrors(flatten(error.issues))
   }
 
   return config

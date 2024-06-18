@@ -2,7 +2,11 @@ import antfu from '@antfu/eslint-config'
 
 export default antfu(
   {
-    stylistic: true,
+    stylistic: {
+      indent: 2,
+      quotes: 'single',
+      semi: false,
+    },
     typescript: true,
     jsonc: true,
     ignores: ['dist', 'node_modules', 'pnpm-lock.yaml'],
