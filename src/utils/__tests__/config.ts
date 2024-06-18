@@ -61,7 +61,7 @@ describe('getConfig', () => {
     expect(mockLoggerFatal).toContain(`- source.path
   - \`source.path\` is required and must be a string
 - source.cwd
-  - Invalid type`)
+  - Only the key \`source.path\` is allowed`)
   })
   it('should error when source.path is not an absolute path', () => {
     (read as unknown as Mock).mockReturnValue({
@@ -151,8 +151,8 @@ describe('configSchema', () => {
     expect(() => parse(ConfigSchema, '/path/to/source')).toThrowError('You must pass an object')
   })
   it('should only pass objects with valid entries', () => {
-    expect(() => parse(ConfigSchema, {})).toThrowError('Only the key `source` is allowed')
-    expect(() => parse(ConfigSchema, { invalid: 'key' })).toThrowError('Only the key `source` is allowed')
+    expect(() => parse(ConfigSchema, {})).toThrowError('Only the key `source.path` is allowed')
+    expect(() => parse(ConfigSchema, { invalid: 'key' })).toThrowError('Only the key `source.path` is allowed')
     expect(() => parse(ConfigSchema, { source: { invalid: 'key' } })).toThrowError('\`source.path\` is required and must be a string')
   })
 })

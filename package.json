@@ -69,28 +69,28 @@
     "pathe": "^1.1.2",
     "rc9": "^2.1.2",
     "signal-exit": "^4.1.0",
-    "valibot": "^0.30.0",
-    "verdaccio": "^5.30.3",
+    "valibot": "^0.32.0",
+    "verdaccio": "^5.31.1",
     "yargs": "^17.7.2"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^2.21.1",
     "@changesets/changelog-github": "^0.5.0",
-    "@changesets/cli": "^2.27.1",
+    "@changesets/cli": "^2.27.5",
     "@total-typescript/ts-reset": "^0.5.1",
     "@types/fs-extra": "^11.0.4",
     "@types/lodash-es": "^4.17.12",
     "@types/node": "^20.12.7",
     "@types/yargs": "^17.0.32",
     "@verdaccio/types": "^10.8.0",
-    "@vitest/coverage-v8": "^1.5.3",
+    "@vitest/coverage-v8": "^1.6.0",
     "eslint": "^9.5.0",
     "lint-staged": "^15.2.7",
     "simple-git-hooks": "^2.11.1",
     "strip-ansi": "^7.1.0",
-    "tsup": "^8.0.2",
+    "tsup": "^8.1.0",
     "typescript": "^5.4.5",
-    "vitest": "^1.5.3"
+    "vitest": "^1.6.0"
   },
   "simple-git-hooks": {
     "pre-commit": "pnpm lint-staged"
