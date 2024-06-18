@@ -184,25 +184,25 @@ You should see an output similar to this:
 ```shell frame="terminal" title="secco-demo/destination"
 ➜ secco
 
- WARN  say-hello-world does not seem to be installed and is also not published on npm. Error: No response or Non-200 response from https://unpkg.com/say-hello-world@^1.0.0/package.json
+ WARN  say-hello-world-secco does not seem to be installed and is also not published on npm. Error: No response or Non-200 response from https://unpkg.com/say-hello-world-secco@^1.0.0/package.json
 
 [Verdaccio] Starting server...
 [Verdaccio] Started successfully!
-Publishing say-hello-world@1.0.0-secco-1702634686296 to local registry...
+Publishing say-hello-world-secco@1.0.0-secco-1702634686296 to local registry...
 (node:18034) [DEP0106] DeprecationWarning: crypto.createDecipher is deprecated.
 (Use `node --trace-deprecation ...` to show where the warning was created)
-Published say-hello-world@1.0.0-secco-1702634686296 to local registry
+Published say-hello-world-secco@1.0.0-secco-1702634686296 to local registry
 Installing packages from local registry:
- - say-hello-world
+ - say-hello-world-secco
 ✔ Installation finished successfully!
-Copied package.json to node_modules/say-hello-world/package.json
-Copied dist/index.mjs.map to node_modules/say-hello-world/dist/index.mjs.map
-Copied dist/index.mjs to node_modules/say-hello-world/dist/index.mjs
+Copied package.json to node_modules/say-hello-world-secco/package.json
+Copied dist/index.mjs.map to node_modules/say-hello-world-secco/dist/index.mjs.map
+Copied dist/index.mjs to node_modules/say-hello-world-secco/dist/index.mjs
 ```
 
 A couple of things happened now, here's the breakdown:
 
-- The first line warns that `say-hello-world` isn't installed and not published on npm. This is correct since you didn't run `npm install` inside `secco-demo/destination` as it would't have worked. After all, `say-hello-world` isn't published yet. Therefore secco published the package to a local [Verdaccio][verdaccio] registry.
+- The first line warns that `say-hello-world-secco` isn't installed and not published on npm. This is correct since you didn't run `npm install` inside `secco-demo/destination` as it would't have worked. After all, `say-hello-world-secco` isn't published yet. Therefore secco published the package to a local [Verdaccio][verdaccio] registry.
 
     You won't see this warning if your package is already published to npm and you're trying out a new version locally. In this instance you probably already installed the current latest version.
 
@@ -215,7 +215,7 @@ A couple of things happened now, here's the breakdown:
     ```json title="secco-demo/destination/package.json"
     {
       "dependencies": {
-        "say-hello-world": "1.0.0-secco-1702634686296"
+        "say-hello-world-secco": "1.0.0-secco-1702634686296"
       },
     }
     ```
@@ -233,7 +233,7 @@ Let's say `secco-demo/source` would be a monorepo of multiple packages and `secc
 For example:
 
 ```shell
-secco packages say-hello-world
+secco packages say-hello-world-secco
 ```
 
 :::
