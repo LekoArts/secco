@@ -1,5 +1,11 @@
 # secco
 
+## 1.1.4
+
+### Patch Changes
+
+- [#80](https://github.com/LekoArts/secco/pull/80) [`be3104a`](https://github.com/LekoArts/secco/commit/be3104af3cf343b4779881952be84aa503b18de0) Thanks [@renovate](https://github.com/apps/renovate)! - Update internal dependencies, most notably valibot from 0.30.0 to 0.32.0
+
 ## 1.1.3
 
 ### Patch Changes
