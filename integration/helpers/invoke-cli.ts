@@ -9,7 +9,7 @@ const builtCliLocation = join(__dirname, '..', '..', 'dist', 'cli.mjs')
 const fixturesLocation = join(__dirname, '..', 'fixtures')
 
 type CreateLogsMatcherReturn = ReturnType<typeof createLogsMatcher>
-export type InvokeResult = [exitCode: number, logsMatcher: CreateLogsMatcherReturn]
+export type InvokeResult = [exitCode: number | undefined, logsMatcher: CreateLogsMatcherReturn]
 
 export function SeccoCLI() {
   let env: Record<string, string> = {}
@@ -45,6 +45,7 @@ export function SeccoCLI() {
             env: { NODE_ENV, ...env },
           },
         )
+
         return [
           results.exitCode,
           createLogsMatcher(strip(results.stderr.toString() + results.stdout.toString())),
@@ -52,6 +53,7 @@ export function SeccoCLI() {
       }
       catch (e) {
         const execaError = e as ExecaSyncError
+
         return [
           execaError.exitCode,
           createLogsMatcher(strip(execaError.stdout?.toString() || ``)),
