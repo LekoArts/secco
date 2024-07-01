@@ -45,6 +45,11 @@ export function SeccoCLI() {
             env: { NODE_ENV, ...env },
           },
         )
+
+        if (!results.exitCode) {
+          throw new Error('Could not determine exit code from results')
+        }
+
         return [
           results.exitCode,
           createLogsMatcher(strip(results.stderr.toString() + results.stdout.toString())),
@@ -52,6 +57,11 @@ export function SeccoCLI() {
       }
       catch (e) {
         const execaError = e as ExecaSyncError
+
+        if (!execaError.exitCode) {
+          throw new Error('Could not determine exit code from execaError')
+        }
+
         return [
           execaError.exitCode,
           createLogsMatcher(strip(execaError.stdout?.toString() || ``)),
