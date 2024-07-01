@@ -168,7 +168,7 @@ export async function watcher(source: Source, destination: Destination, packages
   }
 
   if (allPackagesToWatch.length === 0) {
-    logger.error('No packages to watch')
+    logger.error('No packages to watch. Add the package names of your source to the \`package.json\` of your destination and try again.')
     return
   }
 
