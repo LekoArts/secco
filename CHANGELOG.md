@@ -1,5 +1,19 @@
 # secco
 
+## 2.0.0
+
+### Major Changes
+
+- [#87](https://github.com/LekoArts/secco/pull/87) [`2de166e`](https://github.com/LekoArts/secco/commit/2de166e16ac9e350d39943ff8f76518eae40b63b) Thanks [@renovate](https://github.com/apps/renovate)! - Update [`execa`](https://github.com/sindresorhus/execa) from 8.0.1 to 9.3.0. The new v9 major version now requires at least Node.js `^18.19.0 || >=20.5.0`.
+
+  Since `secco` supported Node.js >=18.0.0 in v1, this dependency update warrants a major update to also update secco's `engines` key.
+
+  **Breaking change:** secco now requires Node.js `^18.19.0 || >=20.5.0` or later. This also means that the unstable Node.js 19 is no longer supported.
+
+### Patch Changes
+
+- [#94](https://github.com/LekoArts/secco/pull/94) [`2eb523b`](https://github.com/LekoArts/secco/commit/2eb523ba563bc012781a3eb28ebb1f765a74a1f3) Thanks [@LekoArts](https://github.com/LekoArts)! - Improve error message when no packages are found for watching
+
 ## 1.1.4
 
 ### Patch Changes
