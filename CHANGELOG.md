@@ -1,5 +1,11 @@
 # secco
 
+## 2.1.0
+
+### Minor Changes
+
+- [#96](https://github.com/LekoArts/secco/pull/96) [`69c2d17`](https://github.com/LekoArts/secco/commit/69c2d17613f00ae7ca02affc12854a05969d4d86) Thanks [@LekoArts](https://github.com/LekoArts)! - Add full support for [Bun](https://bun.sh/) by correctly setting the npm registry during `bun add`. This is achieved by using the `BUN_CONFIG_REGISTRY` environment variable.
+
 ## 2.0.0
 
 ### Major Changes
