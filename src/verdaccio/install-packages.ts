@@ -4,6 +4,7 @@ import { logger } from '../utils/logger'
 import type { PromisifiedSpawnArgs } from '../utils/promisified-spawn'
 import { promisifiedSpawn } from '../utils/promisified-spawn'
 import { getAddDependenciesCmd } from './add-dependencies'
+import { REGISTRY_URL } from './verdaccio-config'
 
 interface InstallPackagesArgs {
   packagesToInstall: Array<string>
@@ -25,17 +26,23 @@ If you have control over the destination, manually add the "packageManager" key 
   const listOfPackagesToInstall = packagesToInstall.map(p => ` - ${p}`).join('\n')
   logger.log(`Installing packages from local registry:\n${listOfPackagesToInstall}`)
 
-  // The combination of name and majorVersion allows us to detect yarn 3
   const { name, majorVersion } = pm
 
-  // TODO(feature): Handle externalRegistry case by detecting yarn 2/3 and modify yarn config
-  // We need to set programatically:
-  // yarn config set npmRegistryServer http://localhost:4873
-  // unsafeHttpWhitelist:\n - "localhost"
   let externalRegistry = false
+  let env: NodeJS.ProcessEnv = {}
 
+  // The combination of name and majorVersion allows us to detect yarn 3
   if (name === 'yarn' && majorVersion === '3')
     externalRegistry = true
+    // TODO(feature): Handle externalRegistry case by detecting yarn 2/3 and modify yarn config
+    // We need to set programatically:
+    // yarn config set npmRegistryServer http://localhost:4873
+    // unsafeHttpWhitelist:\n - "localhost"
+
+  if (name === 'bun') {
+    externalRegistry = true
+    env = { BUN_CONFIG_REGISTRY: REGISTRY_URL }
+  }
 
   let installCmd!: PromisifiedSpawnArgs
 
@@ -47,7 +54,7 @@ If you have control over the destination, manually add the "packageManager" key 
       const pkgVersion = newlyPublishedPackageVersions[p]
       return `${p}@${pkgVersion}`
     })
-    installCmd = getAddDependenciesCmd({ packages, pm, externalRegistry })
+    installCmd = getAddDependenciesCmd({ packages, pm, externalRegistry, env })
   }
 
   try {
