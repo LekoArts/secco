@@ -8,6 +8,7 @@ interface GetAddDependenciesCmdArgs {
   packages: Array<string>
   pm: PackageManager
   externalRegistry?: boolean
+  env?: NodeJS.ProcessEnv
 }
 
 const installMap: Record<PackageManagerName, 'install' | 'add'> = {
@@ -24,10 +25,8 @@ const exactMap: Record<PackageManagerName, '--save-exact' | '--exact'> = {
   bun: '--exact',
 }
 
-// TODO(feature): Support verdaccio registry in bun through https://bun.sh/guides/install/custom-registry
-
-export function getAddDependenciesCmd({ packages, pm, externalRegistry = false }: GetAddDependenciesCmdArgs) {
-  const commands: PromisifiedSpawnArgs = [pm.command, [installMap[pm.name], ...packages, exactMap[pm.name], !externalRegistry ? `--registry=${REGISTRY_URL}` : null].filter(Boolean)]
+export function getAddDependenciesCmd({ packages, pm, externalRegistry = false, env = {} }: GetAddDependenciesCmdArgs) {
+  const commands: PromisifiedSpawnArgs = [pm.command, [installMap[pm.name], ...packages, exactMap[pm.name], !externalRegistry ? `--registry=${REGISTRY_URL}` : null].filter(Boolean), { env }]
 
   return commands
 }
