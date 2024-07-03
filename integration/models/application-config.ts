@@ -36,8 +36,10 @@ export function applicationConfig() {
 
       return clone
     },
-    setPackageManager: (name: PackageManagerName, version: string) => {
-      packageManager = `${name}@${version}`
+    setPackageManager: (name?: PackageManagerName, version?: string) => {
+      if (name && version) {
+        packageManager = `${name}@${version}`
+      }
       return self
     },
     commit: async () => {
