@@ -1,23 +1,19 @@
-import type { SetupReturn } from '../helpers/setup-kitchen-sink'
-import { KitchenSink } from '../helpers/setup-kitchen-sink'
+import type { Application } from '../models/application'
+import { presets } from '../presets'
 
 describe.sequential('mode: sequential', () => {
-  let cleanup: SetupReturn['cleanup']
-  let cli: SetupReturn['cli']
+  let app: Application
 
   beforeAll(async () => {
-    const { cleanup: _cleanup, cli: _cli } = await KitchenSink().setup()
-
-    cleanup = _cleanup
-    cli = _cli
+    app = await presets.kitchenSink.commit()
   })
 
   afterAll(async () => {
-    await cleanup()
+    await app.cleanup()
   })
 
   it('should run Verdaccio with --force-verdaccio', () => {
-    const [exitCode, logs] = cli(['--scan-once', '--force-verdaccio'], { verbose: true })
+    const [exitCode, logs] = app.cli(['--scan-once', '--force-verdaccio'], { verbose: true })
 
     logs.should.contain('[log] [Verdaccio] Starting server...')
     logs.should.contain('[log] [Verdaccio] Started successfully!')
@@ -30,7 +26,7 @@ describe.sequential('mode: sequential', () => {
   })
 
   it('verbose should be enabled through --verbose flag', () => {
-    const [exitCode, logs] = cli(['--verbose', '--scan-once'])
+    const [exitCode, logs] = app.cli(['--verbose', '--scan-once'])
 
     logs.should.contain('[debug] Found 1 packages in source.')
     logs.should.contain('[debug] Found 1 destination packages.')
@@ -39,7 +35,7 @@ describe.sequential('mode: sequential', () => {
   })
 
   it('verbose should be enabled through VERBOSE env var', () => {
-    const [exitCode, logs] = cli(['--scan-once'], { verbose: true })
+    const [exitCode, logs] = app.cli(['--scan-once'], { verbose: true })
 
     logs.should.contain('[debug] Found 1 packages in source.')
     logs.should.contain('[debug] Found 1 destination packages.')
@@ -48,7 +44,7 @@ describe.sequential('mode: sequential', () => {
   })
 
   it('should copy files on consecutive runs', () => {
-    const [exitCode, logs] = cli(['--scan-once'], { verbose: true })
+    const [exitCode, logs] = app.cli(['--scan-once'], { verbose: true })
 
     logs.should.not.contain('[log] [Verdaccio] Starting server...')
     logs.should.not.contain('[success] Installation finished successfully!')
