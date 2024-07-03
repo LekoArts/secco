@@ -12,10 +12,6 @@ inputs:
     description: Node version to use
     required: false
     default: '20'
-  install-bun:
-    description: Install bun
-    required: false
-    default: 'false'
 
 runs:
   using: composite
@@ -38,9 +34,6 @@ runs:
         run_install: false
         # If you're not setting the packageManager field in package.json, add the version here
         # version: 8.6.7
-
-    - uses: oven-sh/setup-bun@v2
-      if: ${{ inputs.install-bun == 'true' }}
 
     - name: Expose pnpm config(s) through "$GITHUB_OUTPUT"
       id: pnpm-config
