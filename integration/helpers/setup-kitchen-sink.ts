@@ -1,7 +1,7 @@
-import { join } from 'node:path'
 import { cp, mkdtemp, rm, writeFile } from 'node:fs/promises'
 
 import { tmpdir } from 'node:os'
+import { join } from 'pathe'
 import { CONFIG_FILE_NAME } from '../../src/constants'
 import { type InvokeResult, SeccoCLI } from './invoke-cli'
 
