@@ -12,12 +12,13 @@ interface CliOptions {
 }
 
 export function application(config: ApplicationConfig, isolatedDir: string) {
-  const { name } = config
+  const { name, packageManager } = config
   const logger = createLogger({ prefix: name })
 
   const self = {
     name,
     dir: isolatedDir,
+    packageManager,
     cli: (args: Array<string>, options?: CliOptions): InvokeResult => {
       const { verbose = false } = options || {}
 

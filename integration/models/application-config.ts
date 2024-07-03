@@ -29,6 +29,9 @@ export function applicationConfig() {
     get name() {
       return name
     },
+    get packageManager() {
+      return packageManager
+    },
     clone: () => {
       const clone = applicationConfig()
       clone.setName(name)

@@ -19,6 +19,7 @@ describe.sequential('mode: sequential', () => {
     logs.should.contain('[log] [Verdaccio] Started successfully!')
     logs.should.contain('[log] Publishing `say-hello-world@0.0.2-secco-')
     logs.should.contain('[log] Published `say-hello-world@0.0.2-secco-')
+    logs.should.contain(`[debug] Detected package manager in destination: ${app.packageManager.split('@')[0]}`)
     logs.should.contain('[log] Installing packages from local registry:')
     logs.should.contain('[success] Installation finished successfully!')
 
