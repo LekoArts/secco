@@ -1,4 +1,4 @@
-import { join } from 'node:path'
+import { join } from 'pathe'
 import { SeccoCLI } from '../helpers/invoke-cli'
 
 const missingSourcePackagesLocation = join(__dirname, '..', 'fixtures', 'missing-source-packages')

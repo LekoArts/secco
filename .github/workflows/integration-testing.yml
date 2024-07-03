@@ -5,14 +5,31 @@ on: workflow_call
 jobs:
   integration-testing:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        pm:
+          - name: npm
+            version: 10.8.1
+          - name: pnpm
+            version: 9.4.0
+          - name: yarn
+            version: 1.22.22
+          - name: bun
+            version: 1.1.17
     steps:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Install dependencies
         uses: ./.github/actions/pnpm-install
+      - name: Install Bun
+        uses: oven-sh/setup-bun@v2
+        if: ${{ matrix.pm.name == 'bun' }}
       - uses: actions/download-artifact@v4
         with:
           name: dist
           path: dist
       - name: Run Vitest
         run: pnpm run test:integration
+        env:
+          INTEGRATION_PM_NAME: ${{ matrix.pm.name }}
+          INTEGRATION_PM_VERSION: ${{ matrix.pm.version }}

@@ -1,5 +1,5 @@
-import { join } from 'node:path'
 import process from 'node:process'
+import { join } from 'pathe'
 import type { ExecaSyncError } from 'execa'
 import { execaSync } from 'execa'
 import strip from 'strip-ansi'
