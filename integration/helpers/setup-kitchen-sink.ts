@@ -1,32 +1,20 @@
 import { join } from 'node:path'
-import crypto from 'node:crypto'
-import { copyFile, cp, rm } from 'node:fs/promises'
+import { cp, mkdtemp, rm, writeFile } from 'node:fs/promises'
 
-// import { cp, mkdtemp, rm } from 'node:fs/promises'
-// import { tmpdir } from 'node:os'
-import { write } from 'rc9'
+import { tmpdir } from 'node:os'
 import { CONFIG_FILE_NAME } from '../../src/constants'
 import { type InvokeResult, SeccoCLI } from './invoke-cli'
 
-const builtCliLocation = join(__dirname, '..', '..', 'dist', 'cli.mjs')
 const fixtureLocation = join(__dirname, '..', 'fixtures', 'kitchen-sink')
 
-function createSeccoRcFile(cwd: string) {
-  write({
-    source: {
-      path: join(cwd, 'source'),
-    },
-  }, {
-    name: CONFIG_FILE_NAME,
-    dir: join(cwd, 'destination'),
-    flat: false,
-  })
+async function createSeccoRcFile(cwd: string) {
+  await writeFile(join(cwd, 'destination', CONFIG_FILE_NAME), `source.path="${join(cwd, 'source')}"`, { encoding: 'utf-8' })
 }
 
 function cli({ cwd, args, options }: { cwd: string, args: Array<string>, options?: CliOptions }) {
   const { verbose = false } = options || {}
 
-  return SeccoCLI().setCliLocation(join(cwd, 'cli.mjs')).setCwd(join(cwd, 'destination')).setEnv({
+  return SeccoCLI().setCwd(join(cwd, 'destination')).setEnv({
     VERBOSE: verbose ? 'true' : 'false',
   }).invoke(args)
 }
@@ -47,17 +35,13 @@ export function KitchenSink() {
   const self = {
     setup: async () => {
       // Create temporary directory to isolate fixture
-      // cwd = await mkdtemp(join(tmpdir(), 'secco-integration-test-'))
-      cwd = join(__dirname, '..', `temp-tests-${crypto.randomUUID()}`)
+      cwd = await mkdtemp(join(tmpdir(), 'secco-integration-test-'))
 
       // Copy fixture directory to temporary directory
       await cp(fixtureLocation, cwd, { recursive: true })
 
-      // Copy built CLI to root of temporary directory
-      await copyFile(builtCliLocation, join(cwd, 'cli.mjs'))
-
       // Create a secco config file in the temporary directory
-      createSeccoRcFile(cwd)
+      await createSeccoRcFile(cwd)
 
       return {
         cwd,
