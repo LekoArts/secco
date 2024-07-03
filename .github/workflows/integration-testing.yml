@@ -5,6 +5,13 @@ on: workflow_call
 jobs:
   integration-testing:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        pm:
+          - name: npm
+            version: 10.8.1
+          - name: pnpm
+            version: 9.4.0
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -16,3 +23,6 @@ jobs:
           path: dist
       - name: Run Vitest
         run: pnpm run test:integration
+        env:
+          INTEGRATION_PM_NAME: ${{ matrix.pm.name }}
+          INTEGRATION_PM_VERSION: ${{ matrix.pm.version }}
