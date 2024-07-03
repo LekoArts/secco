@@ -8,6 +8,14 @@ inputs:
     description: Enable corepack
     required: false
     default: 'true'
+  node-version:
+    description: Node version to use
+    required: false
+    default: '20'
+  install-bun:
+    description: Install bun
+    required: false
+    default: 'false'
 
 runs:
   using: composite
@@ -16,7 +24,7 @@ runs:
     - name: Install Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: 20
+        node-version: ${{ inputs.node-version }}
     - name: ⚙️ Enable Corepack
       if: ${{ inputs.enable-corepack == 'true' }}
       shell: bash
@@ -30,6 +38,9 @@ runs:
         run_install: false
         # If you're not setting the packageManager field in package.json, add the version here
         # version: 8.6.7
+
+    - uses: oven-sh/setup-bun@v2
+      if: ${{ inputs.install-bun == 'true' }}
 
     - name: Expose pnpm config(s) through "$GITHUB_OUTPUT"
       id: pnpm-config
@@ -47,9 +58,9 @@ runs:
       name: Setup pnpm cache
       with:
         path: ${{ steps.pnpm-config.outputs.STORE_PATH }}
-        key: ${{ runner.os }}-pnpm-store-cache-${{ steps.cache-rotation.outputs.YEAR_MONTH }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+        key: ${{ runner.os }}-node-${{ inputs.node-version }}-pnpm-store-cache-${{ steps.cache-rotation.outputs.YEAR_MONTH }}-${{ hashFiles('**/pnpm-lock.yaml') }}
         restore-keys: |
-          ${{ runner.os }}-pnpm-store-cache-${{ steps.cache-rotation.outputs.YEAR_MONTH }}-
+          ${{ runner.os }}-node-${{ inputs.node-version }}-pnpm-store-cache-${{ steps.cache-rotation.outputs.YEAR_MONTH }}-
 
     - name: Install dependencies
       shell: bash
