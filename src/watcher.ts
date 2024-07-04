@@ -36,17 +36,16 @@ interface PrivateCopyPathArgs extends CopyPathArgs {
 
 export async function watcher(source: Source, destination: Destination, packages: PackageNames | undefined, options: WatcherOptions) {
   const { packageNamesToFilePath, packages: sourcePackages } = source
-  const { packages: destinationPackages } = destination
+  const { packages: destinationPackages, hasWorkspaces: destinationHasWorkspaces } = destination
   const { verbose: isVerbose, scanOnce } = options
   let { forceVerdaccio } = options
 
   setDefaultSpawnStdio(isVerbose ? 'inherit' : 'ignore')
 
-  if (false) {
-    // Current logic of copying files from source to destination doesn't work yet with workspaces (inside destination), so force verdaccio usage for now.
-    // TODO(feature): Support workspaces in destination
-    // Reuse find-workspaces package to find all workspaces in destination
+  // Current logic of copying files from source to destination doesn't work yet with workspaces (inside destination), so force verdaccio usage for now.
+  if (destinationHasWorkspaces && !forceVerdaccio) {
     forceVerdaccio = true
+    logger.info('Workspaces detected in destination. Automatically enabling \`--force-verdaccio\` flag.')
   }
 
   let afterPackageInstallation = false
@@ -147,9 +146,9 @@ export async function watcher(source: Source, destination: Destination, packages
         await publishPackagesAndInstall({
           packagesToPublish: allPackagesToWatch,
           packageNamesToFilePath,
-          destinationPackages,
           ignorePackageJsonChanges,
           source,
+          destination,
         })
       }
       else {
@@ -288,9 +287,9 @@ export async function watcher(source: Source, destination: Destination, packages
           await publishPackagesAndInstall({
             packagesToPublish: Array.from(packagesToPublish),
             packageNamesToFilePath,
-            destinationPackages,
             ignorePackageJsonChanges,
             source,
+            destination,
           })
 
           packagesToPublish.clear()

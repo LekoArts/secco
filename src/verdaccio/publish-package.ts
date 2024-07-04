@@ -60,7 +60,7 @@ function adjustPackageJson({ sourcePkgJsonPath, packageName, packageNamesToFileP
   }
 }
 
-type PublishPackageArgs = Omit<PublishPackagesAndInstallArgs, 'destinationPackages'> & {
+type PublishPackageArgs = Omit<PublishPackagesAndInstallArgs, 'destination'> & {
   packageName: string
   versionPostfix: string
 }

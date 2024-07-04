@@ -31,6 +31,15 @@ export function findWorkspacesInSource(sourcePath: Source['path']) {
   }
 }
 
+export function findWorkspacesInDestination(destinationPath: string) {
+  const workspaces = findWorkspaces(destinationPath)
+
+  return {
+    hasWorkspaces: Boolean(workspaces),
+    workspaces,
+  }
+}
+
 export function hasConfigFile() {
   const configPath = join(currentDir, CONFIG_FILE_NAME)
   return fs.existsSync(configPath)
@@ -41,12 +50,20 @@ export function isPrivate(pkgJson: PackageJson) {
 }
 
 const packageNameToFilePath = new Map<string, string>()
+const destinationPackageNameToFilePath = new Map<string, string>()
 
 /**
  * Returns a map (package name to absolute file path) of packages inside the source repository
  */
 export function getPackageNamesToFilePath() {
   return packageNameToFilePath
+}
+
+/**
+ * Returns a map (package name to absolute file path) of packages inside the destination repository
+ */
+export function getDestinationPackageNamesToFilePath() {
+  return destinationPackageNameToFilePath
 }
 
 /**
@@ -98,17 +115,35 @@ export function getPackages(sourcePath: Source['path'], workspaces: ReturnType<t
   return []
 }
 
-export function getDestinationPackages(sourcePackages: SourcePackages) {
-  const destPkgJson = destr<{ dependencies?: Record<string, string>, devDependencies?: Record<string, string> }>(fs.readFileSync(join(currentDir, 'package.json'), 'utf-8'))
+export function getDestinationPackages(sourcePackages: SourcePackages, workspaces: ReturnType<typeof findWorkspacesInSource>['workspaces']) {
+  if (!workspaces) {
+    const destPkgJson = destr<{ dependencies?: Record<string, string>, devDependencies?: Record<string, string>, name: string }>(fs.readFileSync(join(currentDir, 'package.json'), 'utf-8'))
 
-  if (!destPkgJson)
-    return []
+    if (!destPkgJson)
+      return []
 
-  // Intersect sourcePackages with destination dependencies to get list of packages that are used
-  const destinationPackages = intersection(
-    sourcePackages,
-    Object.keys(merge({}, destPkgJson.dependencies, destPkgJson.devDependencies)),
-  )
+    destinationPackageNameToFilePath.set(destPkgJson.name, currentDir)
 
-  return destinationPackages
+    // Intersect sourcePackages with destination dependencies to get list of packages that are used
+    return intersection(
+      sourcePackages,
+      Object.keys(merge({}, destPkgJson.dependencies, destPkgJson.devDependencies)),
+    )
+  }
+
+  if (workspaces.length > 0) {
+    return workspaces.map((workspace) => {
+      const absolutePath = workspace.location
+      const pkgJson = workspace.package
+
+      destinationPackageNameToFilePath.set(pkgJson.name, absolutePath)
+
+      return intersection(
+        sourcePackages,
+        Object.keys(merge({}, pkgJson.dependencies, pkgJson.devDependencies)),
+      )
+    }).flat()
+  }
+
+  return []
 }

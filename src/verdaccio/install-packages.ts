@@ -1,32 +1,23 @@
 import process from 'node:process'
-import { detectPackageManager } from 'nypm'
 import { logger } from '../utils/logger'
 import type { PromisifiedSpawnArgs } from '../utils/promisified-spawn'
 import { promisifiedSpawn } from '../utils/promisified-spawn'
+import type { Destination } from '../types'
 import { getAddDependenciesCmd } from './add-dependencies'
 import { REGISTRY_URL } from './verdaccio-config'
 
 interface InstallPackagesArgs {
   packagesToInstall: Array<string>
   newlyPublishedPackageVersions: Record<string, string>
+  destination: Destination
 }
 
-export async function installPackages({ newlyPublishedPackageVersions, packagesToInstall }: InstallPackagesArgs) {
-  const cwd = process.cwd()
-  const pm = await detectPackageManager(cwd, { includeParentDirs: false })
-  logger.debug(`Detected package manager in destination: ${pm?.name}`)
-
-  if (!pm) {
-    logger.fatal(`Failed to detect package manager in ${cwd}
-
-If you have control over the destination, manually add the "packageManager" key to its \`package.json\` file.`)
-    process.exit()
-  }
+export async function installPackages({ newlyPublishedPackageVersions, packagesToInstall, destination }: InstallPackagesArgs) {
+  const { pm } = destination
+  const { name, majorVersion } = pm
 
   const listOfPackagesToInstall = packagesToInstall.map(p => ` - ${p}`).join('\n')
   logger.log(`Installing packages from local registry:\n${listOfPackagesToInstall}`)
-
-  const { name, majorVersion } = pm
 
   let externalRegistry = false
   let env: NodeJS.ProcessEnv = {}

@@ -7,7 +7,7 @@ import { detectPackageManager } from 'nypm'
 import { getConfig } from './utils/config'
 import { logger } from './utils/logger'
 import { commands } from './commands'
-import { checkDirHasPackageJson, findWorkspacesInSource, getDestinationPackages, getPackageNamesToFilePath, getPackages } from './utils/initial-setup'
+import { checkDirHasPackageJson, findWorkspacesInDestination, findWorkspacesInSource, getDestinationPackageNamesToFilePath, getDestinationPackages, getPackageNamesToFilePath, getPackages } from './utils/initial-setup'
 import type { CliArguments, Destination, Source } from './types'
 import { CLI_NAME } from './constants'
 import { watcher } from './watcher'
@@ -58,17 +58,33 @@ ${JSON.stringify(seccoConfig, null, 2)}`)
 
   checkDirHasPackageJson()
 
-  const { source: sourceConfig } = seccoConfig
-  const { hasWorkspaces, workspaces } = findWorkspacesInSource(sourceConfig.path)
-  const pm = await detectPackageManager(sourceConfig.path, { includeParentDirs: false })
-  logger.debug(`Detected package manager in source: ${pm?.name}`)
-  logger.debug(`Source has workspaces: ${hasWorkspaces}`)
+  const destinationPath = process.cwd()
 
-  const sourcePackages = getPackages(sourceConfig.path, workspaces)
-  logger.debug(`Found ${sourcePackages.length} packages in source.`)
+  const { source: sourceConfig } = seccoConfig
+  const { hasWorkspaces: sourceHasWorkspaces, workspaces: sourceWorkspaces } = findWorkspacesInSource(sourceConfig.path)
+  const { hasWorkspaces: destinationHasWorkspaces, workspaces: destinationWorkspaces } = findWorkspacesInDestination(destinationPath)
+
+  const pmSource = await detectPackageManager(sourceConfig.path, { includeParentDirs: false })
+  const pmDestination = await detectPackageManager(destinationPath, { includeParentDirs: false })
+
+  if (!pmDestination) {
+    logger.fatal(`Failed to detect package manager in ${destinationPath}
+
+If you have control over the destination, manually add the "packageManager" key to its \`package.json\` file.`)
+    process.exit()
+  }
+
+  logger.debug(`Detected package manager in source: ${pmSource?.name}`)
+  logger.debug(`Detected package manager in destination: ${pmDestination?.name}`)
+  logger.debug(`Source has workspaces: ${sourceHasWorkspaces}`)
+  logger.debug(`Destination has workspaces: ${destinationHasWorkspaces}`)
+
+  const sourcePackages = getPackages(sourceConfig.path, sourceWorkspaces)
+  logger.debug(`Found ${sourcePackages.length} ${sourcePackages.length === 1 ? 'package' : 'packages'} in source.`)
   const packageNamesToFilePath = getPackageNamesToFilePath()
-  const destinationPackages = getDestinationPackages(sourcePackages)
-  logger.debug(`Found ${destinationPackages.length} destination packages.`)
+  const destinationPackageNamesToFilePath = getDestinationPackageNamesToFilePath()
+  const destinationPackages = getDestinationPackages(sourcePackages, destinationWorkspaces)
+  logger.debug(`Found ${destinationPackages.length} ${destinationPackages.length === 1 ? 'package' : 'packages'} in destination.`)
 
   if (!argv?.packageNames && destinationPackages.length === 0) {
     logger.error(`You haven't got any source dependencies in your current \`package.json\`.
@@ -87,14 +103,17 @@ If you only want to use \`${CLI_NAME}\` you'll need to add the dependencies to y
 
   const source: Source = {
     ...sourceConfig,
-    hasWorkspaces,
+    hasWorkspaces: sourceHasWorkspaces,
     packages: sourcePackages,
     packageNamesToFilePath,
-    pm,
+    pm: pmSource,
   }
 
   const destination: Destination = {
     packages: destinationPackages,
+    hasWorkspaces: destinationHasWorkspaces,
+    destinationPackageNamesToFilePath,
+    pm: pmDestination,
   }
 
   watcher(source, destination, argv.packageNames, { scanOnce: argv.scanOnce, forceVerdaccio: argv.forceVerdaccio, verbose: argv.verbose })
