@@ -7,7 +7,7 @@ import { detectPackageManager } from 'nypm'
 import { getConfig } from './utils/config'
 import { logger } from './utils/logger'
 import { commands } from './commands'
-import { checkDirHasPackageJson, findWorkspacesInDestination, findWorkspacesInSource, getDestinationPackageNamesToFilePath, getDestinationPackages, getPackageNamesToFilePath, getPackages } from './utils/initial-setup'
+import { checkDirHasPackageJson, findWorkspacesInDestination, findWorkspacesInSource, getAbsolutePathsForDestinationPackages, getDestinationPackages, getPackageNamesToFilePath, getPackages } from './utils/initial-setup'
 import type { CliArguments, Destination, Source } from './types'
 import { CLI_NAME } from './constants'
 import { watcher } from './watcher'
@@ -82,8 +82,8 @@ If you have control over the destination, manually add the "packageManager" key 
   const sourcePackages = getPackages(sourceConfig.path, sourceWorkspaces)
   logger.debug(`Found ${sourcePackages.length} ${sourcePackages.length === 1 ? 'package' : 'packages'} in source.`)
   const packageNamesToFilePath = getPackageNamesToFilePath()
-  const destinationPackageNamesToFilePath = getDestinationPackageNamesToFilePath()
   const destinationPackages = getDestinationPackages(sourcePackages, destinationWorkspaces)
+  const absolutePathsForDestinationPackages = getAbsolutePathsForDestinationPackages()
   logger.debug(`Found ${destinationPackages.length} ${destinationPackages.length === 1 ? 'package' : 'packages'} in destination.`)
 
   if (!argv?.packageNames && destinationPackages.length === 0) {
@@ -112,7 +112,7 @@ If you only want to use \`${CLI_NAME}\` you'll need to add the dependencies to y
   const destination: Destination = {
     packages: destinationPackages,
     hasWorkspaces: destinationHasWorkspaces,
-    destinationPackageNamesToFilePath,
+    absolutePathsForDestinationPackages,
     pm: pmDestination,
   }
 

@@ -3,7 +3,7 @@ import type { Config } from './utils/config'
 
 export type PackageNames = Array<string>
 export type PackageNamesToFilePath = Map<string, string>
-export type DestinationPackageNamesToFilePath = Map<string, string>
+export type AbsolutePathsForDestinationPackages = Set<string>
 export type SourcePackages = Array<string>
 export type DestinationPackages = Array<string>
 export type DepTree = Record<string, Set<string>>
@@ -27,7 +27,7 @@ export type Source = Config['source'] & {
 export interface Destination {
   hasWorkspaces: boolean
   packages: DestinationPackages
-  destinationPackageNamesToFilePath: DestinationPackageNamesToFilePath
+  absolutePathsForDestinationPackages: AbsolutePathsForDestinationPackages
   pm: PackageManager
 }
 

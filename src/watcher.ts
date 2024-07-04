@@ -42,7 +42,8 @@ export async function watcher(source: Source, destination: Destination, packages
 
   setDefaultSpawnStdio(isVerbose ? 'inherit' : 'ignore')
 
-  // Current logic of copying files from source to destination doesn't work yet with workspaces (inside destination), so force verdaccio usage for now.
+  // Current logic of copying files from source to destination doesn't work with workspaces (inside destination), so force verdaccio usage for now.
+  // TODO: Implement file copying logic for workspaces in destination
   if (destinationHasWorkspaces && !forceVerdaccio) {
     forceVerdaccio = true
     logger.info('Workspaces detected in destination. Automatically enabling \`--force-verdaccio\` flag.')

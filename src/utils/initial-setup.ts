@@ -50,7 +50,7 @@ export function isPrivate(pkgJson: PackageJson) {
 }
 
 const packageNameToFilePath = new Map<string, string>()
-const destinationPackageNameToFilePath = new Map<string, string>()
+const absolutePathsForDestinationPackages = new Set<string>()
 
 /**
  * Returns a map (package name to absolute file path) of packages inside the source repository
@@ -62,8 +62,8 @@ export function getPackageNamesToFilePath() {
 /**
  * Returns a map (package name to absolute file path) of packages inside the destination repository
  */
-export function getDestinationPackageNamesToFilePath() {
-  return destinationPackageNameToFilePath
+export function getAbsolutePathsForDestinationPackages() {
+  return absolutePathsForDestinationPackages
 }
 
 /**
@@ -122,13 +122,17 @@ export function getDestinationPackages(sourcePackages: SourcePackages, workspace
     if (!destPkgJson)
       return []
 
-    destinationPackageNameToFilePath.set(destPkgJson.name, currentDir)
-
     // Intersect sourcePackages with destination dependencies to get list of packages that are used
-    return intersection(
+    const deps = intersection(
       sourcePackages,
       Object.keys(merge({}, destPkgJson.dependencies, destPkgJson.devDependencies)),
     )
+
+    if (deps.length > 0) {
+      absolutePathsForDestinationPackages.add(currentDir)
+    }
+
+    return deps
   }
 
   if (workspaces.length > 0) {
@@ -136,12 +140,16 @@ export function getDestinationPackages(sourcePackages: SourcePackages, workspace
       const absolutePath = workspace.location
       const pkgJson = workspace.package
 
-      destinationPackageNameToFilePath.set(pkgJson.name, absolutePath)
-
-      return intersection(
+      const deps = intersection(
         sourcePackages,
         Object.keys(merge({}, pkgJson.dependencies, pkgJson.devDependencies)),
       )
+
+      if (deps.length > 0) {
+        absolutePathsForDestinationPackages.add(absolutePath)
+      }
+
+      return deps
     }).flat()
   }
 
