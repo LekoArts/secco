@@ -53,14 +53,15 @@ const packageNameToFilePath = new Map<string, string>()
 const absolutePathsForDestinationPackages = new Set<string>()
 
 /**
- * Returns a map (package name to absolute file path) of packages inside the source repository
+ * Returns a Map (package name to absolute file path) of packages inside the source repository
  */
 export function getPackageNamesToFilePath() {
   return packageNameToFilePath
 }
 
 /**
- * Returns a map (package name to absolute file path) of packages inside the destination repository
+ * Returns a Set of absolute paths to packages inside destination that use source packages.
+ * Will be later used to only modify the package.json files that are actually using the source packages.
  */
 export function getAbsolutePathsForDestinationPackages() {
   return absolutePathsForDestinationPackages
