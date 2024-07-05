@@ -1,7 +1,7 @@
 import type { Application } from '../models/application'
 import { presets } from '../presets'
 
-describe.sequential('mode: sequential', () => {
+describe.sequential('kitchen sink (single package)', () => {
   let app: Application
 
   beforeAll(async () => {
@@ -29,8 +29,8 @@ describe.sequential('mode: sequential', () => {
   it('verbose should be enabled through --verbose flag', () => {
     const [exitCode, logs] = app.cli(['--verbose', '--scan-once'])
 
-    logs.should.contain('[debug] Found 1 packages in source.')
-    logs.should.contain('[debug] Found 1 destination packages.')
+    logs.should.contain('[debug] Found 1 package in source.')
+    logs.should.contain('[debug] Found 1 package in destination.')
 
     expect(exitCode).toBe(0)
   })
@@ -38,8 +38,8 @@ describe.sequential('mode: sequential', () => {
   it('verbose should be enabled through VERBOSE env var', () => {
     const [exitCode, logs] = app.cli(['--scan-once'], { verbose: true })
 
-    logs.should.contain('[debug] Found 1 packages in source.')
-    logs.should.contain('[debug] Found 1 destination packages.')
+    logs.should.contain('[debug] Found 1 package in source.')
+    logs.should.contain('[debug] Found 1 package in destination.')
 
     expect(exitCode).toBe(0)
   })
