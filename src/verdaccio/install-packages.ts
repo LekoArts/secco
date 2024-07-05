@@ -2,6 +2,7 @@ import process from 'node:process'
 import fs from 'fs-extra'
 import { destr } from 'destr'
 import { join } from 'pathe'
+import { execa } from 'execa'
 import { logger } from '../utils/logger'
 import type { PromisifiedSpawnArgs } from '../utils/promisified-spawn'
 import { promisifiedSpawn } from '../utils/promisified-spawn'
@@ -28,12 +29,12 @@ export async function installPackages({ newlyPublishedPackageVersions, packagesT
   let env: NodeJS.ProcessEnv = {}
 
   // Yarn Berry
-  if (name === 'yarn' && (majorVersion === '3' || majorVersion === '4'))
+  if (name === 'yarn' && (majorVersion === '3' || majorVersion === '4')) {
     externalRegistry = true
-    // TODO(feature): Handle externalRegistry case by detecting yarn 2/3 and modify yarn config
-    // We need to set programatically:
-    // yarn config set npmRegistryServer http://localhost:4873
-    // unsafeHttpWhitelist:\n - "localhost"
+
+    await execa`yarn config set npmRegistryServer ${REGISTRY_URL}`
+    await execa`yarn config set unsafeHttpWhitelist --json ["localhost"]`
+  }
 
   if (name === 'bun') {
     externalRegistry = true
