@@ -37,7 +37,7 @@ If you have control over the destination, manually add the "packageManager" key 
     externalRegistry = true
 
     await execa`yarn config set npmRegistryServer ${REGISTRY_URL}`
-    await execa`yarn config set unsafeHttpWhitelist --json '["localhost"]'`
+    await execa`yarn config set unsafeHttpWhitelist --json ["localhost"]`
   }
 
   if (name === 'bun') {
