@@ -1,9 +1,14 @@
 import process from 'node:process'
+import fs from 'fs-extra'
+import { destr } from 'destr'
+import { join } from 'pathe'
 import { logger } from '../utils/logger'
 import type { PromisifiedSpawnArgs } from '../utils/promisified-spawn'
 import { promisifiedSpawn } from '../utils/promisified-spawn'
-import type { Destination } from '../types'
-import { getAddDependenciesCmd } from './add-dependencies'
+import type { Destination, PackageJson } from '../types'
+import { getAbsolutePathsForDestinationPackages } from '../utils/initial-setup'
+import { setNpmTagInDeps } from '../utils/set-npm-tag-in-deps'
+import { getAddDependenciesCmd, getInstallCmd } from './add-dependencies'
 import { REGISTRY_URL } from './verdaccio-config'
 
 interface InstallPackagesArgs {
@@ -13,7 +18,7 @@ interface InstallPackagesArgs {
 }
 
 export async function installPackages({ newlyPublishedPackageVersions, packagesToInstall, destination }: InstallPackagesArgs) {
-  const { pm } = destination
+  const { pm, hasWorkspaces } = destination
   const { name, majorVersion } = pm
 
   const listOfPackagesToInstall = packagesToInstall.map(p => ` - ${p}`).join('\n')
@@ -22,8 +27,8 @@ export async function installPackages({ newlyPublishedPackageVersions, packagesT
   let externalRegistry = false
   let env: NodeJS.ProcessEnv = {}
 
-  // The combination of name and majorVersion allows us to detect yarn 3
-  if (name === 'yarn' && majorVersion === '3')
+  // Yarn Berry
+  if (name === 'yarn' && (majorVersion === '3' || majorVersion === '4'))
     externalRegistry = true
     // TODO(feature): Handle externalRegistry case by detecting yarn 2/3 and modify yarn config
     // We need to set programatically:
@@ -37,8 +42,22 @@ export async function installPackages({ newlyPublishedPackageVersions, packagesT
 
   let installCmd!: PromisifiedSpawnArgs
 
-  if (false) {
-    // TODO(feature): Support workspace in destination repository
+  if (hasWorkspaces) {
+    const absolutePaths = getAbsolutePathsForDestinationPackages()
+
+    absolutePaths.forEach((absPath) => {
+      const pkgJsonPath = join(absPath, 'package.json')
+      const packageJson = destr<PackageJson>(fs.readFileSync(pkgJsonPath, 'utf8'))
+      const { changed, updatedPkgJson } = setNpmTagInDeps({ packageJson, packagesToInstall, newlyPublishedPackageVersions })
+
+      if (changed) {
+        logger.debug(`Adjusting dependencies in ${pkgJsonPath} to use newly published versions.`)
+
+        fs.outputJSONSync(pkgJsonPath, updatedPkgJson, { spaces: 2 })
+      }
+    })
+
+    installCmd = getInstallCmd({ pm, externalRegistry, env })
   }
   else {
     const packages = packagesToInstall.map((p) => {
