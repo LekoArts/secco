@@ -78,7 +78,17 @@ export function getAbsolutePathsForDestinationPackages() {
 export function getPackages(sourcePath: Source['path'], workspaces: ReturnType<typeof findWorkspacesInSource>['workspaces']) {
   // If workspaces is an empty Array or null, it means it's not a monorepo
   if (!workspaces) {
-    const pkgJsonPath = fs.readFileSync(join(sourcePath, 'package.json'), 'utf-8')
+    let pkgJsonPath = ''
+
+    try {
+      pkgJsonPath = fs.readFileSync(join(sourcePath, 'package.json'), 'utf-8')
+    }
+    catch (e) {
+      logger.fatal(`Couldn't find package.json in ${sourcePath}. Make sure that the source.path inside \`${CONFIG_FILE_NAME}\` is correct.`)
+
+      process.exit()
+    }
+
     const pkgJson = destr<PackageJson>(pkgJsonPath)
 
     if (pkgJson?.name) {
