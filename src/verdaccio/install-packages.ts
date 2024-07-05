@@ -1,4 +1,5 @@
 import process from 'node:process'
+import { execa } from 'execa'
 import { detectPackageManager } from 'nypm'
 import { logger } from '../utils/logger'
 import type { PromisifiedSpawnArgs } from '../utils/promisified-spawn'
@@ -31,13 +32,13 @@ If you have control over the destination, manually add the "packageManager" key 
   let externalRegistry = false
   let env: NodeJS.ProcessEnv = {}
 
-  // The combination of name and majorVersion allows us to detect yarn 3
-  if (name === 'yarn' && majorVersion === '3')
+  // Yarn Berry
+  if (name === 'yarn' && (majorVersion === '3' || majorVersion === '4')) {
     externalRegistry = true
-    // TODO(feature): Handle externalRegistry case by detecting yarn 2/3 and modify yarn config
-    // We need to set programatically:
-    // yarn config set npmRegistryServer http://localhost:4873
-    // unsafeHttpWhitelist:\n - "localhost"
+
+    await execa`yarn config set npmRegistryServer ${REGISTRY_URL}`
+    await execa`yarn config set unsafeHttpWhitelist --json '["localhost"]'`
+  }
 
   if (name === 'bun') {
     externalRegistry = true
