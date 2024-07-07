@@ -22,6 +22,12 @@ const kitchenSink = applicationConfig()
   .setTemplate(fixtures['kitchen-sink'])
   .setPackageManager(constants.INTEGRATION_PM_NAME, constants.INTEGRATION_PM_VERSION)
 
+const kitchenSinkWorkspaces = applicationConfig()
+  .setName('kitchen-sink-workspaces')
+  .setTemplate(fixtures['kitchen-sink-workspaces'])
+  .setPackageManager(constants.INTEGRATION_PM_NAME, constants.INTEGRATION_PM_VERSION)
+
 export const presets = {
   kitchenSink,
+  kitchenSinkWorkspaces,
 } as const

@@ -1,0 +1,7 @@
+{
+  "name": "kitchen-sink-workspaces-destination",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ]
+}
