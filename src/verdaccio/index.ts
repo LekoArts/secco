@@ -15,6 +15,7 @@ async function startVerdaccio() {
   let resolved = false
 
   logger.log('[Verdaccio] Starting server...')
+  logger.debug(`[Verdaccio] Port: ${VERDACCIO_CONFIG.port}`)
 
   // Clear Verdaccio storage
   fs.removeSync(VERDACCIO_CONFIG.storage as string)
