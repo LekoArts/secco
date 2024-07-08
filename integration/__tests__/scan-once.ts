@@ -8,8 +8,6 @@ async function renamePnpmWorkspaceFixture(app: Application) {
   const tmpWorkspaceYaml = join(app.dir, 'destination', 'pnpm-workspace.yaml')
 
   await fs.rename(fixture, tmpWorkspaceYaml)
-
-  return () => fs.rename(tmpWorkspaceYaml, fixture)
 }
 
 describe.sequential('scan-once', () => {
@@ -55,13 +53,12 @@ describe.sequential('scan-once', () => {
 
   describe.sequential('workspaces', () => {
     let app: Application
-    let restorePnpmFixture: () => Promise<void>
 
     beforeAll(async () => {
       app = await presets.kitchenSinkWorkspaces.commit()
 
       if (process.env.INTEGRATION_PM_NAME === 'pnpm') {
-        restorePnpmFixture = await renamePnpmWorkspaceFixture(app)
+        await renamePnpmWorkspaceFixture(app)
       }
 
       process.env.VERDACCIO_PORT = '4874'
@@ -69,10 +66,6 @@ describe.sequential('scan-once', () => {
 
     afterAll(async () => {
       await app.cleanup()
-
-      if (process.env.INTEGRATION_PM_NAME === 'pnpm') {
-        await restorePnpmFixture()
-      }
     })
 
     it('should work (with Verdaccio by default)', () => {
