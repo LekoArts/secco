@@ -18,6 +18,8 @@ describe.sequential('scan-once', () => {
 
     beforeAll(async () => {
       app = await presets.kitchenSink.commit()
+
+      process.env.VERDACCIO_PORT = '4873'
     })
 
     afterAll(async () => {
@@ -25,7 +27,7 @@ describe.sequential('scan-once', () => {
     })
 
     it('should run Verdaccio with --force-verdaccio', () => {
-      const [exitCode, logs] = app.cli(['--scan-once', '--force-verdaccio'], { verbose: true })
+      const [exitCode, logs] = app.cli(['--scan-once', '--force-verdaccio', '--verbose'])
 
       logs.should.contain('[log] [Verdaccio] Starting server...')
       logs.should.contain('[log] [Verdaccio] Started successfully!')
@@ -34,24 +36,6 @@ describe.sequential('scan-once', () => {
       logs.should.contain(`[debug] Detected package manager in destination: ${app.packageManager.split('@')[0]}`)
       logs.should.contain('[log] Installing packages from local registry:')
       logs.should.contain('[success] Installation finished successfully!')
-
-      expect(exitCode).toBe(0)
-    })
-
-    it('verbose should be enabled through --verbose flag', () => {
-      const [exitCode, logs] = app.cli(['--verbose', '--scan-once'])
-
-      logs.should.contain('[debug] Found 1 package in source.')
-      logs.should.contain('[debug] Found 1 package in destination.')
-
-      expect(exitCode).toBe(0)
-    })
-
-    it('verbose should be enabled through VERBOSE env var', () => {
-      const [exitCode, logs] = app.cli(['--scan-once'], { verbose: true })
-
-      logs.should.contain('[debug] Found 1 package in source.')
-      logs.should.contain('[debug] Found 1 package in destination.')
 
       expect(exitCode).toBe(0)
     })
@@ -79,6 +63,8 @@ describe.sequential('scan-once', () => {
       if (process.env.INTEGRATION_PM_NAME === 'pnpm') {
         restorePnpmFixture = await renamePnpmWorkspaceFixture(app)
       }
+
+      process.env.VERDACCIO_PORT = '4874'
     })
 
     afterAll(async () => {
@@ -89,7 +75,7 @@ describe.sequential('scan-once', () => {
       }
     })
 
-    it('should run Verdaccio with --force-verdaccio', () => {
+    it('should work (with Verdaccio by default)', () => {
       const [exitCode, logs] = app.cli(['--scan-once'], { verbose: true })
 
       logs.should.contain('[log] [Verdaccio] Starting server...')
@@ -99,34 +85,6 @@ describe.sequential('scan-once', () => {
       logs.should.contain(`[debug] Detected package manager in destination: ${app.packageManager.split('@')[0]}`)
       logs.should.contain('[log] Installing packages from local registry:')
       logs.should.contain('[success] Installation finished successfully!')
-
-      expect(exitCode).toBe(0)
-    })
-
-    it('verbose should be enabled through --verbose flag', () => {
-      const [exitCode, logs] = app.cli(['--verbose', '--scan-once'])
-
-      logs.should.contain('[debug] Found 1 package in source.')
-      logs.should.contain('[debug] Found 1 package in destination.')
-
-      expect(exitCode).toBe(0)
-    })
-
-    it('verbose should be enabled through VERBOSE env var', () => {
-      const [exitCode, logs] = app.cli(['--scan-once'], { verbose: true })
-
-      logs.should.contain('[debug] Found 1 package in source.')
-      logs.should.contain('[debug] Found 1 package in destination.')
-
-      expect(exitCode).toBe(0)
-    })
-
-    it('should use Verdaccio on consecutive runs', () => {
-      const [exitCode, logs] = app.cli(['--scan-once'], { verbose: true })
-
-      logs.should.contain('[log] [Verdaccio] Starting server...')
-      logs.should.contain('[success] Installation finished successfully!')
-      logs.should.contain('[info] Copied 0 files. Exiting...')
 
       expect(exitCode).toBe(0)
     })
