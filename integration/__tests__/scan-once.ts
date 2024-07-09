@@ -41,6 +41,8 @@ describe.sequential('scan-once', () => {
     it('should copy files on consecutive runs', () => {
       const [exitCode, logs] = app.cli(['--scan-once'], { verbose: true })
 
+      logs.logOutput()
+
       logs.should.not.contain('[log] [Verdaccio] Starting server...')
       logs.should.not.contain('[success] Installation finished successfully!')
       logs.should.contain('[log] Copied `index.mjs` to `node_modules/say-hello-world/index.mjs`')
@@ -70,6 +72,8 @@ describe.sequential('scan-once', () => {
 
     it('should work (with Verdaccio by default)', () => {
       const [exitCode, logs] = app.cli(['--scan-once'], { verbose: true })
+
+      logs.logOutput()
 
       logs.should.contain('[log] [Verdaccio] Starting server...')
       logs.should.contain('[log] [Verdaccio] Started successfully!')

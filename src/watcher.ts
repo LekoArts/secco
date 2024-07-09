@@ -237,12 +237,16 @@ export async function watcher(source: Source, destination: Destination, packages
           ignoredPackageJson,
         })
 
+        console.log({ nodeModulesFilePath, packageName, sourcePackages, packageNamesToFilePath, isInitialScan, ignoredPackageJson })
+
         if (isInitialScan) {
         // checkDepsChanges can do async GET requests to unpkg.com. We need to make sure that we wait for those requests before attempting to install the dependencies.
           waitFor.add(didDependenciesChangePromise)
         }
 
         const { didDepsChange, pkgNotInstalled } = await didDependenciesChangePromise
+
+        console.log({ didDepsChange, pkgNotInstalled })
 
         if (pkgNotInstalled)
           anyPackageNotInstalled = true
