@@ -47,8 +47,9 @@ const parser = yargsInstace
 
 async function run() {
   const argv: CliArguments = await parser
+  const verbose = argv.verbose || isTruthy(process.env.VERBOSE)
 
-  if (argv.verbose || isTruthy(process.env.VERBOSE))
+  if (verbose)
     logger.level = 4
 
   const seccoConfig = getConfig()
@@ -116,7 +117,7 @@ If you only want to use \`${CLI_NAME}\` you'll need to add the dependencies to y
     pm: pmDestination,
   }
 
-  watcher(source, destination, argv.packageNames, { scanOnce: argv.scanOnce, forceVerdaccio: argv.forceVerdaccio, verbose: argv.verbose })
+  watcher(source, destination, argv.packageNames, { scanOnce: argv.scanOnce, forceVerdaccio: argv.forceVerdaccio, verbose })
 }
 
 run()
