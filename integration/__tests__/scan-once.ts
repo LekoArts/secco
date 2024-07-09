@@ -71,6 +71,8 @@ describe.sequential('scan-once', () => {
     it('should work (with Verdaccio by default)', () => {
       const [exitCode, logs] = app.cli(['--scan-once'], { verbose: true })
 
+      logs.logOutput()
+
       logs.should.contain('[log] [Verdaccio] Starting server...')
       logs.should.contain('[log] [Verdaccio] Started successfully!')
       logs.should.contain('[log] Publishing `say-hello-world-workspaces@1.0.0-secco-')
