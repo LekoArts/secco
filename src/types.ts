@@ -1,3 +1,4 @@
+/* eslint-disable ts/no-namespace */
 import type { PackageManager } from 'nypm'
 import type { Config } from './utils/config'
 
@@ -39,4 +40,16 @@ export interface PackageJson {
   devDependencies?: Record<string, string>
   peerDependencies?: Record<string, string>
   workspaces?: Array<string> | { packages: Array<string> }
+}
+
+declare global {
+  namespace NodeJS {
+    interface ProcessEnv {
+      INTEGRATION_PM_NAME?: 'npm' | 'pnpm' | 'yarn' | 'bun'
+      INTEGRATION_PM_VERSION?: string
+      VERDACCIO_PORT?: string
+      CI?: string
+      GITHUB_ACTIONS?: string
+    }
+  }
 }

@@ -1,17 +1,9 @@
 /* eslint-disable node/prefer-global/process */
-/* eslint-disable ts/no-namespace */
+
 import os from 'node:os'
 import { join } from 'pathe'
 import type { Config as VerdaccioConfig } from '@verdaccio/types'
 import { CLI_NAME } from '../constants'
-
-declare global {
-  namespace NodeJS {
-    interface ProcessEnv {
-      VERDACCIO_PORT?: string
-    }
-  }
-}
 
 const PORT = Number.parseInt(process.env.VERDACCIO_PORT || '') || 4873 // Default
 
