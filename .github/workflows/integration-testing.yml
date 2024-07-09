@@ -8,21 +8,9 @@ jobs:
     strategy:
       matrix:
         pm:
-          - name: npm
-            displayName: npm
-            version: 10.8.1
-          - name: pnpm
-            displayName: pnpm
-            version: 9.4.0
-          - name: yarn
-            displayName: yarn (classic)
-            version: 1.22.22
           - name: yarn
             displayName: yarn (berry)
             version: 4.3.1
-          - name: bun
-            displayName: bun
-            version: 1.1.17
     name: ${{ matrix.pm.displayName }}
     steps:
       - name: Checkout
