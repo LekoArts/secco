@@ -34,7 +34,10 @@ export async function installPackages({ newlyPublishedPackageVersions, packagesT
 
     await execa`yarn config set npmRegistryServer ${REGISTRY_URL}`
     await execa`yarn config set unsafeHttpWhitelist --json ["localhost"]`
+    // secco tries to look at node_modules paths, so Yarn plug'n'play is not suitable
     await execa`yarn config set nodeLinker node-modules`
+    // In pull requests the hardened mode would be enabled, breaking the installation
+    await execa`yarn config set enableHardenedMode false`
   }
 
   if (name === 'bun') {
