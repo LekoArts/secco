@@ -2,4 +2,4 @@
 "secco": patch
 ---
 
-Correctly set internal "verbose" value when VERBOSE env var is set
+Correctly display additional information e.g. during `npm install` when `VERBOSE` env var is set
