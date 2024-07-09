@@ -30,13 +30,13 @@ const exactMap: Record<PackageManagerName, '--save-exact' | '--exact'> = {
 }
 
 export function getAddDependenciesCmd({ packages, pm, externalRegistry = false, env = {} }: GetAddDependenciesCmdArgs) {
-  const commands: PromisifiedSpawnArgs = [pm.command, [installMap[pm.name], ...packages, exactMap[pm.name], '--verbose', !externalRegistry ? `--registry=${REGISTRY_URL}` : null].filter(Boolean), { env }]
+  const commands: PromisifiedSpawnArgs = [pm.command, [installMap[pm.name], ...packages, exactMap[pm.name], !externalRegistry ? `--registry=${REGISTRY_URL}` : null].filter(Boolean), { env }]
 
   return commands
 }
 
 export function getInstallCmd({ pm, externalRegistry = false, env = {} }: GetInstallCmdArgs) {
-  const commands: PromisifiedSpawnArgs = [pm.command, ['install', !externalRegistry ? `--registry=${REGISTRY_URL}` : null, '--verbose'].filter(Boolean), { env }]
+  const commands: PromisifiedSpawnArgs = [pm.command, ['install', !externalRegistry ? `--registry=${REGISTRY_URL}` : null].filter(Boolean), { env }]
 
   return commands
 }
