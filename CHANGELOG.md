@@ -1,5 +1,21 @@
 # secco
 
+## 2.2.0
+
+### Minor Changes
+
+- [#99](https://github.com/LekoArts/secco/pull/99) [`1593131`](https://github.com/LekoArts/secco/commit/159313193103ba27f8c5fed5915e0a88552e617e) Thanks [@LekoArts](https://github.com/LekoArts)! - Support Yarn Berry (currently v3 & v4) by modyfing the `.yarnrc.yml` file inside the destination before trying to install packages from the local Verdaccio registry
+
+- [#101](https://github.com/LekoArts/secco/pull/101) [`d4d8ef9`](https://github.com/LekoArts/secco/commit/d4d8ef98085e74d0869af0a17b43f13989b0848e) Thanks [@LekoArts](https://github.com/LekoArts)! - Add `SECCO_VERDACCIO_PORT` environment variable. You can use this to change the default port (`4873`) when secco uses Verdaccio.
+
+- [#101](https://github.com/LekoArts/secco/pull/101) [`d4d8ef9`](https://github.com/LekoArts/secco/commit/d4d8ef98085e74d0869af0a17b43f13989b0848e) Thanks [@LekoArts](https://github.com/LekoArts)! - You can now use secco inside destinations that are set up with [workspaces](https://docs.npmjs.com/cli/v10/using-npm/workspaces). It should work for all supported package managers (npm, yarn, pnpm, bun).
+
+  Please note: secco will automatically use the `--force-verdaccio` flag when inside a workspaces project.
+
+### Patch Changes
+
+- [#101](https://github.com/LekoArts/secco/pull/101) [`d4d8ef9`](https://github.com/LekoArts/secco/commit/d4d8ef98085e74d0869af0a17b43f13989b0848e) Thanks [@LekoArts](https://github.com/LekoArts)! - Correctly display additional information e.g. during `npm install` when `VERBOSE` env var is set
+
 ## 2.1.0
 
 ### Minor Changes
