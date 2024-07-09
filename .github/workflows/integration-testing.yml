@@ -41,3 +41,10 @@ jobs:
         env:
           INTEGRATION_PM_NAME: ${{ matrix.pm.name }}
           INTEGRATION_PM_VERSION: ${{ matrix.pm.version }}
+      - name: Upload isolated dirs
+        if: ${{ cancelled() || failure() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: isolated-dirs-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.pm.name }}
+          path: /tmp/secco-**/**/*
+          retention-days: 1

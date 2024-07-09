@@ -1,13 +1,10 @@
-/* eslint-disable node/prefer-global/process */
 import { cp, mkdtemp, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import fs from 'fs-extra'
 import { basename, join } from 'pathe'
-import { execaSync } from 'execa'
 import { CONFIG_FILE_NAME } from '../../src/constants'
 import { createLogger } from '../helpers/logger'
 import { packageManager as rootPackageManager } from '../../package.json'
-import { isTruthy } from '../../src/utils/is-truthy'
 import { application } from './application'
 
 export type ApplicationConfig = ReturnType<typeof applicationConfig>
@@ -52,12 +49,6 @@ export function applicationConfig() {
       logger.log(`Creating application "${name}"`)
 
       const isolatedDir = await mkdtemp(join(tmpdir(), `secco-${name}-`))
-
-      if (isTruthy(process.env.CI) && isTruthy(process.env.GITHUB_ACTIONS)) {
-        // Make isolatedDir available to other GitHub Actions steps
-        logger.log('Setting INTEGRATION_ISOLATED_DIR environment variable')
-        execaSync(`echo "INTEGRATION_ISOLATED_DIR=${isolatedDir}" >> $GITHUB_ENV`)
-      }
 
       logger.log(`Copying template "${basename(template)}" to "${isolatedDir}"`)
       await cp(template, isolatedDir, { recursive: true })
