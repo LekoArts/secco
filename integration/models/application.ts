@@ -29,7 +29,7 @@ export function application(config: ApplicationConfig, isolatedDir: string) {
     cleanup: async () => {
       logger.log(`Cleaning up...`)
 
-      // await rm(isolatedDir, { recursive: true, force: true })
+      await rm(isolatedDir, { recursive: true, force: true })
     },
   }
 
