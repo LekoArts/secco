@@ -31,6 +31,15 @@ export function findWorkspacesInSource(sourcePath: Source['path']) {
   }
 }
 
+export function findWorkspacesInDestination(destinationPath: string) {
+  const workspaces = findWorkspaces(destinationPath)
+
+  return {
+    hasWorkspaces: Boolean(workspaces),
+    workspaces,
+  }
+}
+
 export function hasConfigFile() {
   const configPath = join(currentDir, CONFIG_FILE_NAME)
   return fs.existsSync(configPath)
@@ -41,12 +50,21 @@ export function isPrivate(pkgJson: PackageJson) {
 }
 
 const packageNameToFilePath = new Map<string, string>()
+const absolutePathsForDestinationPackages = new Set<string>()
 
 /**
- * Returns a map (package name to absolute file path) of packages inside the source repository
+ * Returns a Map (package name to absolute file path) of packages inside the source repository
  */
 export function getPackageNamesToFilePath() {
   return packageNameToFilePath
+}
+
+/**
+ * Returns a Set of absolute paths to packages inside destination that use source packages.
+ * Will be later used to only modify the package.json files that are actually using the source packages.
+ */
+export function getAbsolutePathsForDestinationPackages() {
+  return absolutePathsForDestinationPackages
 }
 
 /**
@@ -61,7 +79,17 @@ export function getPackageNamesToFilePath() {
 export function getPackages(sourcePath: Source['path'], workspaces: ReturnType<typeof findWorkspacesInSource>['workspaces']) {
   // If workspaces is an empty Array or null, it means it's not a monorepo
   if (!workspaces) {
-    const pkgJsonPath = fs.readFileSync(join(sourcePath, 'package.json'), 'utf-8')
+    let pkgJsonPath = ''
+
+    try {
+      pkgJsonPath = fs.readFileSync(join(sourcePath, 'package.json'), 'utf-8')
+    }
+    catch (e) {
+      logger.fatal(`Couldn't find package.json in ${sourcePath}. Make sure that the source.path inside \`${CONFIG_FILE_NAME}\` is correct.`)
+
+      process.exit()
+    }
+
     const pkgJson = destr<PackageJson>(pkgJsonPath)
 
     if (pkgJson?.name) {
@@ -98,17 +126,43 @@ export function getPackages(sourcePath: Source['path'], workspaces: ReturnType<t
   return []
 }
 
-export function getDestinationPackages(sourcePackages: SourcePackages) {
-  const destPkgJson = destr<{ dependencies?: Record<string, string>, devDependencies?: Record<string, string> }>(fs.readFileSync(join(currentDir, 'package.json'), 'utf-8'))
+export function getDestinationPackages(sourcePackages: SourcePackages, workspaces: ReturnType<typeof findWorkspacesInSource>['workspaces']) {
+  if (!workspaces) {
+    const destPkgJson = destr<{ dependencies?: Record<string, string>, devDependencies?: Record<string, string>, name: string }>(fs.readFileSync(join(currentDir, 'package.json'), 'utf-8'))
 
-  if (!destPkgJson)
-    return []
+    if (!destPkgJson)
+      return []
 
-  // Intersect sourcePackages with destination dependencies to get list of packages that are used
-  const destinationPackages = intersection(
-    sourcePackages,
-    Object.keys(merge({}, destPkgJson.dependencies, destPkgJson.devDependencies)),
-  )
+    // Intersect sourcePackages with destination dependencies to get list of packages that are used
+    const deps = intersection(
+      sourcePackages,
+      Object.keys(merge({}, destPkgJson.dependencies, destPkgJson.devDependencies)),
+    )
 
-  return destinationPackages
+    if (deps.length > 0) {
+      absolutePathsForDestinationPackages.add(currentDir)
+    }
+
+    return deps
+  }
+
+  if (workspaces.length > 0) {
+    return workspaces.map((workspace) => {
+      const absolutePath = workspace.location
+      const pkgJson = workspace.package
+
+      const deps = intersection(
+        sourcePackages,
+        Object.keys(merge({}, pkgJson.dependencies, pkgJson.devDependencies)),
+      )
+
+      if (deps.length > 0) {
+        absolutePathsForDestinationPackages.add(absolutePath)
+      }
+
+      return deps
+    }).flat()
+  }
+
+  return []
 }

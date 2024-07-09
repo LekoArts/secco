@@ -16,7 +16,7 @@ secco solves these problems and streamlines the process of local package testing
 - **Link Multiple Projects.** secco reads the `.seccorc` file to make the connection between destination and source. This allows you to use `secco` with as many source folders as you wish.
 - **npm, yarn, pnpm, and bun support.** You can use any of these package managers in your source and destination projects.
 - **Watch and CI mode.** By default, secco starts a watch task. But you can also only run it once, enabling CI End-To-End testing use cases.
-- **Workspaces (in source).** Your source folder can be a monorepo using workspaces.
+- **Workspaces.** Your source & destination folders can be a monorepo using workspaces.
 
 <a href="https://www.lekoarts.de?utm_source=secco">
   <img alt="lekoarts.de" src="https://img.shields.io/badge/-website-blue">

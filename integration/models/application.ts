@@ -3,6 +3,7 @@ import { join } from 'pathe'
 import type { InvokeResult } from '../helpers/invoke-cli'
 import { SeccoCLI } from '../helpers/invoke-cli'
 import { createLogger } from '../helpers/logger'
+import { isTruthy } from '../../src/utils/is-truthy'
 import type { ApplicationConfig } from './application-config'
 
 export type Application = ReturnType<typeof application>
@@ -27,6 +28,11 @@ export function application(config: ApplicationConfig, isolatedDir: string) {
       }).invoke(args)
     },
     cleanup: async () => {
+      if (isTruthy(process.env.CI)) {
+        logger.log(`Skipping cleanup in CI environment`)
+        return
+      }
+
       logger.log(`Cleaning up...`)
 
       await rm(isolatedDir, { recursive: true, force: true })

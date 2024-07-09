@@ -48,7 +48,8 @@ export function applicationConfig() {
     commit: async () => {
       logger.log(`Creating application "${name}"`)
 
-      const isolatedDir = await mkdtemp(join(tmpdir(), `secco-${name}-`))
+      const tempDir = process.env.RUNNER_TEMP || tmpdir()
+      const isolatedDir = await mkdtemp(join(tempDir, `secco-${name}-`))
 
       logger.log(`Copying template "${basename(template)}" to "${isolatedDir}"`)
       await cp(template, isolatedDir, { recursive: true })

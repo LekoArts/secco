@@ -3,55 +3,97 @@ import fs from 'fs-extra'
 import type { Mock } from 'vitest'
 import { vi } from 'vitest'
 import { logger } from '../logger'
-import { checkDirHasPackageJson, getDestinationPackages, getPackageNamesToFilePath, getPackages, isPrivate } from '../initial-setup'
+import { checkDirHasPackageJson, getAbsolutePathsForDestinationPackages, getDestinationPackages, getPackageNamesToFilePath, getPackages, isPrivate } from '../initial-setup'
 
 describe('getDestinationPackages', () => {
-  it('returns an empty array if destination package.json is missing', () => {
-    vi.spyOn(fs, 'readFileSync').mockReturnValueOnce(undefined as any)
+  describe('single package', () => {
+    it('returns an empty array if destination package.json is missing', () => {
+      vi.spyOn(fs, 'readFileSync').mockReturnValueOnce(undefined as any)
 
-    const result = getDestinationPackages(['package1', 'package2'])
+      const result = getDestinationPackages(['package1', 'package2'], null)
 
-    expect(result).toEqual([])
+      expect(result).toEqual([])
+    })
+
+    it('returns an empty array if sourcePackages is empty', () => {
+      vi.spyOn(fs, 'readFileSync').mockReturnValueOnce('{}')
+
+      const result = getDestinationPackages([], null)
+
+      expect(result).toEqual([])
+    })
+
+    it('returns an empty array if there are no matching dependencies', () => {
+      vi.spyOn(fs, 'readFileSync').mockReturnValueOnce('{"dependencies": {"package3": "^1.0.0"}}')
+
+      const result = getDestinationPackages(['package1', 'package2'], null)
+
+      expect(result).toEqual([])
+    })
+
+    it('returns an array of matching dependencies', () => {
+      vi.spyOn(fs, 'readFileSync').mockReturnValueOnce('{"dependencies": {"package1": "^1.0.0", "package3": "^1.0.0"}}')
+
+      const result = getDestinationPackages(['package1', 'package2'], null)
+
+      expect(result).toEqual(['package1'])
+    })
+
+    it('returns an array of matching devDependencies', () => {
+      vi.spyOn(fs, 'readFileSync').mockReturnValueOnce('{"devDependencies": {"package2": "^1.0.0", "package3": "^1.0.0"}}')
+
+      const result = getDestinationPackages(['package1', 'package2'], null)
+
+      expect(result).toEqual(['package2'])
+    })
+
+    it('returns an array of matching dependencies and devDependencies', () => {
+      vi.spyOn(fs, 'readFileSync').mockReturnValueOnce('{"dependencies": {"package1": "^1.0.0", "package3": "^1.0.0"}, "devDependencies": {"package2": "^1.0.0"}}')
+
+      const result = getDestinationPackages(['package1', 'package2'], null)
+
+      expect(result).toEqual(['package1', 'package2'])
+    })
+
+    it('sets the pkg name + path in destinationPackageNameToFilePath Map if intersection', () => {
+      vi.spyOn(fs, 'readFileSync').mockReturnValueOnce('{"name": "package2", "dependencies": {"package1": "^1.0.0"}}')
+
+      getDestinationPackages(['package1'], null)
+
+      expect(getAbsolutePathsForDestinationPackages().has(process.cwd())).toBe(true)
+    })
   })
+  describe('workspaces', () => {
+    it('returns an empty array if no workspaces are found', () => {
+      const result = getDestinationPackages(['package1', 'package2'], [])
 
-  it('returns an empty array if sourcePackages is empty', () => {
-    vi.spyOn(fs, 'readFileSync').mockReturnValueOnce('{}')
+      expect(result).toEqual([])
+    })
 
-    const result = getDestinationPackages([])
+    it('returns an empty array if there are no matching dependencies', () => {
+      const result = getDestinationPackages(['package1', 'package2'], [{ location: 'location-package3', package: { name: 'package3', dependencies: { package4: '^1.0.0' } } }])
 
-    expect(result).toEqual([])
-  })
+      expect(result).toEqual([])
+    })
 
-  it('returns an empty array if there are no matching dependencies', () => {
-    vi.spyOn(fs, 'readFileSync').mockReturnValueOnce('{"dependencies": {"package3": "^1.0.0"}}')
+    it('returns an array of matching dependencies', () => {
+      const result = getDestinationPackages(['package1', 'package2'], [{ location: 'location-package3', package: { name: 'package3', dependencies: { package1: '^1.0.0' } } }, { location: 'location-package4', package: { name: 'package4', dependencies: { package2: '^1.0.0' } } }])
 
-    const result = getDestinationPackages(['package1', 'package2'])
+      expect(result).toEqual(['package1', 'package2'])
+    })
 
-    expect(result).toEqual([])
-  })
+    it('returns an array of matching devDependencies', () => {
+      const result = getDestinationPackages(['package1', 'package2'], [{ location: 'location-package3', package: { name: 'package3', devDependencies: { package1: '^1.0.0' } } }, { location: 'location-package4', package: { name: 'package4', devDependencies: { package2: '^1.0.0' } } }])
 
-  it('returns an array of matching dependencies', () => {
-    vi.spyOn(fs, 'readFileSync').mockReturnValueOnce('{"dependencies": {"package1": "^1.0.0", "package3": "^1.0.0"}}')
+      expect(result).toEqual(['package1', 'package2'])
+    })
 
-    const result = getDestinationPackages(['package1', 'package2'])
+    it('sets the pkg name + path in destinationPackageNameToFilePath Map if intersection', () => {
+      getDestinationPackages(['package1', 'package2'], [{ location: 'location-package3', package: { name: 'package3', dependencies: { package1: '^1.0.0' } } }, { location: 'location-package4', package: { name: 'package4', devDependencies: { package2: '^1.0.0' } } }])
 
-    expect(result).toEqual(['package1'])
-  })
-
-  it('returns an array of matching devDependencies', () => {
-    vi.spyOn(fs, 'readFileSync').mockReturnValueOnce('{"devDependencies": {"package2": "^1.0.0", "package3": "^1.0.0"}}')
-
-    const result = getDestinationPackages(['package1', 'package2'])
-
-    expect(result).toEqual(['package2'])
-  })
-
-  it('returns an array of matching dependencies and devDependencies', () => {
-    vi.spyOn(fs, 'readFileSync').mockReturnValueOnce('{"dependencies": {"package1": "^1.0.0", "package3": "^1.0.0"}, "devDependencies": {"package2": "^1.0.0"}}')
-
-    const result = getDestinationPackages(['package1', 'package2'])
-
-    expect(result).toEqual(['package1', 'package2'])
+      expect(getAbsolutePathsForDestinationPackages().has('location-package3')).toBe(true)
+      expect(getAbsolutePathsForDestinationPackages().has('location-package4')).toBe(true)
+    })
   })
 })
 

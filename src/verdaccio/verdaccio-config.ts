@@ -3,10 +3,12 @@ import { join } from 'pathe'
 import type { Config as VerdaccioConfig } from '@verdaccio/types'
 import { CLI_NAME } from '../constants'
 
+const PORT = Number.parseInt(process.env.SECCO_VERDACCIO_PORT || '') || 4873 // Default
+
 // @ts-expect-error: Verdaccio's types are wrong
 export const VERDACCIO_CONFIG: VerdaccioConfig = {
   storage: join(os.tmpdir(), 'verdaccio', 'storage'),
-  port: 4873, // Default
+  port: PORT,
   max_body_size: '100mb',
   web: {
     enable: true,

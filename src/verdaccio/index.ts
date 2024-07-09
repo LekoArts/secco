@@ -4,7 +4,7 @@ import { customAlphabet } from 'nanoid/non-secure'
 import fs from 'fs-extra'
 import { intersection } from 'lodash-es'
 import { logger } from '../utils/logger'
-import type { DestinationPackages, PackageNamesToFilePath, Source } from '../types'
+import type { Destination, PackageNamesToFilePath, Source } from '../types'
 import { VERDACCIO_CONFIG } from './verdaccio-config'
 import { publishPackage } from './publish-package'
 import { installPackages } from './install-packages'
@@ -15,6 +15,7 @@ async function startVerdaccio() {
   let resolved = false
 
   logger.log('[Verdaccio] Starting server...')
+  logger.debug(`[Verdaccio] Port: ${VERDACCIO_CONFIG.port}`)
 
   // Clear Verdaccio storage
   fs.removeSync(VERDACCIO_CONFIG.storage as string)
@@ -43,13 +44,13 @@ async function startVerdaccio() {
 
 export interface PublishPackagesAndInstallArgs {
   packagesToPublish: Array<string>
-  destinationPackages: DestinationPackages
   packageNamesToFilePath: PackageNamesToFilePath
   ignorePackageJsonChanges: (packageName: string, contentArray: Array<string>) => () => void
   source: Source
+  destination: Destination
 }
 
-export async function publishPackagesAndInstall({ packageNamesToFilePath, destinationPackages, ignorePackageJsonChanges, packagesToPublish, source }: PublishPackagesAndInstallArgs) {
+export async function publishPackagesAndInstall({ packageNamesToFilePath, ignorePackageJsonChanges, packagesToPublish, source, destination }: PublishPackagesAndInstallArgs) {
   await startVerdaccio()
 
   const versionPostfix = `${Date.now()}-${nanoid()}`
@@ -66,10 +67,11 @@ export async function publishPackagesAndInstall({ packageNamesToFilePath, destin
     })
   }
 
-  const packagesToInstall = intersection(packagesToPublish, destinationPackages)
+  const packagesToInstall = intersection(packagesToPublish, destination.packages)
 
   await installPackages({
     packagesToInstall,
     newlyPublishedPackageVersions,
+    destination,
   })
 }

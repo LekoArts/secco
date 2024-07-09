@@ -1,8 +1,10 @@
+/* eslint-disable ts/no-namespace */
 import type { PackageManager } from 'nypm'
 import type { Config } from './utils/config'
 
 export type PackageNames = Array<string>
 export type PackageNamesToFilePath = Map<string, string>
+export type AbsolutePathsForDestinationPackages = Set<string>
 export type SourcePackages = Array<string>
 export type DestinationPackages = Array<string>
 export type DepTree = Record<string, Set<string>>
@@ -24,7 +26,10 @@ export type Source = Config['source'] & {
 }
 
 export interface Destination {
+  hasWorkspaces: boolean
   packages: DestinationPackages
+  absolutePathsForDestinationPackages: AbsolutePathsForDestinationPackages
+  pm: PackageManager
 }
 
 export interface PackageJson {
@@ -35,4 +40,17 @@ export interface PackageJson {
   devDependencies?: Record<string, string>
   peerDependencies?: Record<string, string>
   workspaces?: Array<string> | { packages: Array<string> }
+}
+
+declare global {
+  namespace NodeJS {
+    interface ProcessEnv {
+      INTEGRATION_PM_NAME?: 'npm' | 'pnpm' | 'yarn' | 'bun'
+      INTEGRATION_PM_VERSION?: string
+      SECCO_VERDACCIO_PORT?: string
+      CI?: string
+      GITHUB_ACTIONS?: string
+      RUNNER_TEMP?: string
+    }
+  }
 }

@@ -1,33 +1,29 @@
 import process from 'node:process'
+import fs from 'fs-extra'
+import { destr } from 'destr'
+import { join } from 'pathe'
 import { execa } from 'execa'
-import { detectPackageManager } from 'nypm'
 import { logger } from '../utils/logger'
 import type { PromisifiedSpawnArgs } from '../utils/promisified-spawn'
 import { promisifiedSpawn } from '../utils/promisified-spawn'
-import { getAddDependenciesCmd } from './add-dependencies'
+import type { Destination, PackageJson } from '../types'
+import { getAbsolutePathsForDestinationPackages } from '../utils/initial-setup'
+import { setNpmTagInDeps } from '../utils/set-npm-tag-in-deps'
+import { getAddDependenciesCmd, getInstallCmd } from './add-dependencies'
 import { REGISTRY_URL } from './verdaccio-config'
 
 interface InstallPackagesArgs {
   packagesToInstall: Array<string>
   newlyPublishedPackageVersions: Record<string, string>
+  destination: Destination
 }
 
-export async function installPackages({ newlyPublishedPackageVersions, packagesToInstall }: InstallPackagesArgs) {
-  const cwd = process.cwd()
-  const pm = await detectPackageManager(cwd, { includeParentDirs: false })
-  logger.debug(`Detected package manager in destination: ${pm?.name}`)
-
-  if (!pm) {
-    logger.fatal(`Failed to detect package manager in ${cwd}
-
-If you have control over the destination, manually add the "packageManager" key to its \`package.json\` file.`)
-    process.exit()
-  }
+export async function installPackages({ newlyPublishedPackageVersions, packagesToInstall, destination }: InstallPackagesArgs) {
+  const { pm, hasWorkspaces } = destination
+  const { name, majorVersion } = pm
 
   const listOfPackagesToInstall = packagesToInstall.map(p => ` - ${p}`).join('\n')
   logger.log(`Installing packages from local registry:\n${listOfPackagesToInstall}`)
-
-  const { name, majorVersion } = pm
 
   let externalRegistry = false
   let env: NodeJS.ProcessEnv = {}
@@ -38,6 +34,11 @@ If you have control over the destination, manually add the "packageManager" key 
 
     await execa`yarn config set npmRegistryServer ${REGISTRY_URL}`
     await execa`yarn config set unsafeHttpWhitelist --json ["localhost"]`
+    // secco tries to look at node_modules paths, so Yarn plug'n'play is not suitable
+    await execa`yarn config set nodeLinker node-modules`
+    // In pull requests these values would be enabled, breaking the installation
+    await execa`yarn config set enableHardenedMode false`
+    await execa`yarn config set enableImmutableInstalls false`
   }
 
   if (name === 'bun') {
@@ -47,8 +48,22 @@ If you have control over the destination, manually add the "packageManager" key 
 
   let installCmd!: PromisifiedSpawnArgs
 
-  if (false) {
-    // TODO(feature): Support workspace in destination repository
+  if (hasWorkspaces) {
+    const absolutePaths = getAbsolutePathsForDestinationPackages()
+
+    absolutePaths.forEach((absPath) => {
+      const pkgJsonPath = join(absPath, 'package.json')
+      const packageJson = destr<PackageJson>(fs.readFileSync(pkgJsonPath, 'utf8'))
+      const { changed, updatedPkgJson } = setNpmTagInDeps({ packageJson, packagesToInstall, newlyPublishedPackageVersions })
+
+      if (changed) {
+        logger.debug(`Adjusting dependencies in ${pkgJsonPath} to use newly published versions.`)
+
+        fs.outputJSONSync(pkgJsonPath, updatedPkgJson, { spaces: 2 })
+      }
+    })
+
+    installCmd = getInstallCmd({ pm, externalRegistry, env })
   }
   else {
     const packages = packagesToInstall.map((p) => {
