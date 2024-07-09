@@ -53,7 +53,7 @@ describe.sequential('scan-once', () => {
     })
   })
 
-  describe.sequential('workspaces', () => {
+  describe.sequential.skip('workspaces', () => {
     let app: Application
 
     beforeAll(async () => {

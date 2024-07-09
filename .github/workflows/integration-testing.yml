@@ -9,6 +9,9 @@ jobs:
       matrix:
         pm:
           - name: yarn
+            displayName: yarn (classic)
+            version: 1.22.22
+          - name: yarn
             displayName: yarn (berry)
             version: 4.3.1
     name: ${{ matrix.pm.displayName }}
