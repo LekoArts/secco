@@ -30,6 +30,7 @@ export default antfu(
         },
       ],
       'ts/array-type': ['error', { default: 'generic' }],
+      'node/prefer-global/process': 'off',
     },
   },
 )

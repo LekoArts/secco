@@ -1,4 +1,3 @@
-/* eslint-disable node/prefer-global/process */
 import { applicationConfig } from './models/application-config'
 import { fixtures } from './fixtures'
 

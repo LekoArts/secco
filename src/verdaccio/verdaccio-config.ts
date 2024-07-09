@@ -1,5 +1,3 @@
-/* eslint-disable node/prefer-global/process */
-
 import os from 'node:os'
 import { join } from 'pathe'
 import type { Config as VerdaccioConfig } from '@verdaccio/types'

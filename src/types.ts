@@ -50,6 +50,7 @@ declare global {
       VERDACCIO_PORT?: string
       CI?: string
       GITHUB_ACTIONS?: string
+      RUNNER_TEMP?: string
     }
   }
 }
