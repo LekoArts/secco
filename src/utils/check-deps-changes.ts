@@ -43,7 +43,8 @@ export async function checkDepsChanges(args: CheckDependencyChangesArgs) {
   try {
     // The package might already be installed (e.g. the "latest" version)
     // nodeModulesFilePath might not exist, but this is okay since we catch the resulting error
-    nodeModulePkgJson = destr<PackageJson>(fs.readFileSync(args.nodeModulesFilePath, 'utf8'))
+    const nodeModulePkgJsonString = await fs.readFile(args.nodeModulesFilePath, 'utf8')
+    nodeModulePkgJson = destr<PackageJson>(nodeModulePkgJsonString)
   }
   catch {
     pkgNotInstalled = true
