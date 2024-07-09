@@ -34,5 +34,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: temp-dir-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.pm.name }}
-          path: ${{ runner.temp }}
+          path: ${{ runner.temp }}/secco-**/**/*
           retention-days: 1
