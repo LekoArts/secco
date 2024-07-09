@@ -47,7 +47,7 @@ declare global {
     interface ProcessEnv {
       INTEGRATION_PM_NAME?: 'npm' | 'pnpm' | 'yarn' | 'bun'
       INTEGRATION_PM_VERSION?: string
-      VERDACCIO_PORT?: string
+      SECCO_VERDACCIO_PORT?: string
       CI?: string
       GITHUB_ACTIONS?: string
       RUNNER_TEMP?: string

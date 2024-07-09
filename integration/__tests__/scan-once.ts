@@ -17,7 +17,7 @@ describe.sequential('scan-once', () => {
     beforeAll(async () => {
       app = await presets.kitchenSink.commit()
 
-      process.env.VERDACCIO_PORT = '4873'
+      process.env.SECCO_VERDACCIO_PORT = '4873'
     })
 
     afterAll(async () => {
@@ -61,7 +61,7 @@ describe.sequential('scan-once', () => {
         await renamePnpmWorkspaceFixture(app)
       }
 
-      process.env.VERDACCIO_PORT = '4874'
+      process.env.SECCO_VERDACCIO_PORT = '4874'
     })
 
     afterAll(async () => {

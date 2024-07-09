@@ -3,7 +3,7 @@ import { join } from 'pathe'
 import type { Config as VerdaccioConfig } from '@verdaccio/types'
 import { CLI_NAME } from '../constants'
 
-const PORT = Number.parseInt(process.env.VERDACCIO_PORT || '') || 4873 // Default
+const PORT = Number.parseInt(process.env.SECCO_VERDACCIO_PORT || '') || 4873 // Default
 
 // @ts-expect-error: Verdaccio's types are wrong
 export const VERDACCIO_CONFIG: VerdaccioConfig = {
