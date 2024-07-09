@@ -1,5 +1,5 @@
 {
-  "name": "destination",
+  "name": "destination-workspaces",
   "version": "1.0.0",
   "private": true,
   "main": "bin.mjs",
