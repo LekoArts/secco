@@ -35,3 +35,10 @@ Equivalent to `source.path`.
 - **Default:** `false`
 
 Equivalent to the [`--verbose`](/reference/flags/#--verbose) flag.
+
+### `SECCO_VERDACCIO_PORT`
+
+- **Type:** `string`
+- **Default:** `4873`
+
+Configure the port that secco's internal Verdaccio instance uses.
