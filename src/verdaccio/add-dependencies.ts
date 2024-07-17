@@ -15,7 +15,7 @@ interface GetInstallCmdArgs {
   env?: NodeJS.ProcessEnv
 }
 
-const installMap: Record<PackageManagerName, 'install' | 'add'> = {
+const addMap: Record<PackageManagerName, 'install' | 'add'> = {
   npm: 'install',
   pnpm: 'add',
   yarn: 'add',
@@ -30,7 +30,7 @@ const exactMap: Record<PackageManagerName, '--save-exact' | '--exact'> = {
 }
 
 export function getAddDependenciesCmd({ packages, pm, externalRegistry = false, env = {} }: GetAddDependenciesCmdArgs) {
-  const commands: PromisifiedSpawnArgs = [pm.command, [installMap[pm.name], ...packages, exactMap[pm.name], !externalRegistry ? `--registry=${REGISTRY_URL}` : null].filter(Boolean), { env }]
+  const commands: PromisifiedSpawnArgs = [pm.command, [addMap[pm.name], ...packages, exactMap[pm.name], !externalRegistry ? `--registry=${REGISTRY_URL}` : null].filter(Boolean), { env }]
 
   return commands
 }

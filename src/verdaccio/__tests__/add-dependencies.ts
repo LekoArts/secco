@@ -1,4 +1,4 @@
-import { getAddDependenciesCmd } from '../add-dependencies'
+import { getAddDependenciesCmd, getInstallCmd } from '../add-dependencies'
 import { REGISTRY_URL } from '../verdaccio-config'
 
 const registryUrlFlag = `--registry=${REGISTRY_URL}`
@@ -59,5 +59,44 @@ describe('getAddDependenciesCmd', () => {
     const result = getAddDependenciesCmd({ packages, pm, env })
 
     expect(result).toEqual(['npm', ['install', 'package1', 'package2', '--save-exact', registryUrlFlag], { env }])
+  })
+})
+
+describe('getInstallCmd', () => {
+  it('should return the correct command for npm', () => {
+    const pm = { name: 'npm' as const, command: 'npm' }
+    const expectedCmd = ['npm', ['install', registryUrlFlag], { env: {} }]
+    expect(getInstallCmd({ pm })).toEqual(expectedCmd)
+  })
+
+  it('should return the correct command for pnpm', () => {
+    const pm = { name: 'pnpm' as const, command: 'pnpm' }
+    const expectedCmd = ['pnpm', ['install', registryUrlFlag], { env: {} }]
+    expect(getInstallCmd({ pm })).toEqual(expectedCmd)
+  })
+
+  it('should return the correct command for yarn', () => {
+    const pm = { name: 'yarn' as const, command: 'yarn' }
+    const expectedCmd = ['yarn', ['install', registryUrlFlag], { env: {} }]
+    expect(getInstallCmd({ pm })).toEqual(expectedCmd)
+  })
+
+  it('should return the correct command for bun', () => {
+    const pm = { name: 'bun' as const, command: 'bun' }
+    const expectedCmd = ['bun', ['install', registryUrlFlag], { env: {} }]
+    expect(getInstallCmd({ pm })).toEqual(expectedCmd)
+  })
+
+  it('should return the correct command with external registry', () => {
+    const pm = { name: 'npm' as const, command: 'npm' }
+    const expectedCmd = ['npm', ['install'], { env: {} }]
+    expect(getInstallCmd({ pm, externalRegistry: true })).toEqual(expectedCmd)
+  })
+
+  it('should return the correct command with custom environment variables', () => {
+    const pm = { name: 'npm' as const, command: 'npm' }
+    const env = { NODE_ENV: 'production' }
+    const expectedCmd = ['npm', ['install', registryUrlFlag], { env }]
+    expect(getInstallCmd({ pm, env })).toEqual(expectedCmd)
   })
 })
