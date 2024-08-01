@@ -1,0 +1,6 @@
+{
+  "name": "say-hello-world",
+  "version": "0.0.2",
+  "packageManager": "pnpm@9.4.0",
+  "main": "index.mjs"
+}
