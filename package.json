@@ -69,8 +69,8 @@
     "pathe": "^1.1.2",
     "rc9": "^2.1.2",
     "signal-exit": "^4.1.0",
-    "valibot": "^0.36.0",
-    "verdaccio": "^5.31.1",
+    "valibot": "^0.37.0",
+    "verdaccio": "^5.32.0",
     "yargs": "^17.7.2"
   },
   "devDependencies": {
@@ -83,14 +83,14 @@
     "@types/node": "^20.14.10",
     "@types/yargs": "^17.0.32",
     "@verdaccio/types": "^10.8.0",
-    "@vitest/coverage-v8": "^2.0.1",
+    "@vitest/coverage-v8": "^2.0.5",
     "eslint": "^9.8.0",
     "lint-staged": "^15.2.7",
     "simple-git-hooks": "^2.11.1",
     "strip-ansi": "^7.1.0",
-    "tsup": "^8.1.0",
+    "tsup": "^8.2.3",
     "typescript": "^5.5.3",
-    "vitest": "^2.0.1"
+    "vitest": "^2.0.5"
   },
   "simple-git-hooks": {
     "pre-commit": "pnpm lint-staged"
