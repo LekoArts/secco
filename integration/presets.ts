@@ -1,5 +1,5 @@
-import { applicationConfig } from './models/application-config'
 import { fixtures } from './fixtures'
+import { applicationConfig } from './models/application-config'
 
 const constants = {
   INTEGRATION_PM_NAME: process.env.INTEGRATION_PM_NAME,

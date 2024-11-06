@@ -1,6 +1,6 @@
+import type { Application } from '../models/application'
 import fs from 'fs-extra'
 import { join } from 'pathe'
-import type { Application } from '../models/application'
 import { presets } from '../presets'
 
 async function renamePnpmWorkspaceFixture(app: Application) {

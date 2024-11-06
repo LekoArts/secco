@@ -1,6 +1,6 @@
+import type { Config as VerdaccioConfig } from '@verdaccio/types'
 import os from 'node:os'
 import { join } from 'pathe'
-import type { Config as VerdaccioConfig } from '@verdaccio/types'
 import { CLI_NAME } from '../constants'
 
 const PORT = Number.parseInt(process.env.SECCO_VERDACCIO_PORT || '') || 4873 // Default

@@ -1,7 +1,7 @@
-import process from 'node:process'
-import { join } from 'pathe'
 import type { ExecaSyncError } from 'execa'
+import process from 'node:process'
 import { execaSync } from 'execa'
+import { join } from 'pathe'
 import strip from 'strip-ansi'
 import { createLogsMatcher } from './matcher'
 

@@ -2,9 +2,9 @@ import { cp, mkdtemp, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import fs from 'fs-extra'
 import { basename, join } from 'pathe'
+import { packageManager as rootPackageManager } from '../../package.json'
 import { CONFIG_FILE_NAME } from '../../src/constants'
 import { createLogger } from '../helpers/logger'
-import { packageManager as rootPackageManager } from '../../package.json'
 import { application } from './application'
 
 export type ApplicationConfig = ReturnType<typeof applicationConfig>

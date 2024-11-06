@@ -1,18 +1,18 @@
+import type { Destination, PackageNames, Source, WatcherOptions } from './types'
 import process from 'node:process'
-import fs from 'fs-extra'
 import chokidar from 'chokidar'
-import { intersection, uniq } from 'lodash-es'
-import { join, relative } from 'pathe'
-import { installDependencies } from 'nypm'
 import { deleteAsync } from 'del'
-import { logger } from './utils/logger'
+import fs from 'fs-extra'
+import { intersection, uniq } from 'lodash-es'
+import { installDependencies } from 'nypm'
+import { join, relative } from 'pathe'
 import { CLI_NAME, DEFAULT_IGNORED, WATCH_EVENTS } from './constants'
-import { setDefaultSpawnStdio } from './utils/promisified-spawn'
-import { traversePkgDeps } from './utils/traverse-pkg-deps'
 import { checkDepsChanges } from './utils/check-deps-changes'
 import { getDependantPackages } from './utils/get-dependant-packages'
+import { logger } from './utils/logger'
+import { setDefaultSpawnStdio } from './utils/promisified-spawn'
+import { traversePkgDeps } from './utils/traverse-pkg-deps'
 import { publishPackagesAndInstall } from './verdaccio'
-import type { Destination, PackageNames, Source, WatcherOptions } from './types'
 
 let numOfCopiedFiles = 0
 const MAX_COPY_RETRIES = 3
@@ -112,9 +112,9 @@ export async function watcher(source: Source, destination: Destination, packages
     await Promise.all(
       [...packagesToClear].map(
         async packageToClear => await deleteAsync([
-            `node_modules/${packageToClear}/**/*.{js,js.map}`,
-            `!node_modules/${packageToClear}/node_modules/**/*.{js,js.map}`,
-            `!node_modules/${packageToClear}/src/**/*.{js,js.map}`,
+          `node_modules/${packageToClear}/**/*.{js,js.map}`,
+          `!node_modules/${packageToClear}/node_modules/**/*.{js,js.map}`,
+          `!node_modules/${packageToClear}/src/**/*.{js,js.map}`,
         ]),
       ),
     )
@@ -271,7 +271,8 @@ export async function watcher(source: Source, destination: Destination, packages
       const localCopies = [copyPath({ oldPath: file, newPath: nodeModulesFilePath, packageName })]
 
       allCopies = allCopies.concat(localCopies)
-    }).on('ready', async () => {
+    })
+    .on('ready', async () => {
     // Wait for all async work to finish before attempting to publish & install
       await Promise.all(Array.from(waitFor))
 

@@ -1,9 +1,8 @@
-import process from 'node:process'
-import { isAbsolute } from 'node:path'
-import { read, write } from 'rc9'
 import type { FlatErrors, InferOutput } from 'valibot'
+import { isAbsolute } from 'node:path'
+import process from 'node:process'
+import { read, write } from 'rc9'
 import {
-  ValiError,
   check,
   flatten,
   object,
@@ -13,6 +12,7 @@ import {
   strictObject,
   string,
   trim,
+  ValiError,
 } from 'valibot'
 import { CLI_NAME, CONFIG_FILE_NAME } from '../constants'
 import { logger } from './logger'
@@ -64,7 +64,7 @@ export function sourcePathSchema(name: string) {
     trim(),
     check(
       input => isAbsolute(input),
-`\`${name}\` must be an absolute path`,
+      `\`${name}\` must be an absolute path`,
     ),
   )
 }

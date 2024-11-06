@@ -1,7 +1,7 @@
+import type { DepTree, PackageJson, PackageNamesToFilePath, SourcePackages } from '../types'
 import * as fs from 'fs-extra/esm'
 import { difference, intersection } from 'lodash-es'
 import { join } from 'pathe'
-import type { DepTree, PackageJson, PackageNamesToFilePath, SourcePackages } from '../types'
 import { logger } from './logger'
 
 interface TraversePackageDependenciesArgs {

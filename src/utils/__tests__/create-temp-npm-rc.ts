@@ -1,6 +1,6 @@
-import fs from 'fs-extra'
 import type { Mock } from 'vitest'
 import { execaSync } from 'execa'
+import fs from 'fs-extra'
 import { createTempNpmRc } from '../create-temp-npm-rc'
 
 vi.mock('fs-extra')

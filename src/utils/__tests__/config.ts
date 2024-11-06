@@ -1,6 +1,6 @@
+import type { Mock } from 'vitest'
 import process from 'node:process'
 import { read } from 'rc9'
-import type { Mock } from 'vitest'
 import { parse } from 'valibot'
 import { ConfigSchema, getConfig, isEmpty, sourcePathSchema } from '../config'
 import { logger } from '../logger'

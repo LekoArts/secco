@@ -1,10 +1,10 @@
+import type { InvokeResult } from '../helpers/invoke-cli'
+import type { ApplicationConfig } from './application-config'
 import { rm } from 'node:fs/promises'
 import { join } from 'pathe'
-import type { InvokeResult } from '../helpers/invoke-cli'
+import { isTruthy } from '../../src/utils/is-truthy'
 import { SeccoCLI } from '../helpers/invoke-cli'
 import { createLogger } from '../helpers/logger'
-import { isTruthy } from '../../src/utils/is-truthy'
-import type { ApplicationConfig } from './application-config'
 
 export type Application = ReturnType<typeof application>
 

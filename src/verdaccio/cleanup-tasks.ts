@@ -1,3 +1,4 @@
+/* eslint-disable ts/no-unsafe-function-type */
 import { onExit } from 'signal-exit'
 import { logger } from '../utils/logger'
 

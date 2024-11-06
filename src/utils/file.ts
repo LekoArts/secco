@@ -1,7 +1,7 @@
+import type { PackageJson } from '../types'
 import { destr } from 'destr'
 import fs from 'fs-extra'
 import { join } from 'pathe'
-import type { PackageJson } from '../types'
 
 export async function pathExists(p: string) {
   try {

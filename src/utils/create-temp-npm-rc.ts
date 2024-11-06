@@ -1,9 +1,9 @@
-import fs from 'fs-extra'
 import { execaSync } from 'execa'
+import fs from 'fs-extra'
 import { join } from 'pathe'
 import { CLI_NAME } from '../constants'
-import { REGISTRY_URL } from '../verdaccio/verdaccio-config'
 import { registerCleanupTask } from '../verdaccio/cleanup-tasks'
+import { REGISTRY_URL } from '../verdaccio/verdaccio-config'
 
 const NpmRcConfigKey = `${REGISTRY_URL.replace(/https?:/g, '')}/:_authToken`
 const NpmRcContent = `${NpmRcConfigKey}="${CLI_NAME}"`

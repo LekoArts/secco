@@ -1,13 +1,13 @@
 import type { Server } from 'node:http'
-import { runServer } from 'verdaccio'
-import { customAlphabet } from 'nanoid/non-secure'
+import type { Destination, PackageNamesToFilePath, Source } from '../types'
 import fs from 'fs-extra'
 import { intersection } from 'lodash-es'
+import { customAlphabet } from 'nanoid/non-secure'
+import { runServer } from 'verdaccio'
 import { logger } from '../utils/logger'
-import type { Destination, PackageNamesToFilePath, Source } from '../types'
-import { VERDACCIO_CONFIG } from './verdaccio-config'
-import { publishPackage } from './publish-package'
 import { installPackages } from './install-packages'
+import { publishPackage } from './publish-package'
+import { VERDACCIO_CONFIG } from './verdaccio-config'
 
 const nanoid = customAlphabet('0123456789abcdefghijklmnopqrstuvwxyz', 4)
 

@@ -1,11 +1,11 @@
+import type { PackageJson, Source, SourcePackages } from '../types'
 import process from 'node:process'
+import { destr } from 'destr'
+import { findWorkspaces } from 'find-workspaces'
 import fs from 'fs-extra'
 import { intersection, merge } from 'lodash-es'
-import { findWorkspaces } from 'find-workspaces'
 import { join } from 'pathe'
-import { destr } from 'destr'
 import { CONFIG_FILE_NAME } from '../constants'
-import type { PackageJson, Source, SourcePackages } from '../types'
 import { logger } from './logger'
 
 const currentDir = process.cwd()
@@ -84,6 +84,7 @@ export function getPackages(sourcePath: Source['path'], workspaces: ReturnType<t
     try {
       pkgJsonPath = fs.readFileSync(join(sourcePath, 'package.json'), 'utf-8')
     }
+    // eslint-disable-next-line unused-imports/no-unused-vars
     catch (e) {
       logger.fatal(`Couldn't find package.json in ${sourcePath}. Make sure that the source.path inside \`${CONFIG_FILE_NAME}\` is correct.`)
 

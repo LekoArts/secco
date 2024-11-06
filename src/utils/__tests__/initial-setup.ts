@@ -1,9 +1,9 @@
+import type { Mock } from 'vitest'
 import process from 'node:process'
 import fs from 'fs-extra'
-import type { Mock } from 'vitest'
 import { vi } from 'vitest'
-import { logger } from '../logger'
 import { checkDirHasPackageJson, getAbsolutePathsForDestinationPackages, getDestinationPackages, getPackageNamesToFilePath, getPackages, isPrivate } from '../initial-setup'
+import { logger } from '../logger'
 
 describe('getDestinationPackages', () => {
   describe('single package', () => {

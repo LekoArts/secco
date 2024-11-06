@@ -14,21 +14,16 @@ export default antfu(
   {
     rules: {
       'no-console': 'warn',
-      'ts/ban-types': [
-        'error',
-        {
-          extendDefaults: true,
-          types: {
-            '{}': {
-              fixWith: 'Record<string, unknown>',
-            },
-            'object': {
-              fixWith: 'Record<string, unknown>',
-            },
-            'Function': false,
+      'ts/no-restricted-types': ['error', {
+        types: {
+          '{}': {
+            fixWith: 'Record<string, unknown>',
+          },
+          'object': {
+            fixWith: 'Record<string, unknown>',
           },
         },
-      ],
+      }],
       'ts/array-type': ['error', { default: 'generic' }],
       'node/prefer-global/process': 'off',
     },

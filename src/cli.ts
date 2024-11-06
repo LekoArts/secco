@@ -1,17 +1,17 @@
 #!/usr/bin/env node
 
+import type { CliArguments, Destination, Source } from './types'
 import process from 'node:process'
+import { detectPackageManager } from 'nypm'
 import yargs from 'yargs'
 import { hideBin } from 'yargs/helpers'
-import { detectPackageManager } from 'nypm'
-import { getConfig } from './utils/config'
-import { logger } from './utils/logger'
 import { commands } from './commands'
-import { checkDirHasPackageJson, findWorkspacesInDestination, findWorkspacesInSource, getAbsolutePathsForDestinationPackages, getDestinationPackages, getPackageNamesToFilePath, getPackages } from './utils/initial-setup'
-import type { CliArguments, Destination, Source } from './types'
 import { CLI_NAME } from './constants'
-import { watcher } from './watcher'
+import { getConfig } from './utils/config'
+import { checkDirHasPackageJson, findWorkspacesInDestination, findWorkspacesInSource, getAbsolutePathsForDestinationPackages, getDestinationPackages, getPackageNamesToFilePath, getPackages } from './utils/initial-setup'
 import { isTruthy } from './utils/is-truthy'
+import { logger } from './utils/logger'
+import { watcher } from './watcher'
 
 const input = hideBin(process.argv)
 const yargsInstace = yargs(input)

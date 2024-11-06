@@ -1,8 +1,8 @@
+import type { Mock } from 'vitest'
 import { join } from 'pathe'
 import { vi } from 'vitest'
-import type { Mock } from 'vitest'
-import { traversePkgDeps } from '../traverse-pkg-deps'
 import { logger } from '../logger'
+import { traversePkgDeps } from '../traverse-pkg-deps'
 
 function mockReadJsonSync(path: string) {
   if (path === join(...'<root>/packages/package-a/package.json'.split('/'))) {

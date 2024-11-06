@@ -1,13 +1,13 @@
+import type { Source } from '../types'
 import { isAbsolute } from 'node:path'
 import process from 'node:process'
+import { colors } from 'consola/utils'
 import Enquirer from 'enquirer'
 import { serialize } from 'rc9'
-import { colors } from 'consola/utils'
-import { type Config, setConfig } from '../utils/config'
-import { logger } from '../utils/logger'
 import { CONFIG_FILE_NAME } from '../constants'
+import { type Config, setConfig } from '../utils/config'
 import { hasConfigFile } from '../utils/initial-setup'
-import type { Source } from '../types'
+import { logger } from '../utils/logger'
 
 type RequiredSourceConfig = Pick<Source, 'path'>
 

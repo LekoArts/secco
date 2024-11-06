@@ -1,5 +1,5 @@
-import process from 'node:process'
 import type { Options } from 'execa'
+import process from 'node:process'
 import { execa } from 'execa'
 import { CLI_NAME } from '../constants'
 import { logger } from './logger'

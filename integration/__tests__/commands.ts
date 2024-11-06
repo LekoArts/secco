@@ -1,5 +1,5 @@
-import { SeccoCLI } from '../helpers/invoke-cli'
 import { version as seccoVersion } from '../../package.json'
+import { SeccoCLI } from '../helpers/invoke-cli'
 
 const initQuestion = 'What is the absolute path to your source?'
 const warning = '.seccorc file already exists in this directory'
