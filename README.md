@@ -21,8 +21,8 @@ secco solves these problems and streamlines the process of local package testing
 <a href="https://www.lekoarts.de?utm_source=secco">
   <img alt="lekoarts.de" src="https://img.shields.io/badge/-website-blue">
 </a>
-<a href="https://twitter.com/intent/follow?screen_name=lekoarts_de">
-  <img src="https://img.shields.io/twitter/follow/lekoarts_de.svg?label=Follow%20@lekoarts_de" alt="Follow @lekoarts_de" />
+<a href="https://bsky.app/profile/lekoarts.de">
+  <img src="https://img.shields.io/badge/Bluesky-0285FF?logo=bluesky&logoColor=fff" alt="Follow @lekoarts.de" />
 </a>
 <a href="https://mastodon.social/@lekoarts">
   <img alt="Mastodon Follow" src="https://img.shields.io/mastodon/follow/109244982385960702">

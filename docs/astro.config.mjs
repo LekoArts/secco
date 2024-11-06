@@ -20,7 +20,7 @@ export default defineConfig({
       social: {
         github: 'https://github.com/LekoArts/secco',
         mastodon: 'https://mastodon.social/@lekoarts',
-        twitter: 'https://twitter.com/lekoarts_de',
+        blueSky: 'https://bsky.app/profile/lekoarts.de',
       },
       head: [
         {
