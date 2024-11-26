@@ -55,7 +55,7 @@ describe('traversePkgDeps', () => {
       'package-a-dep1-dep1',
       'package-not-used',
     ]
-    const packageNamesToFilePath = new Map()
+    const packageNamesToFilePath = new Map<string, string>()
     for (const packageName of sourcePackages) {
       packageNamesToFilePath.set(
         packageName,
