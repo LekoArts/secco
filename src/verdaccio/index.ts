@@ -47,7 +47,7 @@ export type PublishPackageArgs = Omit<PublishPackagesAndInstallArgs, 'destinatio
   versionPostfix: string
 }
 
-export type AdjustPackageJsonArgs = Omit<PublishPackageArgs, 'source'> & {
+export type AdjustPackageJsonArgs = PublishPackageArgs & {
   sourcePkgJsonPath: string
 }
 

@@ -24,6 +24,7 @@ export async function publishPackage({ packageName, packagesToPublish, packageNa
     versionPostfix,
     packagesToPublish,
     ignorePackageJsonChanges,
+    source,
   })
 
   const pathToPkg = path.dirname(sourcePkgJsonPath)
