@@ -1,0 +1,5 @@
+{
+  "name": "pnpm-workspaces-source",
+  "private": true,
+  "packageManager": "pnpm@9.4.0"
+}

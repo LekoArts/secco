@@ -5,6 +5,7 @@ import fs from 'fs-extra'
 import { CLI_NAME } from '../constants'
 import { getSourcePackageJsonPath } from '../utils/file'
 import { registerCleanupTask } from '../verdaccio/cleanup-tasks'
+import { logger } from './logger'
 import { getCatalogsFromWorkspaceManifest, readWorkspaceManifest } from './pnpm'
 
 /**
@@ -38,10 +39,17 @@ export function adjustPackageJson({ sourcePkgJsonPath, packageName, packageNames
   })
 
   if (source?.pm?.name === 'pnpm' && source.hasWorkspaces) {
+    // Flags to later pass to the logger to inform which actions happened
+    let adjustedWorkspaceProtocol = false
+    let adjustedDefaultCatalog = false
+    let adjustedNamedCatalogs = false
+
     // Adjust 'workspace:*' versions to 'latest'
     Object.entries(sourcePkgJson.dependencies ?? {}).forEach(([depName, depVersion]) => {
       if (depVersion === 'workspace:*' && sourcePkgJson.dependencies) {
         sourcePkgJson.dependencies[depName] = 'latest'
+
+        adjustedWorkspaceProtocol = true
       }
     })
 
@@ -57,6 +65,8 @@ export function adjustPackageJson({ sourcePkgJsonPath, packageName, packageNames
         if (depVersion === 'catalog:' || depVersion === 'catalog:default') {
           if (sourcePkgJson.dependencies && catalogs?.default?.[depName]) {
             sourcePkgJson.dependencies[depName] = `${catalogs.default[depName]}`
+
+            adjustedDefaultCatalog = true
           }
         }
       })
@@ -68,9 +78,18 @@ export function adjustPackageJson({ sourcePkgJsonPath, packageName, packageNames
         const catalogName = depVersion.split(':')[1]
         if (sourcePkgJson.dependencies && catalogs[catalogName]?.[depName]) {
           sourcePkgJson.dependencies[depName] = `${catalogs[catalogName][depName]}`
+
+          adjustedNamedCatalogs = true
         }
       }
     })
+
+    // If any of the flags is true, log the adjusted features
+    if (adjustedWorkspaceProtocol || adjustedDefaultCatalog || adjustedNamedCatalogs) {
+      const listOfAdjustedFeatures = [adjustedWorkspaceProtocol ? 'workspace:*' : '', adjustedDefaultCatalog ? 'catalog:default' : '', adjustedNamedCatalogs ? 'catalog:<name>' : ''].filter(Boolean).join(', ')
+
+      logger.debug(`Adjusted pnpm workspaces features for ${packageName}: ${listOfAdjustedFeatures}`)
+    }
   }
 
   const tempSourcePkgJsonString = JSON.stringify(sourcePkgJson)

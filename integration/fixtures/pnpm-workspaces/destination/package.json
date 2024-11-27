@@ -1,0 +1,12 @@
+{
+  "name": "destination",
+  "version": "1.0.0",
+  "private": true,
+  "main": "bin.mjs",
+  "scripts": {
+    "start": "node bin.mjs"
+  },
+  "dependencies": {
+    "say-hello-world": "^0.0.2"
+  }
+}
