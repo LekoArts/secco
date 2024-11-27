@@ -1,4 +1,5 @@
 import type { Application } from '../models/application'
+import { randomInteger } from '../helpers/random-int'
 import { presets } from '../presets'
 
 const isPnpm = process.env.INTEGRATION_PM_NAME === 'pnpm'
@@ -8,6 +9,8 @@ describe.runIf(isPnpm)('pnpm workspaces', () => {
 
   beforeAll(async () => {
     app = await presets.pnpmWorkspaces.commit()
+
+    process.env.SECCO_VERDACCIO_PORT = randomInteger(4000, 5000)
   })
 
   afterAll(async () => {
