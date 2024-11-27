@@ -1,5 +1,11 @@
 # secco
 
+## 2.3.1
+
+### Patch Changes
+
+- [#126](https://github.com/LekoArts/secco/pull/126) [`c2a3445`](https://github.com/LekoArts/secco/commit/c2a34454c93a38c01f3de504282f98a76c41eb62) Thanks [@LekoArts](https://github.com/LekoArts)! - Do not try to publish twice if workspace/catalog protocol (pnpm) is used in source with --force-verdaccio
+
 ## 2.3.0
 
 ### Minor Changes
