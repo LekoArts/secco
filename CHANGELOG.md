@@ -1,5 +1,25 @@
 # secco
 
+## 2.3.0
+
+### Minor Changes
+
+- [#124](https://github.com/LekoArts/secco/pull/124) [`39f7eca`](https://github.com/LekoArts/secco/commit/39f7ecae275ee4fc74305f105b4918d2628f9668) Thanks [@LekoArts](https://github.com/LekoArts)! - Add support for pnpm's [`workspace:` protocol](https://pnpm.io/workspaces) and [`catalog:`](https://pnpm.io/catalogs) features inside the source directory.
+
+  For example, if the package you want to test out has some of its dependencies defined like this:
+
+  ```json
+  {
+    "name": "source",
+    "dependencies": {
+      "internal-dep": "workspace:*",
+      "react": "catalog:react"
+    }
+  }
+  ```
+
+  The `workspace:*` will be transformed to `latest` before publishing (if the dependency isn't being published with secco) and the `catalog:` entries are resolved using the `pnpm-workspace.yaml` file.
+
 ## 2.2.0
 
 ### Minor Changes
