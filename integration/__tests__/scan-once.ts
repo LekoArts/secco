@@ -1,5 +1,6 @@
 import type { Application } from '../models/application'
 import fs from 'fs-extra'
+import getPort from 'get-port'
 import { join } from 'pathe'
 import { presets } from '../presets'
 
@@ -17,7 +18,7 @@ describe.sequential('scan-once', () => {
     beforeAll(async () => {
       app = await presets.kitchenSink.commit()
 
-      process.env.SECCO_VERDACCIO_PORT = '4873'
+      process.env.SECCO_VERDACCIO_PORT = (await getPort()).toString()
     })
 
     afterAll(async () => {
@@ -61,7 +62,7 @@ describe.sequential('scan-once', () => {
         await renamePnpmWorkspaceFixture(app)
       }
 
-      process.env.SECCO_VERDACCIO_PORT = '4874'
+      process.env.SECCO_VERDACCIO_PORT = (await getPort()).toString()
     })
 
     afterAll(async () => {

@@ -42,6 +42,15 @@ async function startVerdaccio() {
   ]) as Promise<Server>
 }
 
+export type PublishPackageArgs = Omit<PublishPackagesAndInstallArgs, 'destination'> & {
+  packageName: string
+  versionPostfix: string
+}
+
+export type AdjustPackageJsonArgs = PublishPackageArgs & {
+  sourcePkgJsonPath: string
+}
+
 export interface PublishPackagesAndInstallArgs {
   packagesToPublish: Array<string>
   packageNamesToFilePath: PackageNamesToFilePath
