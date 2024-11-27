@@ -134,6 +134,13 @@ export async function checkDepsChanges(args: CheckDependencyChangesArgs) {
         continue
       }
 
+      if (sourcePkgJson.dependencies[key] === 'workspace:*' || sourcePkgJson.dependencies[key]?.startsWith('catalog:')) {
+        // If the source is using pnpm workspaces with workspace or catalog protocols, the dependencies were adjusted in the "adjustPackageJson" function. The change from specific versions back to "workspace:*" or "catalog:" should be ignored here
+
+        // The check is also necessary because otherwise after a "--force-verdaccio" it tries to publish the packages again
+        continue
+      }
+
       if (
         nodeModulePkgJson.dependencies[key]
         && sourcePkgJson.dependencies[key]
