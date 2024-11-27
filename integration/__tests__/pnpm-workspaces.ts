@@ -8,8 +8,6 @@ describe.runIf(isPnpm)('pnpm workspaces', () => {
 
   beforeAll(async () => {
     app = await presets.pnpmWorkspaces.commit()
-
-    process.env.SECCO_VERDACCIO_PORT = '4873'
   })
 
   afterAll(async () => {
@@ -18,8 +16,6 @@ describe.runIf(isPnpm)('pnpm workspaces', () => {
 
   it('should support protocol and catalogs', () => {
     const [exitCode, logs] = app.cli(['--scan-once', '--force-verdaccio', '--verbose', 'packages', 'say-hello-world'])
-
-    logs.logOutput()
 
     logs.should.contain('[log] [Verdaccio] Starting server...')
     logs.should.contain('[log] [Verdaccio] Started successfully!')

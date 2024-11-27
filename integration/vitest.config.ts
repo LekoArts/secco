@@ -8,5 +8,6 @@ export default defineConfig({
     globals: true,
     reporters: [process.env.CI ? 'default' : 'verbose'],
     testTimeout: 2147483647,
+    setupFiles: ['integration/vitest.setup.ts'],
   },
 })
