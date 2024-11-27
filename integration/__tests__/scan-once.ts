@@ -1,7 +1,7 @@
 import type { Application } from '../models/application'
 import fs from 'fs-extra'
+import getPort from 'get-port'
 import { join } from 'pathe'
-import { randomInteger } from '../helpers/random-int'
 import { presets } from '../presets'
 
 async function renamePnpmWorkspaceFixture(app: Application) {
@@ -11,8 +11,6 @@ async function renamePnpmWorkspaceFixture(app: Application) {
   await fs.rename(fixture, tmpWorkspaceYaml)
 }
 
-const VerdaccioPort = randomInteger(4000, 5000)
-
 describe.sequential('scan-once', () => {
   describe.sequential('single package', () => {
     let app: Application
@@ -20,7 +18,7 @@ describe.sequential('scan-once', () => {
     beforeAll(async () => {
       app = await presets.kitchenSink.commit()
 
-      process.env.SECCO_VERDACCIO_PORT = VerdaccioPort
+      process.env.SECCO_VERDACCIO_PORT = (await getPort()).toString()
     })
 
     afterAll(async () => {
@@ -64,7 +62,7 @@ describe.sequential('scan-once', () => {
         await renamePnpmWorkspaceFixture(app)
       }
 
-      process.env.SECCO_VERDACCIO_PORT = VerdaccioPort
+      process.env.SECCO_VERDACCIO_PORT = (await getPort()).toString()
     })
 
     afterAll(async () => {

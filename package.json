@@ -88,6 +88,7 @@
     "@verdaccio/types": "^10.8.0",
     "@vitest/coverage-v8": "^2.1.5",
     "eslint": "^9.15.0",
+    "get-port": "^7.1.0",
     "lint-staged": "^15.2.10",
     "simple-git-hooks": "^2.11.1",
     "strip-ansi": "^7.1.0",
