@@ -26,7 +26,7 @@ describe.runIf(isPnpm)('pnpm workspaces', () => {
     logs.should.contain('[log] Published `say-hello-world@0.0.2-secco-')
     logs.should.contain(`[debug] Detected package manager in source: ${app.packageManager.split('@')[0]}`)
     logs.should.contain(`[debug] Detected package manager in destination: ${app.packageManager.split('@')[0]}`)
-    logs.should.contain('[debug] Adjusted pnpm workspaces features for say-hello-world: workspace:*, catalog:default, catalog:<name>')
+    logs.should.contain('[debug] Adjusted pnpm workspaces features for say-hello-world: workspace:, catalog:default, catalog:<name>')
     logs.should.contain('[log] Installing packages from local registry:')
     logs.should.contain('[success] Installation finished successfully!')
 

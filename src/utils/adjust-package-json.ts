@@ -12,7 +12,7 @@ import { getCatalogsFromWorkspaceManifest, readWorkspaceManifest } from './pnpm'
  * Edit package.json to:
  * - Adjust version to temporary "secco" version
  * - Change version selectors for dependencies that will be published (to make sure they are installed)
- * - Adjust 'workspace:*' versions to 'latest' (if pnpm is used with workspaces)
+ * - Adjust 'workspace:' versions to 'latest' (if pnpm is used with workspaces)
  * - Adjust 'catalog:' versions to versions defined in workspace (if pnpm is used with workspaces)
  */
 export function adjustPackageJson({ sourcePkgJsonPath, packageName, packageNamesToFilePath, packagesToPublish, ignorePackageJsonChanges, versionPostfix, source }: AdjustPackageJsonArgs) {
@@ -44,9 +44,9 @@ export function adjustPackageJson({ sourcePkgJsonPath, packageName, packageNames
     let adjustedDefaultCatalog = false
     let adjustedNamedCatalogs = false
 
-    // Adjust 'workspace:*' versions to 'latest'
+    // Adjust 'workspace:' versions to 'latest'
     Object.entries(sourcePkgJson.dependencies ?? {}).forEach(([depName, depVersion]) => {
-      if (depVersion === 'workspace:*' && sourcePkgJson.dependencies) {
+      if (depVersion.startsWith('workspace:') && sourcePkgJson.dependencies) {
         sourcePkgJson.dependencies[depName] = 'latest'
 
         adjustedWorkspaceProtocol = true
@@ -86,7 +86,7 @@ export function adjustPackageJson({ sourcePkgJsonPath, packageName, packageNames
 
     // If any of the flags is true, log the adjusted features
     if (adjustedWorkspaceProtocol || adjustedDefaultCatalog || adjustedNamedCatalogs) {
-      const listOfAdjustedFeatures = [adjustedWorkspaceProtocol ? 'workspace:*' : '', adjustedDefaultCatalog ? 'catalog:default' : '', adjustedNamedCatalogs ? 'catalog:<name>' : ''].filter(Boolean).join(', ')
+      const listOfAdjustedFeatures = [adjustedWorkspaceProtocol ? 'workspace:' : '', adjustedDefaultCatalog ? 'catalog:default' : '', adjustedNamedCatalogs ? 'catalog:<name>' : ''].filter(Boolean).join(', ')
 
       logger.debug(`Adjusted pnpm workspaces features for ${packageName}: ${listOfAdjustedFeatures}`)
     }
