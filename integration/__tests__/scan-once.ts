@@ -1,6 +1,6 @@
 import type { Application } from '../models/application'
 import getPort from 'get-port'
-import { renamePnpmWorkspaceFixture } from '../helpers/renamer'
+import { renameFixture } from '../helpers/renamer'
 import { presets } from '../presets'
 
 describe.sequential('scan-once', () => {
@@ -51,7 +51,7 @@ describe.sequential('scan-once', () => {
       app = await presets.kitchenSinkWorkspaces.commit()
 
       if (process.env.INTEGRATION_PM_NAME === 'pnpm') {
-        await renamePnpmWorkspaceFixture(app, 'destination')
+        await renameFixture(app, 'destination', 'pnpm-workspace.yaml')
       }
 
       process.env.SECCO_VERDACCIO_PORT = (await getPort()).toString()
