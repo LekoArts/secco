@@ -1,15 +1,7 @@
 import type { Application } from '../models/application'
-import fs from 'fs-extra'
 import getPort from 'get-port'
-import { join } from 'pathe'
+import { renamePnpmWorkspaceFixture } from '../helpers/renamer'
 import { presets } from '../presets'
-
-async function renamePnpmWorkspaceFixture(app: Application) {
-  const fixture = join(app.dir, 'destination', 'fixture.pnpm-workspace.yaml')
-  const tmpWorkspaceYaml = join(app.dir, 'destination', 'pnpm-workspace.yaml')
-
-  await fs.rename(fixture, tmpWorkspaceYaml)
-}
 
 describe.sequential('scan-once', () => {
   describe.sequential('single package', () => {
@@ -59,7 +51,7 @@ describe.sequential('scan-once', () => {
       app = await presets.kitchenSinkWorkspaces.commit()
 
       if (process.env.INTEGRATION_PM_NAME === 'pnpm') {
-        await renamePnpmWorkspaceFixture(app)
+        await renamePnpmWorkspaceFixture(app, 'destination')
       }
 
       process.env.SECCO_VERDACCIO_PORT = (await getPort()).toString()
