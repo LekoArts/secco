@@ -1,5 +1,6 @@
 import type { Application } from '../models/application'
 import getPort from 'get-port'
+import { renamePnpmWorkspaceFixture } from '../helpers/renamer'
 import { presets } from '../presets'
 
 const isPnpm = process.env.INTEGRATION_PM_NAME === 'pnpm'
@@ -9,6 +10,8 @@ describe.runIf(isPnpm)('pnpm workspaces', () => {
 
   beforeAll(async () => {
     app = await presets.pnpmWorkspaces.commit()
+
+    await renamePnpmWorkspaceFixture(app)
 
     process.env.SECCO_VERDACCIO_PORT = (await getPort()).toString()
   })

@@ -1,15 +1,7 @@
 import type { Application } from '../models/application'
-import fs from 'fs-extra'
 import getPort from 'get-port'
-import { join } from 'pathe'
+import { renamePnpmWorkspaceFixture } from '../helpers/renamer'
 import { presets } from '../presets'
-
-async function renamePnpmWorkspaceFixture(app: Application) {
-  const fixture = join(app.dir, 'destination', 'fixture.pnpm-workspace.yaml')
-  const tmpWorkspaceYaml = join(app.dir, 'destination', 'pnpm-workspace.yaml')
-
-  await fs.rename(fixture, tmpWorkspaceYaml)
-}
 
 describe.sequential('scan-once', () => {
   describe.sequential('single package', () => {
