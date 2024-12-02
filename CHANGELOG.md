@@ -1,5 +1,11 @@
 # secco
 
+## 2.3.2
+
+### Patch Changes
+
+- [`59586a8`](https://github.com/LekoArts/secco/commit/59586a8f0ac2103ab36c366f7f16e181136a61b9) Thanks [@LekoArts](https://github.com/LekoArts)! - Change pnpm workspaces detection to include all workspace: protocols, not only workspace:\*
+
 ## 2.3.1
 
 ### Patch Changes
