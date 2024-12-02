@@ -11,7 +11,7 @@ describe.runIf(isPnpm)('pnpm workspaces', () => {
   beforeAll(async () => {
     app = await presets.pnpmWorkspaces.commit()
 
-    await renamePnpmWorkspaceFixture(app)
+    await renamePnpmWorkspaceFixture(app, 'source')
 
     process.env.SECCO_VERDACCIO_PORT = (await getPort()).toString()
   })

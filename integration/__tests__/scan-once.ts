@@ -51,7 +51,7 @@ describe.sequential('scan-once', () => {
       app = await presets.kitchenSinkWorkspaces.commit()
 
       if (process.env.INTEGRATION_PM_NAME === 'pnpm') {
-        await renamePnpmWorkspaceFixture(app)
+        await renamePnpmWorkspaceFixture(app, 'destination')
       }
 
       process.env.SECCO_VERDACCIO_PORT = (await getPort()).toString()
