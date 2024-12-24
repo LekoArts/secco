@@ -1,5 +1,11 @@
 # secco
 
+## 2.3.3
+
+### Patch Changes
+
+- [#137](https://github.com/LekoArts/secco/pull/137) [`ccf3463`](https://github.com/LekoArts/secco/commit/ccf3463f67e5f088b39391b401ddac0f7ebffa97) Thanks [@LekoArts](https://github.com/LekoArts)! - Update internal dependencies
+
 ## 2.3.2
 
 ### Patch Changes
