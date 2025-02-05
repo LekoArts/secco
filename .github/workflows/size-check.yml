@@ -15,6 +15,7 @@ jobs:
       - name: ⚙️ Enable Corepack
         shell: bash
         run: |
+          npm i -g --force corepack
           corepack enable
           echo "Corepack enabled"
       - uses: preactjs/compressed-size-action@master
