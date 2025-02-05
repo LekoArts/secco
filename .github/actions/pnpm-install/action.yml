@@ -21,10 +21,12 @@ runs:
       uses: actions/setup-node@v4
       with:
         node-version: ${{ inputs.node-version }}
+        cache: 'pnpm'
     - name: ⚙️ Enable Corepack
       if: ${{ inputs.enable-corepack == 'true' }}
       shell: bash
       run: |
+        npm i -g --force corepack
         corepack enable
         echo "Corepack enabled"
 
@@ -32,8 +34,6 @@ runs:
       if: ${{ inputs.enable-corepack == 'false' }}
       with:
         run_install: false
-        # If you're not setting the packageManager field in package.json, add the version here
-        # version: 8.6.7
 
     - name: Expose pnpm config(s) through "$GITHUB_OUTPUT"
       id: pnpm-config
