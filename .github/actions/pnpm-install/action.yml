@@ -26,6 +26,7 @@ runs:
       if: ${{ inputs.enable-corepack == 'true' }}
       shell: bash
       run: |
+        npm i -g --force corepack
         corepack enable
         echo "Corepack enabled"
 
