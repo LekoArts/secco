@@ -11,7 +11,7 @@ inputs:
   node-version:
     description: Node version to use
     required: false
-    default: '20'
+    default: '22'
 
 runs:
   using: composite
@@ -21,6 +21,7 @@ runs:
       uses: actions/setup-node@v4
       with:
         node-version: ${{ inputs.node-version }}
+        check-latest: true
     - name: ⚙️ Enable Corepack
       if: ${{ inputs.enable-corepack == 'true' }}
       shell: bash

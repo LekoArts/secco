@@ -13,7 +13,7 @@ jobs:
             version: 10.8.1
           - name: pnpm
             displayName: pnpm
-            version: 9.12.3
+            version: 10.4.1
           - name: yarn
             displayName: yarn (classic)
             version: 1.22.22
