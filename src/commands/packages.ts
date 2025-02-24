@@ -5,4 +5,4 @@ export const builder = {
     array: true,
   },
 }
-export const handler = function () {}
+export function handler() {}
