@@ -1,5 +1,13 @@
 # secco
 
+## 2.3.4
+
+### Patch Changes
+
+- [#144](https://github.com/LekoArts/secco/pull/144) [`37da371`](https://github.com/LekoArts/secco/commit/37da371e350c6c1ec6f0f263d20c0f442218b668) Thanks [@LekoArts](https://github.com/LekoArts)! - Update internal dependencies
+
+- [#119](https://github.com/LekoArts/secco/pull/119) [`6d6f38b`](https://github.com/LekoArts/secco/commit/6d6f38bd4c55023fc5fb26043045adb2d9fabb6d) Thanks [@renovate](https://github.com/apps/renovate)! - Update `chokidar` to v4. No change in behavior of `secco` should occur.
+
 ## 2.3.3
 
 ### Patch Changes
