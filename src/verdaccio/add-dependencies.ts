@@ -20,6 +20,8 @@ const addMap: Record<PackageManagerName, 'install' | 'add'> = {
   pnpm: 'add',
   yarn: 'add',
   bun: 'add',
+  // TODO: Add proper support for Deno
+  deno: 'add',
 }
 
 const exactMap: Record<PackageManagerName, '--save-exact' | '--exact'> = {
@@ -27,6 +29,8 @@ const exactMap: Record<PackageManagerName, '--save-exact' | '--exact'> = {
   pnpm: '--save-exact',
   yarn: '--exact',
   bun: '--exact',
+  // TODO: There doesn't seem to be an --exact flag in Deno
+  deno: '--exact',
 }
 
 export function getAddDependenciesCmd({ packages, pm, externalRegistry = false, env = {} }: GetAddDependenciesCmdArgs) {

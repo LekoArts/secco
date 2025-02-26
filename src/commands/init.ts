@@ -1,11 +1,12 @@
 import type { Source } from '../types'
+import type { Config } from '../utils/config'
 import { isAbsolute } from 'node:path'
 import process from 'node:process'
 import { colors } from 'consola/utils'
 import Enquirer from 'enquirer'
 import { serialize } from 'rc9'
 import { CONFIG_FILE_NAME } from '../constants'
-import { type Config, setConfig } from '../utils/config'
+import { setConfig } from '../utils/config'
 import { hasConfigFile } from '../utils/initial-setup'
 import { logger } from '../utils/logger'
 

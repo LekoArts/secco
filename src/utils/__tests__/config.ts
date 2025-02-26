@@ -1,4 +1,4 @@
-import type { Mock } from 'vitest'
+import type { Mock, MockInstance } from 'vitest'
 import process from 'node:process'
 import { read } from 'rc9'
 import { parse } from 'valibot'
@@ -14,9 +14,10 @@ vi.mock('rc9', async () => {
 })
 
 describe('getConfig', () => {
-  const mockExit = vi.spyOn(process, 'exit').mockImplementation(() => undefined as never)
+  let mockExit: MockInstance<typeof process.exit>
 
   beforeEach(() => {
+    mockExit = vi.spyOn(process, 'exit').mockImplementation(() => undefined as never)
     logger.mockTypes(() => vi.fn())
   })
 
