@@ -73,7 +73,7 @@
   "devDependencies": {
     "@antfu/eslint-config": "^4.11.0",
     "@changesets/changelog-github": "^0.5.1",
-    "@changesets/cli": "^2.28.1",
+    "@changesets/cli": "^2.29.2",
     "@total-typescript/ts-reset": "^0.6.1",
     "@types/fs-extra": "^11.0.4",
     "@types/js-yaml": "^4.0.9",
@@ -81,7 +81,7 @@
     "@types/node": "^22.13.15",
     "@types/yargs": "^17.0.33",
     "@verdaccio/types": "^10.8.0",
-    "@vitest/coverage-v8": "^3.1.1",
+    "@vitest/coverage-v8": "^3.1.2",
     "eslint": "^9.23.0",
     "get-port": "^7.1.0",
     "lint-staged": "^15.5.0",
@@ -89,7 +89,7 @@
     "strip-ansi": "^7.1.0",
     "tsup": "^8.4.0",
     "typescript": "^5.8.2",
-    "vitest": "^3.1.1"
+    "vitest": "^3.1.2"
   },
   "simple-git-hooks": {
     "pre-commit": "pnpm lint-staged"
