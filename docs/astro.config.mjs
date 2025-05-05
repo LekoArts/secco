@@ -17,11 +17,23 @@ export default defineConfig({
       editLink: {
         baseUrl: 'https://github.com/LekoArts/secco/edit/main/docs/',
       },
-      social: {
-        github: 'https://github.com/LekoArts/secco',
-        mastodon: 'https://mastodon.social/@lekoarts',
-        blueSky: 'https://bsky.app/profile/lekoarts.de',
-      },
+      social: [
+        {
+          icon: 'github',
+          label: 'GitHub',
+          href: 'https://github.com/LekoArts/secco',
+        },
+        {
+          icon: 'mastodon',
+          label: 'Mastodon',
+          href: 'https://mastodon.social/@lekoarts',
+        },
+        {
+          icon: 'blueSky',
+          label: 'Bluesky',
+          href: 'https://bsky.app/profile/lekoarts.de',
+        },
+      ],
       head: [
         {
           tag: 'meta',
