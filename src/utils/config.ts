@@ -35,7 +35,7 @@ export function isEmpty(input: unknown) {
 function logErrors(input: FlatErrors<typeof ConfigSchema>) {
   let listOfErrors: Array<string | null> = []
 
-  if (input.nested?.source || input.nested?.['source.path']) {
+  if (input.nested?.['source.path']) {
     listOfErrors = Object.entries(input.nested).map(([key, value]) => {
       if (value) {
         return `- ${key}
@@ -60,11 +60,11 @@ Make sure that your \`${CONFIG_FILE_NAME}\` file only contains valid key/value p
 
 export function sourcePathSchema(name: string) {
   return pipe(
-    string(`\`${name}\` is required and must be a string`),
+    string(`\`${name}\` must be a string.`),
     trim(),
     check(
       input => isAbsolute(input),
-      `\`${name}\` must be an absolute path`,
+      `\`${name}\` must be an absolute path.`,
     ),
   )
 }
@@ -75,10 +75,10 @@ export const ConfigSchema = strictObject(
       {
         path: sourcePathSchema('source.path'),
       },
-      'Only the key `source.path` is allowed',
+      'The key `source.path` is required and no other keys are allowed.',
     ),
   },
-  'You must pass an object',
+  'You must pass an object with a `source` key.',
 )
 
 const envSchema = object({
