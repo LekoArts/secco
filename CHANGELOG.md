@@ -1,5 +1,11 @@
 # secco
 
+## 2.3.5
+
+### Patch Changes
+
+- [#160](https://github.com/LekoArts/secco/pull/160) [`ba8d673`](https://github.com/LekoArts/secco/commit/ba8d6731fb899a74a3756b22e326c292d09a50c3) Thanks [@renovate](https://github.com/apps/renovate)! - Update internal dependency `valibot` to `v1.1.0`.
+
 ## 2.3.4
 
 ### Patch Changes
