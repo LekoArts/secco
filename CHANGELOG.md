@@ -1,5 +1,11 @@
 # secco
 
+## 2.3.6
+
+### Patch Changes
+
+- [#169](https://github.com/LekoArts/secco/pull/169) [`549d846`](https://github.com/LekoArts/secco/commit/549d84614bd1409cce5e2cb7690d412568b53d63) Thanks [@LekoArts](https://github.com/LekoArts)! - Migrate internal build tooling from tsup to tsdown. No behavior change should occur.
+
 ## 2.3.5
 
 ### Patch Changes
