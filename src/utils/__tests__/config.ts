@@ -60,9 +60,9 @@ describe('getConfig', () => {
 
     expect(mockLoggerFatal).toContain('Errors parsing your `.seccorc` file')
     expect(mockLoggerFatal).toContain(`- source.path
-  - \`source.path\` is required and must be a string
+  - The key \`source.path\` is required and no other keys are allowed.
 - source.cwd
-  - Only the key \`source.path\` is allowed`)
+  - The key \`source.path\` is required and no other keys are allowed.`)
   })
   it('should error when source.path is not an absolute path', () => {
     (read as unknown as Mock).mockReturnValue({
@@ -77,7 +77,7 @@ describe('getConfig', () => {
 
     expect(mockLoggerFatal).toContain('Errors parsing your `.seccorc` file')
     expect(mockLoggerFatal).toContain(`- source.path
-  - \`source.path\` must be an absolute path`)
+  - \`source.path\` must be an absolute path.`)
   })
   it('should return source.path from valid .seccorc file', () => {
     const srcPath = '/path/to/source';
@@ -117,7 +117,7 @@ describe('sourcePathSchema', () => {
     const schema = sourcePathSchema('test')
     const input = '/'
     const output = parse(schema, input)
-    const error = '\`test\` is required and must be a string'
+    const error = '\`test\` must be a string.'
 
     expect(output).toBe(input)
     expect(() => parse(schema, 123)).toThrowError(error)
@@ -136,7 +136,7 @@ describe('sourcePathSchema', () => {
     const output = parse(schema, input)
 
     expect(output).toBe(input)
-    expect(() => parse(schema, 'path/to/source')).toThrowError('\`test\` must be an absolute path')
+    expect(() => parse(schema, 'path/to/source')).toThrowError('\`test\` must be an absolute path.')
   })
 })
 
@@ -152,8 +152,8 @@ describe('configSchema', () => {
     expect(() => parse(ConfigSchema, '/path/to/source')).toThrowError('You must pass an object')
   })
   it('should only pass objects with valid entries', () => {
-    expect(() => parse(ConfigSchema, {})).toThrowError('Only the key `source.path` is allowed')
-    expect(() => parse(ConfigSchema, { invalid: 'key' })).toThrowError('Only the key `source.path` is allowed')
-    expect(() => parse(ConfigSchema, { source: { invalid: 'key' } })).toThrowError('\`source.path\` is required and must be a string')
+    expect(() => parse(ConfigSchema, undefined)).toThrowError('You must pass an object with a \`source\` key.')
+    expect(() => parse(ConfigSchema, { invalid: 'key' })).toThrowError('You must pass an object with a \`source\` key.')
+    expect(() => parse(ConfigSchema, { source: { invalid: 'key' } })).toThrowError('The key \`source.path\` is required and no other keys are allowed.')
   })
 })
