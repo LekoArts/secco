@@ -1,20 +1,15 @@
-import { defineConfig } from 'tsup'
-import { CLI_NAME } from './src/constants'
+import { defineConfig } from 'tsdown'
 
 export default defineConfig((options) => {
   return {
-    name: CLI_NAME,
     entry: ['src/cli.ts'],
     dts: false,
     sourcemap: !!options.watch,
     format: 'esm',
     minify: !options.watch,
     clean: true,
-    cjsInterop: true,
-    outExtension() {
-      return {
-        js: '.mjs',
-      }
-    },
+    outExtensions: () => ({
+      js: '.mjs',
+    }),
   }
 })

@@ -33,8 +33,8 @@
     "pnpm": ">=8.8.0"
   },
   "scripts": {
-    "build": "tsup",
-    "watch": "pnpm run build --watch",
+    "build": "tsdown",
+    "watch": "tsdown --watch",
     "prepublishOnly": "pnpm run build",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
@@ -87,7 +87,7 @@
     "lint-staged": "^15.5.1",
     "simple-git-hooks": "^2.13.0",
     "strip-ansi": "^7.1.0",
-    "tsup": "^8.4.0",
+    "tsdown": "^0.11.0",
     "typescript": "^5.8.3",
     "vitest": "^3.1.2"
   },
