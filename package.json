@@ -68,7 +68,7 @@
     "strip-bom": "^5.0.0",
     "valibot": "^1.1.0",
     "verdaccio": "^6.1.2",
-    "yargs": "^17.7.2"
+    "yargs": "^18.0.0"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^4.12.0",
