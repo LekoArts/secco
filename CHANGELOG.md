@@ -1,5 +1,15 @@
 # secco
 
+## 3.0.0
+
+### Major Changes
+
+- [#179](https://github.com/LekoArts/secco/pull/179) [`5976456`](https://github.com/LekoArts/secco/commit/5976456f33a0f06599c3e8431a891c18529779b8) Thanks [@renovate](https://github.com/apps/renovate)! - Update [`yargs`](https://github.com/yargs/yargs) from `17.7.2` to `18.0.0`. yargs v18 now requires Node.js `^20.19.0 || ^22.12.0 || >=23` or later.
+
+  Since `secco` supported Node.js v18 in v2, this dependency update warrants a major update to update secco's `engines` key.
+
+  **Breaking change:** `secco` now requires Node.js `^20.19.0 || ^22.12.0 || >=23` or later. Once you update your Node.js version, you'll be able to use secco as before.
+
 ## 2.3.6
 
 ### Patch Changes
