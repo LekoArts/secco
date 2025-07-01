@@ -2,7 +2,7 @@
   "name": "secco",
   "type": "module",
   "version": "3.0.0",
-  "packageManager": "pnpm@10.11.0",
+  "packageManager": "pnpm@10.12.4",
   "description": "Local package testing made easy. secco is a command-line tool for local development. It uses Verdaccio and direct file copying to apply your latest changes to other projects.",
   "author": "LekoArts",
   "license": "MIT",
