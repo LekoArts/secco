@@ -60,13 +60,13 @@
     "lodash-es": "^4.17.21",
     "nanoid": "^5.1.5",
     "node-fetch": "^3.3.2",
-    "nypm": "^0.6.0",
+    "nypm": "^0.6.1",
     "pathe": "^2.0.3",
     "rc9": "^2.1.2",
     "signal-exit": "^4.1.0",
     "strip-bom": "^5.0.0",
     "valibot": "^1.1.0",
-    "verdaccio": "^6.1.5",
+    "verdaccio": "^6.1.6",
     "yargs": "^18.0.0"
   },
   "devDependencies": {
@@ -86,7 +86,7 @@
     "lint-staged": "^16.1.2",
     "simple-git-hooks": "^2.13.0",
     "strip-ansi": "^7.1.0",
-    "tsdown": "^0.12.9",
+    "tsdown": "^0.13.0",
     "typescript": "^5.8.3",
     "vitest": "^3.2.4"
   },
