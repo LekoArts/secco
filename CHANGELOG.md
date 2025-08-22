@@ -1,5 +1,11 @@
 # secco
 
+## 3.0.1
+
+### Patch Changes
+
+- [`93a6957`](https://github.com/LekoArts/secco/commit/93a69576eb92ee697f2881b88f6862fea96d78fe) Thanks [@LekoArts](https://github.com/LekoArts)! - Add optional chaining check when checking for workspace packages
+
 ## 3.0.0
 
 ### Major Changes
