@@ -58,13 +58,13 @@ ${optionsToDisplay}
 
   if (!confirm) {
     logger.info('Ok, bye!')
-    process.exit()
+    process.exit(0)
   }
 
   setConfig(configValues)
 
   logger.success(`Successfully created ${CONFIG_FILE_NAME}`)
-  process.exit()
+  process.exit(0)
 }
 
 export const command = 'init'

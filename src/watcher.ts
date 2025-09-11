@@ -20,7 +20,7 @@ const MAX_COPY_RETRIES = 3
 
 function quit() {
   logger.info(`Copied ${numOfCopiedFiles} files. Exiting...`)
-  process.exit()
+  process.exit(0)
 }
 
 interface CopyPathArgs {
