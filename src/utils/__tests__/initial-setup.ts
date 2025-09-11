@@ -184,7 +184,7 @@ describe('checkDirHasPackageJson', () => {
 
     expect(mockExistsSync).toHaveBeenCalledWith(`${process.cwd()}/package.json`)
     expect(mockLoggerFatal).toContain('No `package.json` found')
-    expect(mockExit).toHaveBeenCalledWith()
+    expect(mockExit).toHaveBeenCalledWith(1)
   })
 
   it('should not exit the process if a package.json file is found', () => {

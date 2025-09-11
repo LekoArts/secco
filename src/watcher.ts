@@ -287,8 +287,6 @@ export async function watcher(source: Source, destination: Destination, packages
 
         if (didDepsChange) {
           if (isInitialScan) {
-            waitFor.delete(didDependenciesChangePromise)
-
             // TODO(feature): Handle case where dependency change happens (e.g. added or removed package) during 'watch' mode.
             // secco currently doesn't handle this case. It will only pick those changes up during its initial scan.
 

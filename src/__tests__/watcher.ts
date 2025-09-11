@@ -165,7 +165,7 @@ describe('watcher', () => {
       })
 
       // Process.exit should have been called
-      expect(process.exit).toHaveBeenCalledWith()
+      expect(process.exit).toHaveBeenCalledWith(0)
     })
   })
 
@@ -529,7 +529,7 @@ describe('watcher', () => {
       await new Promise(resolve => setImmediate(resolve))
 
       // Verify process.exit was called
-      expect(process.exit).toHaveBeenCalledWith()
+      expect(process.exit).toHaveBeenCalledWith(0)
     })
   })
 
