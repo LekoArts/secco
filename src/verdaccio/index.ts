@@ -76,6 +76,7 @@ async function startVerdaccio() {
   }
   catch (err) {
     verdaccioStartupPromise = null
+    verdaccioServer = null
     throw err
   }
 }
