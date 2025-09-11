@@ -8,6 +8,7 @@ import { installDependencies } from 'nypm'
 import { join, relative } from 'pathe'
 import { CLI_NAME, DEFAULT_IGNORED, WATCH_EVENTS } from './constants'
 import { checkDepsChanges } from './utils/check-deps-changes'
+import { getPackageJson } from './utils/file'
 import { getDependantPackages } from './utils/get-dependant-packages'
 import { logger } from './utils/logger'
 import { setDefaultSpawnStdio } from './utils/promisified-spawn'
@@ -172,6 +173,18 @@ export async function watcher(source: Source, destination: Destination, packages
     return
   }
 
+  // A map of package paths and their `files` array from package.json
+  const sourcePackageFilesMap: Map<string, Array<string>> = new Map()
+  for (const packageName of allPackagesToWatch) {
+    const packagePath = packageNamesToFilePath.get(packageName)
+    if (packagePath) {
+      const pkgJson = getPackageJson(packagePath)
+      if (pkgJson?.files && Array.isArray(pkgJson.files)) {
+        sourcePackageFilesMap.set(packagePath, pkgJson.files)
+      }
+    }
+  }
+
   const ignored = DEFAULT_IGNORED.concat(
     allPackagesToWatch.map(
       p => new RegExp(`${p}[\\/\\\\]src[\\/\\\\]`, 'i'),
@@ -202,24 +215,49 @@ export async function watcher(source: Source, destination: Destination, packages
 
       // Match name against package path
       let packageName
+      let packagePath
 
-      for (const [_packageName, packagePath] of pkgPathMatchingEntries) {
-        const relativePath = relative(packagePath, file)
+      for (const [_packageName, _packagePath] of pkgPathMatchingEntries) {
+        const relativePath = relative(_packagePath, file)
         if (!relativePath.startsWith('..')) {
           packageName = _packageName
+          packagePath = _packagePath
           break
         }
       }
 
-      if (!packageName)
+      if (!packageName || !packagePath)
         return
 
-      const prefix = packageNamesToFilePath.get(packageName)
+      const relativePackageFile = relative(packagePath, file)
 
-      if (!prefix)
-        return
+      // If the package.json has a `files` field, only copy files that are included in that field
+      const filesPatterns = sourcePackageFilesMap.get(packagePath)
+      if (filesPatterns) {
+        // Skip package.json check since we need it
+        if (relativePackageFile !== 'package.json') {
+          const isIncluded = filesPatterns.some((pattern) => {
+            // Handle exact matches and directory patterns
+            if (relativePackageFile.startsWith(`${pattern}/`) || relativePackageFile === pattern) {
+              return true
+            }
 
-      const relativePackageFile = relative(prefix, file)
+            // Handle glob patterns with wildcards
+            if (pattern.includes('*')) {
+              const regex = new RegExp(pattern.replace(/\*/g, '.*'))
+              return regex.test(relativePackageFile)
+            }
+
+            return false
+          })
+
+          if (!isIncluded) {
+            // Skip this file
+            return
+          }
+        }
+      }
+
       const nodeModulesFilePath = join(`./node_modules/${packageName}`, relativePackageFile)
 
       if (relativePackageFile === 'package.json') {
