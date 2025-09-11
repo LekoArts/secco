@@ -347,9 +347,14 @@ export async function watcher(source: Source, destination: Destination, packages
       }
 
       // All files watched, quit once all files are copied and scanOnce is true
-      Promise.all(allCopies).then(() => {
-        if (scanOnce)
-          quit()
-      })
+      Promise.all(allCopies)
+        .then(() => {
+          if (scanOnce)
+            quit()
+        })
+        .catch((err) => {
+          // Log the error but don't crash - some files may have failed to copy
+          logger.error('One or more file copies failed:', err)
+        })
     })
 }
