@@ -10,7 +10,7 @@ describe('getAddDependenciesCmd', () => {
 
     const result = getAddDependenciesCmd({ packages, pm })
 
-    expect(result).toEqual(['npm', ['install', 'package1', 'package2', '--save-exact', registryUrlFlag], { env: {} }])
+    expect(result).toEqual(['npm', ['install', 'package1', 'package2', '--save-exact', registryUrlFlag, '--legacy-peer-deps'], { env: {} }])
   })
 
   it('returns the correct command for yarn', () => {
@@ -48,7 +48,7 @@ describe('getAddDependenciesCmd', () => {
 
     const result = getAddDependenciesCmd({ packages, pm, externalRegistry })
 
-    expect(result).toEqual(['npm', ['install', 'package1', 'package2', '--save-exact'], { env: {} }])
+    expect(result).toEqual(['npm', ['install', 'package1', 'package2', '--save-exact', '--legacy-peer-deps'], { env: {} }])
   })
 
   it('supports passing environment variables', () => {
@@ -58,7 +58,7 @@ describe('getAddDependenciesCmd', () => {
 
     const result = getAddDependenciesCmd({ packages, pm, env })
 
-    expect(result).toEqual(['npm', ['install', 'package1', 'package2', '--save-exact', registryUrlFlag], { env }])
+    expect(result).toEqual(['npm', ['install', 'package1', 'package2', '--save-exact', registryUrlFlag, '--legacy-peer-deps'], { env }])
   })
 })
 
