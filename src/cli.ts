@@ -20,11 +20,13 @@ const parser = yargsInstace
   .usage('Usage: $0 <command>')
   .command(commands)
   .option('scan-once', {
+    alias: 's',
     type: 'boolean',
     default: false,
     description: 'Scan source once and do not start file watching',
   })
   .option('force-verdaccio', {
+    alias: 'f',
     type: 'boolean',
     default: false,
     description: 'Disable file copying/watching and force usage of Verdaccio',
