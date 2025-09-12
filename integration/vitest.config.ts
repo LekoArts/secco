@@ -4,9 +4,9 @@ import { defineConfig } from 'vitest/config'
 export default defineConfig({
   test: {
     name: 'Integration tests',
-    include: ['integration/__tests__/*.ts'],
+    include: ['integration/__tests__/**/*.ts'],
     globals: true,
     reporters: [process.env.CI ? 'default' : 'verbose'],
-    testTimeout: 2147483647,
+    testTimeout: 60_000, // 60 seconds
   },
 })
