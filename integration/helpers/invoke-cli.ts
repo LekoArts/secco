@@ -15,6 +15,7 @@ export function SeccoCLI() {
   let env: Record<string, string> = {}
   let cwd = ''
   let cliLocation = builtCliLocation
+  let input = ''
 
   const self = {
     setEnv: (_env: Record<string, string>) => {
@@ -33,6 +34,10 @@ export function SeccoCLI() {
       cliLocation = _cliLocation
       return self
     },
+    setInput: (_input: string) => {
+      input = _input
+      return self
+    },
     invoke: (args: Array<string>): InvokeResult => {
       const NODE_ENV = 'production'
 
@@ -43,6 +48,7 @@ export function SeccoCLI() {
           {
             cwd,
             env: { NODE_ENV, ...env },
+            input,
           },
         )
 

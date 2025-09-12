@@ -9,6 +9,17 @@ sidebar:
 
 Run this command inside your destination folder. You'll be asked questions about your source folder and at the end of the questionnaire a new `.seccorc` config file will be created.
 
+By default, the `secco init` command is an interactive prompt. However, if you want to use it in non-interactive environments you can provide both `--source` and `--yes` flags.
+
+```shell
+secco init --source=/absolute-path/to/directory --yes
+```
+
+**Optional flags:**
+
+- `--source`: Absolute path to the source directory
+- `--yes`: Skip confirmation prompts
+
 ## `secco`
 
 `secco` will scan your destination's `package.json` file and compare it with the available packages inside your source. It'll then copy over all changes into your destination's `node_modules` folder. Additionally, a watch task is started to continue copying over changes. Packages that have [`"private": true`](https://docs.npmjs.com/cli/v10/configuring-npm/package-json#private) set will be ignored.
