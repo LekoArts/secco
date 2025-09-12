@@ -14,7 +14,7 @@ export async function publishPackage({ packageName, packagesToPublish, packageNa
 
   if (!sourcePkgJsonPath) {
     logger.fatal(`Couldn't find package.json for ${packageName} during publishing`)
-    process.exit()
+    process.exit(1)
   }
 
   const { newPackageVersion, revertAdjustPackageJson } = adjustPackageJson({
@@ -40,7 +40,7 @@ export async function publishPackage({ packageName, packagesToPublish, packageNa
   catch (e) {
     if (e instanceof Error) {
       logger.fatal(`Failed to publish \`${packageName}@${newPackageVersion}\` to local registry`, e)
-      process.exit()
+      process.exit(1)
     }
   }
 

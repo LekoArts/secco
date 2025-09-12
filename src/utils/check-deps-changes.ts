@@ -23,7 +23,7 @@ export function difference(object: ObjWithAny, base: ObjWithAny) {
   return changes(object, base)
 }
 
-interface CheckDependencyChangesArgs {
+export interface CheckDependencyChangesArgs {
   nodeModulesFilePath: string
   packageName: string
   sourcePackages: SourcePackages

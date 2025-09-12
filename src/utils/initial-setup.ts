@@ -18,7 +18,7 @@ export function checkDirHasPackageJson() {
     logger.fatal(`No \`package.json\` found in ${currentDir}
 
 Current directory must contain a \`package.json\` file.`)
-    process.exit()
+    process.exit(1)
   }
 }
 
@@ -88,7 +88,7 @@ export function getPackages(sourcePath: Source['path'], workspaces: ReturnType<t
     catch (e) {
       logger.fatal(`Couldn't find package.json in ${sourcePath}. Make sure that the source.path inside \`${CONFIG_FILE_NAME}\` is correct.`)
 
-      process.exit()
+      process.exit(1)
     }
 
     const pkgJson = destr<PackageJson>(pkgJsonPath)

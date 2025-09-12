@@ -36,3 +36,18 @@ export function getSourcePackageJsonPath(packageName: string, packageNamesToFile
 
   return join(packagePath, 'package.json')
 }
+
+const packageJsonCache = new Map<string, PackageJson | undefined>()
+
+/**
+ * Get the package.json content for a given package path
+ */
+export function getPackageJson(packagePath: string) {
+  if (!packageJsonCache.has(packagePath)) {
+    const packageJsonPath = join(packagePath, 'package.json')
+    const pkgJson = destr<PackageJson>(fs.readFileSync(packageJsonPath, 'utf8'))
+    packageJsonCache.set(packagePath, pkgJson)
+  }
+
+  return packageJsonCache.get(packagePath)
+}

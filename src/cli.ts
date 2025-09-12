@@ -72,7 +72,7 @@ ${JSON.stringify(seccoConfig, null, 2)}`)
     logger.fatal(`Failed to detect package manager in ${destinationPath}
 
 If you have control over the destination, manually add the "packageManager" key to its \`package.json\` file.`)
-    process.exit()
+    process.exit(1)
   }
 
   logger.debug(`Detected package manager in source: ${pmSource?.name}`)
@@ -96,7 +96,7 @@ ${CLI_NAME} packages package-a package-b
 If you only want to use \`${CLI_NAME}\` you'll need to add the dependencies to your \`package.json\`.`)
 
     if (!argv.forceVerdaccio)
-      process.exit()
+      process.exit(1)
 
     else
       logger.info('Continuing other dependency installation due to \`--force-verdaccio\` flag')

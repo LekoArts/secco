@@ -81,7 +81,7 @@ export async function installPackages({ newlyPublishedPackageVersions, packagesT
   catch (e) {
     if (e instanceof Error) {
       logger.fatal('Installation failed', e)
-      process.exit()
+      process.exit(1)
     }
   }
 }

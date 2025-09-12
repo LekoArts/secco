@@ -9,7 +9,7 @@
   "homepage": "https://github.com/LekoArts/secco",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/LekoArts/secco"
+    "url": "git+https://github.com/LekoArts/secco.git"
   },
   "bugs": {
     "url": "https://github.com/LekoArts/secco/issues"

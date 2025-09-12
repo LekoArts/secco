@@ -5,33 +5,61 @@ import { intersection } from 'lodash-es'
 import { customAlphabet } from 'nanoid/non-secure'
 import { runServer } from 'verdaccio'
 import { logger } from '../utils/logger'
+import { registerCleanupTask } from './cleanup-tasks'
 import { installPackages } from './install-packages'
 import { publishPackage } from './publish-package'
 import { VERDACCIO_CONFIG } from './verdaccio-config'
 
 const nanoid = customAlphabet('0123456789abcdefghijklmnopqrstuvwxyz', 4)
 
+// Track Verdaccio server state
+let verdaccioServer: Server | null = null
+let verdaccioStartupPromise: Promise<Server> | null = null
+let cleanupRegistered = false
+
 async function startVerdaccio() {
+  // If server is already running, return immediately
+  if (verdaccioServer) {
+    logger.debug('[Verdaccio] Using existing server')
+    return verdaccioServer
+  }
+
+  // If server is starting, wait for the existing startup promise
+  if (verdaccioStartupPromise) {
+    logger.debug('[Verdaccio] Waiting for server to start...')
+    return verdaccioStartupPromise
+  }
+
   let resolved = false
 
   logger.log('[Verdaccio] Starting server...')
   logger.debug(`[Verdaccio] Port: ${VERDACCIO_CONFIG.port}`)
 
-  // Clear Verdaccio storage
+  // Clear Verdaccio storage only on first start
   fs.removeSync(VERDACCIO_CONFIG.storage as string)
 
-  return Promise.race([
-    new Promise<void>((resolve) => {
+  verdaccioStartupPromise = Promise.race([
+    new Promise<Server>((resolve) => {
       // @ts-expect-error: Verdaccio's types are wrong
       runServer(VERDACCIO_CONFIG).then((app: Server) => {
         app.listen(VERDACCIO_CONFIG.port, () => {
           logger.log('[Verdaccio] Started successfully!')
+          verdaccioServer = app
           resolved = true
-          resolve()
+
+          // Register cleanup task only once when server starts
+          if (!cleanupRegistered) {
+            registerCleanupTask(() => {
+              stopVerdaccio()
+            })
+            cleanupRegistered = true
+          }
+
+          resolve(app)
         })
       })
     }),
-    new Promise((_, reject) => {
+    new Promise<never>((_, reject) => {
       setTimeout(() => {
         if (!resolved) {
           resolved = true
@@ -39,7 +67,28 @@ async function startVerdaccio() {
         }
       }, 10000)
     }),
-  ]) as Promise<Server>
+  ])
+
+  try {
+    const server = await verdaccioStartupPromise
+
+    return server
+  }
+  catch (err) {
+    verdaccioStartupPromise = null
+    verdaccioServer = null
+    throw err
+  }
+}
+
+function stopVerdaccio() {
+  if (verdaccioServer) {
+    logger.debug('[Verdaccio] Stopping server...')
+    verdaccioServer.close()
+    verdaccioServer = null
+  }
+  verdaccioStartupPromise = null
+  cleanupRegistered = false
 }
 
 export type PublishPackageArgs = Omit<PublishPackagesAndInstallArgs, 'destination'> & {

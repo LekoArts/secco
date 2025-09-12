@@ -56,7 +56,7 @@ export function SeccoCLI() {
 
         return [
           execaError.exitCode,
-          createLogsMatcher(strip(execaError.stdout?.toString() || ``)),
+          createLogsMatcher(strip((execaError.stderr?.toString() || ``) + (execaError.stdout?.toString() || ``))),
         ]
       }
     },

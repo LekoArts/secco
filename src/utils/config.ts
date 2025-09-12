@@ -55,7 +55,7 @@ ${listOfErrors.filter(Boolean).join('\n')}
 
 Make sure that your \`${CONFIG_FILE_NAME}\` file only contains valid key/value pairs.`)
 
-  process.exit()
+  process.exit(1)
 }
 
 export function sourcePathSchema(name: string) {
@@ -117,7 +117,7 @@ export function getConfig(): Config {
 Please run \`${CLI_NAME} init\` to create a new \`${CONFIG_FILE_NAME}\` file.
 Alternatively you can define the required config through environment variables.`)
 
-    process.exit()
+    process.exit(1)
   }
 
   let config = {} as Config
