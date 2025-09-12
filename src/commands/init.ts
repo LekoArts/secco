@@ -61,7 +61,7 @@ async function initialize(argv: ArgumentsCamelCase<InitArgs>) {
   if (argv?.yes) {
     setConfig(configValues)
     logger.success(`Successfully created ${CONFIG_FILE_NAME}`)
-    process.exit(0)
+    return
   }
 
   const optionsToDisplay = serialize(configValues)
@@ -82,13 +82,12 @@ ${optionsToDisplay}
 
   if (!confirm) {
     logger.info('Ok, bye!')
-    process.exit(0)
+    return
   }
 
   setConfig(configValues)
 
   logger.success(`Successfully created ${CONFIG_FILE_NAME}`)
-  process.exit(0)
 }
 
 export const command = 'init'

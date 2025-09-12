@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import type { ArgumentsCamelCase } from 'yargs'
 import type { CliArguments, Destination, Source } from './types'
 import process from 'node:process'
 import { detectPackageManager } from 'nypm'
@@ -16,9 +17,17 @@ import { watcher } from './watcher'
 const input = hideBin(process.argv)
 const yargsInstace = yargs(input)
 
-const parser = yargsInstace
+yargsInstace
   .usage('Usage: $0 <command>')
   .command(commands)
+  .command(
+    '$0',
+    'Scan destination and copy files from source',
+    () => {},
+    async (argv: ArgumentsCamelCase<CliArguments>) => {
+      await run(argv)
+    },
+  )
   .option('scan-once', {
     alias: 's',
     type: 'boolean',
@@ -41,14 +50,14 @@ const parser = yargsInstace
   .example([
     ['$0', 'Scan destination and copy files from source'],
     ['$0 packages ars aurea', 'Copy specified packages from source to destination'],
+    ['$0 init --source=/absolute/path --yes', 'Create a .seccorc file in the current dir with the provided source path without any prompts'],
   ])
   .wrap(yargsInstace.terminalWidth())
   .showHelpOnFail(false)
   .detectLocale(false)
   .parseAsync()
 
-async function run() {
-  const argv: CliArguments = await parser
+async function run(argv: ArgumentsCamelCase<CliArguments>) {
   const verbose = argv.verbose || isTruthy(process.env.VERBOSE)
 
   if (verbose)
@@ -121,5 +130,3 @@ If you only want to use \`${CLI_NAME}\` you'll need to add the dependencies to y
 
   watcher(source, destination, argv.packageNames, { scanOnce: argv.scanOnce, forceVerdaccio: argv.forceVerdaccio, verbose })
 }
-
-run()
