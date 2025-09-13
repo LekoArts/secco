@@ -23,7 +23,7 @@ export function prepareGracefulExit() {
 
 onExit((code) => {
   if (cleanupTasks.size > 0 && !isGracefulExit) {
-    logger.warn(`Process exited with code ${code} in the middle of publishing. Cleaning up...`)
+    logger.warn(`Process exited with code ${code}. Cleaning up...`)
     cleanupTasks.forEach(taskFn => taskFn())
   }
 })

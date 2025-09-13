@@ -66,19 +66,21 @@ Here's an overview of all available commands and flags:
 Usage: secco <command>
 
 Commands:
-  secco init                        Initialize a new .seccorc file
+  secco                             Scan destination and copy files from source  [default]
   secco packages [packageNames...]  Specify list of packages you want to link
+  secco init                        Initialize a new .seccorc file
 
 Options:
-  --help             Show help
-  --version          Show version number
-  --scan-once        Scan source once and do not start file watching
-  --force-verdaccio  Disable file copying/watching and force usage of Verdaccio
-  --verbose          Output verbose logging
+      --help             Show help  [boolean]
+      --version          Show version number  [boolean]
+  -s, --scan-once        Scan source once and do not start file watching  [boolean] [default: false]
+  -f, --force-verdaccio  Disable file copying/watching and force usage of Verdaccio  [boolean] [default: false]
+      --verbose          Output verbose logging  [boolean] [default: false]
 
 Examples:
-  secco                     Scan destination and copy files from source
-  secco packages ars aurea  Copy specified packages from source to destination
+  secco                                     Scan destination and copy files from source
+  secco packages ars aurea                  Copy specified packages from source to destination
+  secco init --source=/absolute/path --yes  Create a .seccorc file in the current dir with the provided source path without any prompts
 ```
 
 ## Documentation
