@@ -1,5 +1,51 @@
 # secco
 
+## 3.1.0
+
+### Minor Changes
+
+- The CLI got more functionality! ([#200](https://github.com/LekoArts/secco/pull/200))
+
+  - Add `-s` alias for `--scan-once` and `-f` for `--force-verdaccio`
+  - Add `--source` and `--yes` flag for `secco init`, making it possible to run the init command in non-interactive mode
+
+    For example, this command will create a `.seccorc` file with the given source path:
+
+    ```bash
+    secco init --source=/absolute/path --yes
+    ```
+
+    If you don't provide the `--yes` flag you'll need to confirm the prompt.
+
+- If your source packages have a `files` array inside their `package.json` secco will now respect that when copying over files. It will only copy over the files defined in `files`. ([#198](https://github.com/LekoArts/secco/pull/198))
+
+  Previously, if for example your source package had this structure:
+
+  ```sh
+  .
+  └── package/
+      ├── src
+      ├── dist
+      ├── unrelated-folder
+      └── README.md
+  ```
+
+  Then secco would have copied over the `unrelated-folder`, too. With `files: ["dist"]` it'll only copy that.
+
+### Patch Changes
+
+- Various small bug fixes: ([#200](https://github.com/LekoArts/secco/pull/200))
+
+  - When `dist/` was in the `files` array of `package.json` it didn't correctly copy over files inside the `dist` directory
+  - When `--scan-once` and `--force-verdaccio` were used together a warning was thrown about an ungraceful exit. For this codepath any cleanup tasks are run before exiting now. The warning won't show.
+  - The `init` command ran the whole main function while it should only run the Enquirer prompt. This is fixed now.
+
+- Minor bug fixes here and there to improve the usability. ([#198](https://github.com/LekoArts/secco/pull/198))
+
+  - Reuse already started Verdaccio server when trying to start a new one. Sometimes `secco` tried to start two servers and threw an error.
+  - Use `--legacy-peer-deps` for `npm install`. This helps when your source packages have incorrect peer dependencies.
+  - Correctly set `process.exit(0)` and `process.exit(1)` inside secco's codebase.
+
 ## 3.0.1
 
 ### Patch Changes
