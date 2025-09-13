@@ -1,4 +1,4 @@
-import type { ArgumentsCamelCase, Argv } from 'yargs'
+import type { ArgumentsCamelCase } from 'yargs'
 import type { Source } from '../types'
 import type { Config } from '../utils/config'
 import { isAbsolute } from 'node:path'
@@ -22,7 +22,7 @@ interface InitArgs {
  * When running `secco init` we want to ask the user a few questions to create a new config file.
  * Warns if the file already exists.
  */
-async function initialize(argv: ArgumentsCamelCase<InitArgs>) {
+export async function initialize(argv: ArgumentsCamelCase<InitArgs>) {
   if (hasConfigFile())
     logger.warn(`${CONFIG_FILE_NAME} file already exists in this directory. If you continue this wizard the file will be overwritten.`)
 
@@ -42,6 +42,10 @@ async function initialize(argv: ArgumentsCamelCase<InitArgs>) {
         name: 'path',
         message: 'What is the absolute path to your source?',
         validate: (input) => {
+          if (input === '') {
+            return false
+          }
+
           if (!isAbsolute(input))
             return 'You need to use an absolute path'
 
@@ -89,19 +93,3 @@ ${optionsToDisplay}
 
   logger.success(`Successfully created ${CONFIG_FILE_NAME}`)
 }
-
-export const command = 'init'
-export const desc = `Initialize a new ${CONFIG_FILE_NAME} file`
-export function builder(yargs: Argv): Argv<InitArgs> {
-  return yargs.options({
-    source: {
-      type: 'string',
-      description: 'Absolute path to the source directory',
-    },
-    yes: {
-      type: 'boolean',
-      description: 'Skip confirmation prompts',
-    },
-  })
-}
-export const handler = initialize
