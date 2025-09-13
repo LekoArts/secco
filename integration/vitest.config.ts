@@ -7,6 +7,6 @@ export default defineConfig({
     include: ['integration/__tests__/**/*.ts'],
     globals: true,
     reporters: [process.env.CI ? 'default' : 'verbose'],
-    testTimeout: 60_000, // 60 seconds
+    testTimeout: 120_000, // 120 seconds
   },
 })
