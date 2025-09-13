@@ -40,4 +40,10 @@ describe('init', () => {
       await cleanup()
     }
   })
+  it('should error on invalid input', () => {
+    const [exitCode, logs] = SeccoCLI().setFixture('empty').invoke(['init', '--source', 'relative-path', '--yes'])
+
+    logs.should.contain('You need to provide an absolute path for the --source flag.')
+    expect(exitCode).toBe(1)
+  })
 })

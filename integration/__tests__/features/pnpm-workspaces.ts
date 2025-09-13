@@ -1,7 +1,7 @@
-import type { Application } from '../models/application'
+import type { Application } from '../../models/application'
 import getPort from 'get-port'
-import { renameFixture } from '../helpers/renamer'
-import { presets } from '../presets'
+import { renameFixture } from '../../helpers/renamer'
+import { presets } from '../../presets'
 
 const isPnpm = process.env.INTEGRATION_PM_NAME === 'pnpm'
 
@@ -23,6 +23,8 @@ describe.runIf(isPnpm)('pnpm workspaces', () => {
 
   it('should support protocol and catalogs', () => {
     const [exitCode, logs] = app.cli(['--scan-once', '--force-verdaccio', '--verbose', 'packages', 'say-hello-world'])
+
+    logs.logOutput()
 
     logs.should.contain('[log] [Verdaccio] Starting server...')
     logs.should.contain('[log] [Verdaccio] Started successfully!')
