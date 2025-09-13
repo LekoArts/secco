@@ -14,11 +14,14 @@ import { logger } from './utils/logger'
 import { setDefaultSpawnStdio } from './utils/promisified-spawn'
 import { traversePkgDeps } from './utils/traverse-pkg-deps'
 import { publishPackagesAndInstall } from './verdaccio'
+import { prepareGracefulExit } from './verdaccio/cleanup-tasks'
 
 let numOfCopiedFiles = 0
 const MAX_COPY_RETRIES = 3
 
 function quit() {
+  prepareGracefulExit()
+
   logger.info(`Copied ${numOfCopiedFiles} files. Exiting...`)
   process.exit(0)
 }
