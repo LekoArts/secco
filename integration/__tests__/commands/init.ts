@@ -1,4 +1,6 @@
-import { createTempDir } from '../../helpers/files'
+import path from 'node:path'
+import { fileExists } from 'verdaccio/build/lib/utils'
+import { createTempDir, fileContainsText } from '../../helpers/files'
 import { SeccoCLI } from '../../helpers/invoke-cli'
 
 const initQuestion = 'What is the absolute path to your source?'
@@ -22,10 +24,20 @@ describe('init', () => {
   it('should create config file after providing valid input', async () => {
     const [testDir, cleanup] = await createTempDir('init-command')
     const input = '/some/absolute/path/to/source'
-    const [_, logs] = SeccoCLI().setCwd(testDir).invoke(['init', '--source', input, '--yes'])
 
-    logs.should.contain('Successfully created .seccorc')
+    try {
+      const [exitCode, logs] = SeccoCLI().setEnv({ TEST: undefined, VITEST: undefined, VITEST_MODE: undefined, VITEST_WORKER_ID: undefined, VITEST_POOL_ID: undefined }).setCwd(testDir).invoke(['init', '--source', input, '--yes'])
 
-    await cleanup()
+      logs.should.contain('Successfully created .seccorc')
+      expect(exitCode).toBe(0)
+
+      const file = await fileExists(path.join(testDir, '.seccorc'))
+      expect(file).toBe(true)
+      const contents = await fileContainsText(path.join(testDir, '.seccorc'), input)
+      expect(contents).toBe(true)
+    }
+    finally {
+      await cleanup()
+    }
   })
 })

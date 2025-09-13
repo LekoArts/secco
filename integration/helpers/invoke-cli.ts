@@ -12,13 +12,13 @@ type CreateLogsMatcherReturn = ReturnType<typeof createLogsMatcher>
 export type InvokeResult = [exitCode: number | undefined, logsMatcher: CreateLogsMatcherReturn]
 
 export function SeccoCLI() {
-  let env: Record<string, string> = {}
+  let env: Record<string, string | undefined> = {}
   let cwd = ''
   let cliLocation = builtCliLocation
   let input = ''
 
   const self = {
-    setEnv: (_env: Record<string, string>) => {
+    setEnv: (_env: Record<string, string | undefined>) => {
       env = _env
       return self
     },
@@ -47,7 +47,10 @@ export function SeccoCLI() {
           [cliLocation].concat(args),
           {
             cwd,
-            env: { NODE_ENV, ...env },
+            env: {
+              NODE_ENV,
+              ...env,
+            },
             input,
           },
         )
