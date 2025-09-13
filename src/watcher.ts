@@ -237,8 +237,14 @@ export async function watcher(source: Source, destination: Destination, packages
         // Skip package.json check since we need it
         if (relativePackageFile !== 'package.json') {
           const isIncluded = filesPatterns.some((pattern) => {
-            // Handle exact matches and directory patterns
-            if (relativePackageFile.startsWith(`${pattern}/`) || relativePackageFile === pattern) {
+            // Handle exact matches
+            if (relativePackageFile === pattern) {
+              return true
+            }
+
+            const normalizedPattern = pattern.endsWith('/') ? pattern.slice(0, -1) : pattern
+
+            if (relativePackageFile.startsWith(`${normalizedPattern}/`)) {
               return true
             }
 
