@@ -225,7 +225,7 @@ describe('watcher', () => {
       // Mock package.json with files field
       vi.mocked(getPackageJson).mockReturnValueOnce({
         name: 'package-a',
-        files: ['lib', '*.js'],
+        files: ['lib', '*.js', 'dist/'],
       })
 
       await watcher(mockSource, mockDestination, undefined, mockOptions)
@@ -239,9 +239,30 @@ describe('watcher', () => {
       await chokidarCallbacks.all('change', '/source/packages/package-a/index.js')
       expect(fs.copy).toHaveBeenCalledTimes(2)
 
+      // File in dist directory - should copy
+      await chokidarCallbacks.all('change', '/source/packages/package-a/dist/index.js')
+      expect(fs.copy).toHaveBeenCalledTimes(3)
+
       // File not matching pattern - should NOT copy
       await chokidarCallbacks.all('change', '/source/packages/package-a/src/other.ts')
-      expect(fs.copy).toHaveBeenCalledTimes(2)
+      expect(fs.copy).toHaveBeenCalledTimes(3)
+    })
+
+    it('should handle dist/ pattern correctly', async () => {
+      const { getPackageJson } = await import('../utils/file')
+
+      // Mock package.json with only dist/ pattern to isolate the bug
+      vi.mocked(getPackageJson).mockReturnValueOnce({
+        name: 'package-a',
+        files: ['dist/'],
+      })
+
+      await watcher(mockSource, mockDestination, undefined, mockOptions)
+      await chokidarCallbacks.ready()
+
+      await chokidarCallbacks.all('change', '/source/packages/package-a/dist/index.js')
+
+      expect(fs.copy).toHaveBeenCalledTimes(1)
     })
 
     it('should always include package.json regardless of files field', async () => {

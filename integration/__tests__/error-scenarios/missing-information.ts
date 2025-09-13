@@ -1,7 +1,7 @@
 import { join } from 'pathe'
-import { SeccoCLI } from '../helpers/invoke-cli'
+import { SeccoCLI } from '../../helpers/invoke-cli'
 
-const missingSourcePackagesLocation = join(__dirname, '..', 'fixtures', 'missing-source-packages')
+const missingSourcePackagesLocation = join(__dirname, '..', '..', 'fixtures', 'missing-source-packages')
 
 describe('missing information', () => {
   it('should display error when no .seccorc or env var is found', () => {

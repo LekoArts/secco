@@ -3,6 +3,7 @@ import { onExit } from 'signal-exit'
 import { logger } from '../utils/logger'
 
 const cleanupTasks: Set<Function> = new Set()
+let isGracefulExit = false
 
 export function registerCleanupTask<F extends Function>(taskFn: F) {
   cleanupTasks.add(taskFn)
@@ -14,9 +15,15 @@ export function registerCleanupTask<F extends Function>(taskFn: F) {
   }
 }
 
+export function prepareGracefulExit() {
+  isGracefulExit = true
+  cleanupTasks.forEach(taskFn => taskFn())
+  cleanupTasks.clear()
+}
+
 onExit((code) => {
-  if (cleanupTasks.size > 0) {
-    logger.warn(`Process exited with code ${code} in the middle of publishing. Cleaning up...`)
+  if (cleanupTasks.size > 0 && !isGracefulExit) {
+    logger.warn(`Process exited with code ${code}. Cleaning up...`)
     cleanupTasks.forEach(taskFn => taskFn())
   }
 })

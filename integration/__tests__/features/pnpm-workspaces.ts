@@ -1,7 +1,7 @@
-import type { Application } from '../models/application'
+import type { Application } from '../../models/application'
 import getPort from 'get-port'
-import { renameFixture } from '../helpers/renamer'
-import { presets } from '../presets'
+import { renameFixture } from '../../helpers/renamer'
+import { presets } from '../../presets'
 
 const isPnpm = process.env.INTEGRATION_PM_NAME === 'pnpm'
 
