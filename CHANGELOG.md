@@ -1,5 +1,11 @@
 # secco
 
+## 3.1.1
+
+### Patch Changes
+
+- Publish package with "Trusted publishing" ([#202](https://github.com/LekoArts/secco/pull/202))
+
 ## 3.1.0
 
 ### Minor Changes
