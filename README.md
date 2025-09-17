@@ -85,7 +85,7 @@ Examples:
 
 ## Documentation
 
-Visit secco's [official documentation](https://secco.lekoarts.de)
+Visit secco's [official documentation](https://secco.lekoarts.de).
 
 ## Contributing
 
