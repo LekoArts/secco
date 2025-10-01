@@ -1,11 +1,11 @@
 import type { PackageJson, PackageNamesToFilePath, SourcePackages } from '../types'
 import destr from 'destr'
 import fs from 'fs-extra'
-import { isEqual, isObject, transform, uniq } from 'lodash-es'
 import fetch from 'node-fetch'
 import { CLI_NAME, NPM_DIST_TAG } from '../constants'
 import { getPackageVersion, getSourcePackageJsonPath } from './file'
 import { logger } from './logger'
+import { isEqual, isObject, transform, uniq } from './underscore'
 
 type ObjWithAny = Record<string, any>
 

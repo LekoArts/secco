@@ -3,10 +3,10 @@ import process from 'node:process'
 import { destr } from 'destr'
 import { findWorkspaces } from 'find-workspaces'
 import fs from 'fs-extra'
-import { intersection, merge } from 'lodash-es'
 import { join } from 'pathe'
 import { CONFIG_FILE_NAME } from '../constants'
 import { logger } from './logger'
+import { intersection, merge } from './underscore'
 
 const currentDir = process.cwd()
 

@@ -1,4 +1,5 @@
 import antfu from '@antfu/eslint-config'
+import dependPlugin from 'eslint-plugin-depend'
 
 export default antfu(
   {
@@ -26,6 +27,15 @@ export default antfu(
       }],
       'ts/array-type': ['error', { default: 'generic' }],
       'node/prefer-global/process': 'off',
+    },
+  },
+  {
+    files: ['./src/**/*.ts'],
+    ...dependPlugin.configs['flat/recommended'],
+    rules: {
+      'depend/ban-dependencies': ['error', {
+        allowed: ['fs-extra', 'execa'],
+      }],
     },
   },
 )
