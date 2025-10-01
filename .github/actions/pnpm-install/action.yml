@@ -18,10 +18,11 @@ runs:
 
   steps:
     - name: Install Node.js
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v5
       with:
         node-version: ${{ inputs.node-version }}
         check-latest: true
+        package-manager-cache: false
     - name: ⚙️ Enable Corepack
       if: ${{ inputs.enable-corepack == 'true' }}
       shell: bash
@@ -60,3 +61,4 @@ runs:
       run: pnpm install --frozen-lockfile --prefer-offline
       env:
         HUSKY: '0' # By default do not run HUSKY install
+        SKIP_INSTALL_SIMPLE_GIT_HOOKS: 1 # By default do not run simple-git-hooks install
