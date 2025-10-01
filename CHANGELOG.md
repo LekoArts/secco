@@ -1,5 +1,13 @@
 # secco
 
+## 3.1.2
+
+### Patch Changes
+
+- Update dependencies ([#204](https://github.com/LekoArts/secco/pull/204))
+
+- Improve internal usage of dependencies ([#216](https://github.com/LekoArts/secco/pull/216))
+
 ## 3.1.1
 
 ### Patch Changes
