@@ -32,9 +32,6 @@ importers:
       fs-extra:
         specifier: ^11.3.2
         version: 11.3.2
-      js-yaml:
-        specifier: ^4.1.0
-        version: 4.1.0
       nanoid:
         specifier: ^5.1.6
         version: 5.1.6
@@ -53,15 +50,15 @@ importers:
       signal-exit:
         specifier: ^4.1.0
         version: 4.1.0
-      strip-bom:
-        specifier: ^5.0.0
-        version: 5.0.0
       valibot:
         specifier: ^1.1.0
         version: 1.1.0(typescript@5.9.3)
       verdaccio:
         specifier: ^6.2.0
         version: 6.2.0(typanion@3.14.0)
+      yaml:
+        specifier: ^2.8.1
+        version: 2.8.1
       yargs:
         specifier: ^18.0.0
         version: 18.0.0
@@ -3425,10 +3422,6 @@ packages:
   strip-bom@3.0.0:
     resolution: {integrity: sha512-vavAMRXOgBVNF6nyEEmL3DBK19iRpDcoIwW+swQ+CbGiu7lju6t+JklA1MHweoWtadgt4ISVUsXLyDq34ddcwA==}
     engines: {node: '>=4'}
-
-  strip-bom@5.0.0:
-    resolution: {integrity: sha512-p+byADHF7SzEcVnLvc/r3uognM1hUhObuHXxJcgLCfD194XAkaLbjq3Wzb0N5G2tgIjH0dgT708Z51QxMeu60A==}
-    engines: {node: '>=12'}
 
   strip-final-newline@4.0.0:
     resolution: {integrity: sha512-aulFJcD6YK8V1G7iRB5tigAP4TsHBZZrOV8pjV++zdUwmeV8uzbY7yn6h9MswN62adStNZFuCIx4haBnRuMDaw==}
@@ -7510,8 +7503,6 @@ snapshots:
       ansi-regex: 6.0.1
 
   strip-bom@3.0.0: {}
-
-  strip-bom@5.0.0: {}
 
   strip-final-newline@4.0.0: {}
 
