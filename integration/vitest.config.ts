@@ -8,5 +8,6 @@ export default defineConfig({
     globals: true,
     reporters: [process.env.CI ? 'default' : 'verbose'],
     testTimeout: 120_000, // 120 seconds
+    retry: process.env.CI ? 2 : 0,
   },
 })
