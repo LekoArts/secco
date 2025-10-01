@@ -8,14 +8,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - name: Install Node.js
-        uses: actions/setup-node@v5
-        with:
-          node-version: 24.9.0
-      - name: ⚙️ Enable Corepack
-        shell: bash
-        run: |
-          npm i -g --force corepack
-          corepack enable
-          echo "Corepack enabled"
+      - name: Install dependencies
+        uses: ./.github/actions/pnpm-install
       - uses: preactjs/compressed-size-action@master
