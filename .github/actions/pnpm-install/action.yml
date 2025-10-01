@@ -1,13 +1,7 @@
-# Based on https://gist.github.com/belgattitude/838b2eba30c324f1f0033a797bab2e31
-
 name: PNPM install
 description: Run pnpm install with cache enabled
 
 inputs:
-  enable-corepack:
-    description: Enable corepack
-    required: false
-    default: 'true'
   node-version:
     description: Node version to use
     required: false
@@ -17,46 +11,19 @@ runs:
   using: composite
 
   steps:
+    - name: Install pnpm
+      uses: pnpm/action-setup@v4
+      with:
+        run_install: false
     - name: Install Node.js
       uses: actions/setup-node@v5
       with:
         node-version: ${{ inputs.node-version }}
         check-latest: true
-    - name: ⚙️ Enable Corepack
-      if: ${{ inputs.enable-corepack == 'true' }}
-      shell: bash
-      run: |
-        npm i -g --force corepack
-        corepack enable
-        echo "Corepack enabled"
-
-    - uses: pnpm/action-setup@v4.1.0
-      if: ${{ inputs.enable-corepack == 'false' }}
-      with:
-        run_install: false
-
-    - name: Expose pnpm config(s) through "$GITHUB_OUTPUT"
-      id: pnpm-config
-      shell: bash
-      run: |
-        echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
-
-    - name: Cache rotation keys
-      id: cache-rotation
-      shell: bash
-      run: |
-        echo "YEAR_MONTH=$(/bin/date -u "+%Y%m")" >> $GITHUB_OUTPUT
-
-    - uses: actions/cache@v4
-      name: Setup pnpm cache
-      with:
-        path: ${{ steps.pnpm-config.outputs.STORE_PATH }}
-        key: ${{ runner.os }}-node-${{ inputs.node-version }}-pnpm-store-cache-${{ steps.cache-rotation.outputs.YEAR_MONTH }}-${{ hashFiles('**/pnpm-lock.yaml') }}
-        restore-keys: |
-          ${{ runner.os }}-node-${{ inputs.node-version }}-pnpm-store-cache-${{ steps.cache-rotation.outputs.YEAR_MONTH }}-
-
+        cache: pnpm
     - name: Install dependencies
       shell: bash
       run: pnpm install --frozen-lockfile --prefer-offline
       env:
         HUSKY: '0' # By default do not run HUSKY install
+        SKIP_INSTALL_SIMPLE_GIT_HOOKS: 1 # By default do not run simple-git-hooks install
