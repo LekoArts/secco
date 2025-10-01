@@ -1,6 +1,5 @@
 import path from 'node:path'
-import { fileExists } from 'verdaccio/build/lib/utils'
-import { createTempDir, fileContainsText } from '../../helpers/files'
+import { createTempDir, fileContainsText, fileExists } from '../../helpers/files'
 import { SeccoCLI } from '../../helpers/invoke-cli'
 
 const initQuestion = 'What is the absolute path to your source?'
