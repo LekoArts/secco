@@ -5,9 +5,16 @@ on: workflow_call
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v5
-      - name: Install dependencies
-        uses: ./.github/actions/pnpm-install
+      - name: Install Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 24.9.0
+      - name: ⚙️ Enable Corepack
+        shell: bash
+        run: |
+          npm i -g --force corepack
+          corepack enable
+          echo "Corepack enabled"
       - uses: preactjs/compressed-size-action@master
