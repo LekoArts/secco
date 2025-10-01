@@ -1,5 +1,0 @@
----
-"secco": patch
----
-
-Update dependencies
