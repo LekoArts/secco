@@ -32,7 +32,7 @@ jobs:
       - name: Install Bun (optional)
         uses: oven-sh/setup-bun@v2
         if: ${{ matrix.pm.name == 'bun' }}
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v5
         with:
           name: dist
           path: dist
