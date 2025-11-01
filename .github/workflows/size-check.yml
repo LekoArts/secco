@@ -6,16 +6,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
-      - name: Install Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: 24.9.0
-          package-manager-cache: false
-      - name: ⚙️ Enable Corepack
-        shell: bash
-        run: |
-          npm i -g --force corepack
-          corepack enable
-          echo "Corepack enabled"
+      - name: Checkout
+        uses: actions/checkout@v5
+      - name: Install dependencies
+        uses: ./.github/actions/pnpm-install
       - uses: preactjs/compressed-size-action@master
