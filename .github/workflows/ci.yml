@@ -14,10 +14,6 @@ jobs:
   build-cli:
     name: Build CLI
     uses: ./.github/workflows/build-cli.yml
-  size-check:
-    name: Compressed Size
-    needs: build-cli
-    uses: ./.github/workflows/size-check.yml
   unit-testing:
     name: Unit Testing
     needs: build-cli

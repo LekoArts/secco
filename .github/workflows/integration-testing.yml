@@ -29,6 +29,12 @@ jobs:
         uses: actions/checkout@v5
       - name: Install dependencies
         uses: ./.github/actions/pnpm-install
+      - name: Enable Corepack
+        shell: bash
+        run: |
+          npm i -g --force corepack
+          corepack enable
+          echo "Corepack enabled"
       - name: Install Bun (optional)
         uses: oven-sh/setup-bun@v2
         if: ${{ matrix.pm.name == 'bun' }}
