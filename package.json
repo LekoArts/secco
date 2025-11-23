@@ -45,7 +45,8 @@
     "changeset": "changeset",
     "version": "changeset version",
     "version:ci": "changeset version && pnpm install --lockfile-only",
-    "release": "pnpm build && changeset publish"
+    "release": "pnpm build && changeset publish",
+    "check": "publint"
   },
   "dependencies": {
     "chokidar": "^4.0.3",
@@ -82,9 +83,10 @@
     "eslint-plugin-depend": "^1.3.1",
     "get-port": "^7.1.0",
     "lint-staged": "^16.2.6",
+    "publint": "^0.3.15",
     "simple-git-hooks": "^2.13.1",
     "strip-ansi": "^7.1.2",
-    "tsdown": "^0.15.12",
+    "tsdown": "^0.16.6",
     "typescript": "^5.9.3",
     "vitest": "^4.0.6"
   },

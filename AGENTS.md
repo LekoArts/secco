@@ -8,6 +8,7 @@
 - `pnpm test:unit -- path/to/test.ts` - Run a single test file
 - `pnpm lint` - Run ESLint
 - `pnpm typecheck` - TypeScript type checking
+- `pnpm check` - Run Publint for package.json linting
 
 ## Code Style
 - **Imports**: Use `type` imports for types, Node.js imports with `node:` prefix
