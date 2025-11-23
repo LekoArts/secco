@@ -15,27 +15,14 @@ import { traversePkgDeps } from '../utils/traverse-pkg-deps'
 import { intersection, uniq } from '../utils/underscore'
 import { publishPackagesAndInstall } from '../verdaccio'
 import { prepareGracefulExit } from '../verdaccio/cleanup-tasks'
+import { shouldIncludeFile } from './change-detector'
+import { CopyQueue } from './copy-queue'
 
-let numOfCopiedFiles = 0
-const MAX_COPY_RETRIES = 3
-
-function quit() {
+function quit(copyQueue: CopyQueue) {
   prepareGracefulExit()
 
-  logger.info(`Copied ${numOfCopiedFiles} files. Exiting...`)
+  logger.info(`Copied ${copyQueue.getNumCopied()} files. Exiting...`)
   process.exit(0)
-}
-
-interface CopyPathArgs {
-  oldPath: string
-  newPath: string
-  packageName: string
-}
-
-interface PrivateCopyPathArgs extends CopyPathArgs {
-  resolve: (value: void | PromiseLike<void>) => void
-  reject: (err: Error) => void
-  retry?: number
 }
 
 export async function watcher(source: Source, destination: Destination, packages: PackageNames | undefined, options: WatcherOptions) {
@@ -53,66 +40,13 @@ export async function watcher(source: Source, destination: Destination, packages
     logger.info('Workspaces detected in destination. Automatically enabling \`--force-verdaccio\` flag.')
   }
 
-  let afterPackageInstallation = false
-  let queuedCopies: Array<PrivateCopyPathArgs> = []
-
-  function _copyPath(args: PrivateCopyPathArgs) {
-    const { oldPath, newPath, resolve, reject, retry = 0 } = args
-
-    fs.copy(oldPath, newPath, (err) => {
-      if (err) {
-        if (retry >= MAX_COPY_RETRIES) {
-          logger.error(err)
-          reject(err)
-          return
-        }
-        else {
-          setTimeout(
-            () => _copyPath({ ...args, retry: retry + 1 }),
-            500 * 2 ** retry,
-          )
-          return
-        }
-      }
-
-      // TODO(feature): Handle case where copied file needs to be executable. Use fs.chmodSync(newPath, '0755') for that.
-
-      numOfCopiedFiles += 1
-      logger.log(`Copied \`${relative(source.path, oldPath)}\` to \`${newPath}\``)
-
-      resolve()
-    })
-  }
-
-  function copyPath({ oldPath, newPath, packageName }: CopyPathArgs) {
-    return new Promise<void>((resolve, reject) => {
-      const args = { oldPath, newPath, packageName, resolve, reject }
-
-      if (afterPackageInstallation)
-        _copyPath(args)
-      else
-        queuedCopies.push(args)
-    })
-  }
-
-  function runQueuedCopies() {
-    afterPackageInstallation = true
-
-    queuedCopies.forEach(_copyPath)
-    queuedCopies = []
-  }
+  // Initialize copy queue
+  const copyQueue = new CopyQueue(source.path)
 
   /**
    * Cleanup stale JS artifacts/dist files from node_modules. They'll be copied over anyways. But don't delete nested node_modules files
    */
-  async function clearStaleJsFileFromNodeModules() {
-    const packagesToClear = queuedCopies.reduce<Set<string>>((acc, { packageName }) => {
-      if (packageName)
-        acc.add(packageName)
-
-      return acc
-    }, new Set())
-
+  async function clearStaleJsFileFromNodeModules(packagesToClear: Set<string>) {
     await Promise.all(
       [...packagesToClear].map(
         async packageToClear => await deleteAsync([
@@ -168,7 +102,7 @@ export async function watcher(source: Source, destination: Destination, packages
     }
 
     if (scanOnce)
-      quit()
+      quit(copyQueue)
   }
 
   if (allPackagesToWatch.length === 0) {
@@ -201,6 +135,7 @@ export async function watcher(source: Source, destination: Destination, packages
 
   let allCopies: Array<Promise<void>> = []
   const packagesToPublish: Set<string> = new Set()
+  const packagesToClear: Set<string> = new Set()
   let isInitialScan = true
   let isPublishing = false
   const waitFor = new Set()
@@ -236,35 +171,8 @@ export async function watcher(source: Source, destination: Destination, packages
 
       // If the package.json has a `files` field, only copy files that are included in that field
       const filesPatterns = sourcePackageFilesMap.get(packagePath)
-      if (filesPatterns) {
-        // Skip package.json check since we need it
-        if (relativePackageFile !== 'package.json') {
-          const isIncluded = filesPatterns.some((pattern) => {
-            // Handle exact matches
-            if (relativePackageFile === pattern) {
-              return true
-            }
-
-            const normalizedPattern = pattern.endsWith('/') ? pattern.slice(0, -1) : pattern
-
-            if (relativePackageFile.startsWith(`${normalizedPattern}/`)) {
-              return true
-            }
-
-            // Handle glob patterns with wildcards
-            if (pattern.includes('*')) {
-              const regex = new RegExp(pattern.replace(/\*/g, '.*'))
-              return regex.test(relativePackageFile)
-            }
-
-            return false
-          })
-
-          if (!isIncluded) {
-            // Skip this file
-            return
-          }
-        }
+      if (!shouldIncludeFile(relativePackageFile, filesPatterns)) {
+        return
       }
 
       const nodeModulesFilePath = join(`./node_modules/${packageName}`, relativePackageFile)
@@ -313,7 +221,10 @@ export async function watcher(source: Source, destination: Destination, packages
       // Do not copy package.json files as this will mess up future dependency checks. So if code reaches this path, do nothing.
       }
 
-      const localCopies = [copyPath({ oldPath: file, newPath: nodeModulesFilePath, packageName })]
+      // Track which packages need stale files cleared
+      packagesToClear.add(packageName)
+
+      const localCopies = [copyQueue.enqueue({ oldPath: file, newPath: nodeModulesFilePath, packageName })]
 
       allCopies = allCopies.concat(localCopies)
     })
@@ -349,15 +260,15 @@ export async function watcher(source: Source, destination: Destination, packages
           logger.success('Installation complete')
         }
 
-        await clearStaleJsFileFromNodeModules()
-        runQueuedCopies()
+        await clearStaleJsFileFromNodeModules(packagesToClear)
+        copyQueue.processQueue()
       }
 
       // All files watched, quit once all files are copied and scanOnce is true
       Promise.all(allCopies)
         .then(() => {
           if (scanOnce)
-            quit()
+            quit(copyQueue)
         })
         .catch((err) => {
           // Log the error but don't crash - some files may have failed to copy
