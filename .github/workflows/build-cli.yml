@@ -12,6 +12,8 @@ jobs:
         uses: ./.github/actions/pnpm-install
       - name: Build CLI
         run: pnpm run build
+      - name: Publint
+        run: pnpm run check
       - name: Upload dist
         uses: actions/upload-artifact@v5
         with:

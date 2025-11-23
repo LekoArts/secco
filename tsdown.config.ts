@@ -8,8 +8,6 @@ export default defineConfig((options) => {
     format: 'esm',
     minify: !options.watch,
     clean: true,
-    outExtensions: () => ({
-      js: '.mjs',
-    }),
+    fixedExtension: true,
   }
 })
