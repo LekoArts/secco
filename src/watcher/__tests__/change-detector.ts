@@ -1,5 +1,133 @@
 import { describe, expect, it } from 'vitest'
-import { shouldIncludeFile } from '../change-detector'
+import { findPackageForFile, shouldIncludeFile } from '../change-detector'
+
+describe('findPackageForFile', () => {
+  const packageEntries: Array<[string, string]> = [
+    ['package-a', '/source/packages/package-a'],
+    ['package-b', '/source/packages/package-b'],
+    ['@scope/package-c', '/source/packages/scope-package-c'],
+  ]
+
+  describe('matching files', () => {
+    it('should match file in root of package', () => {
+      const result = findPackageForFile('/source/packages/package-a/index.js', packageEntries)
+      expect(result).toEqual({
+        packageName: 'package-a',
+        packagePath: '/source/packages/package-a',
+      })
+    })
+
+    it('should match file in subdirectory of package', () => {
+      const result = findPackageForFile('/source/packages/package-a/src/utils/helper.js', packageEntries)
+      expect(result).toEqual({
+        packageName: 'package-a',
+        packagePath: '/source/packages/package-a',
+      })
+    })
+
+    it('should match deeply nested file', () => {
+      const result = findPackageForFile('/source/packages/package-b/dist/types/index.d.ts', packageEntries)
+      expect(result).toEqual({
+        packageName: 'package-b',
+        packagePath: '/source/packages/package-b',
+      })
+    })
+
+    it('should match scoped package', () => {
+      const result = findPackageForFile('/source/packages/scope-package-c/index.js', packageEntries)
+      expect(result).toEqual({
+        packageName: '@scope/package-c',
+        packagePath: '/source/packages/scope-package-c',
+      })
+    })
+
+    it('should match package.json', () => {
+      const result = findPackageForFile('/source/packages/package-a/package.json', packageEntries)
+      expect(result).toEqual({
+        packageName: 'package-a',
+        packagePath: '/source/packages/package-a',
+      })
+    })
+  })
+
+  describe('non-matching files', () => {
+    it('should return null for file outside all packages', () => {
+      const result = findPackageForFile('/source/other/file.js', packageEntries)
+      expect(result).toBeNull()
+    })
+
+    it('should return null for file in parent directory', () => {
+      const result = findPackageForFile('/source/packages/index.js', packageEntries)
+      expect(result).toBeNull()
+    })
+
+    it('should return null for file in sibling package directory', () => {
+      // This file is actually in package-b's path, not package-a
+      const result = findPackageForFile('/source/packages/package-b/index.js', packageEntries)
+      expect(result).not.toEqual({
+        packageName: 'package-a',
+        packagePath: '/source/packages/package-a',
+      })
+    })
+
+    it('should return null for completely unrelated path', () => {
+      const result = findPackageForFile('/totally/different/path/file.js', packageEntries)
+      expect(result).toBeNull()
+    })
+  })
+
+  describe('edge cases', () => {
+    it('should handle empty package entries', () => {
+      const result = findPackageForFile('/source/packages/package-a/index.js', [])
+      expect(result).toBeNull()
+    })
+
+    it('should match first package when multiple packages could match', () => {
+      const overlappingEntries: Array<[string, string]> = [
+        ['package-a', '/source/packages/package-a'],
+        ['package-a-nested', '/source/packages/package-a/nested'],
+      ]
+      const result = findPackageForFile('/source/packages/package-a/index.js', overlappingEntries)
+      expect(result).toEqual({
+        packageName: 'package-a',
+        packagePath: '/source/packages/package-a',
+      })
+    })
+
+    it('should handle paths with special characters', () => {
+      const specialEntries: Array<[string, string]> = [
+        ['@my-org/my-package', '/source/packages/@my-org/my-package'],
+      ]
+      const result = findPackageForFile('/source/packages/@my-org/my-package/index.js', specialEntries)
+      expect(result).toEqual({
+        packageName: '@my-org/my-package',
+        packagePath: '/source/packages/@my-org/my-package',
+      })
+    })
+
+    it('should handle Windows-style paths', () => {
+      const windowsEntries: Array<[string, string]> = [
+        ['package-a', 'C:\\source\\packages\\package-a'],
+      ]
+      const result = findPackageForFile('C:\\source\\packages\\package-a\\index.js', windowsEntries)
+      expect(result).toEqual({
+        packageName: 'package-a',
+        packagePath: 'C:\\source\\packages\\package-a',
+      })
+    })
+  })
+
+  describe('matching priority', () => {
+    it('should return first matching package in order', () => {
+      const entries: Array<[string, string]> = [
+        ['first', '/source/packages/pkg'],
+        ['second', '/source/packages/pkg'],
+      ]
+      const result = findPackageForFile('/source/packages/pkg/index.js', entries)
+      expect(result?.packageName).toBe('first')
+    })
+  })
+})
 
 describe('shouldIncludeFile', () => {
   describe('when no files patterns provided', () => {

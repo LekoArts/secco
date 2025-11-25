@@ -1,3 +1,5 @@
+import { relative } from 'pathe'
+
 /**
  * Helper functions for detecting and filtering file changes
  */
@@ -50,21 +52,36 @@ export function shouldIncludeFile(
 /**
  * Find which package a file belongs to by matching against package paths
  *
+ * Uses relative path calculation to determine if a file is within a package directory.
+ * A file is considered to belong to a package if its relative path from the package
+ * directory doesn't start with '..' (meaning it's not outside the package).
+ *
  * @param file - Absolute file path
  * @param packageEntries - Map entries of [packageName, packagePath]
  * @returns Object with packageName and packagePath, or null if not found
+ *
+ * @example
+ * ```typescript
+ * const entries = [
+ *   ['my-package', '/source/packages/my-package'],
+ *   ['other-package', '/source/packages/other-package']
+ * ]
+ * const result = findPackageForFile('/source/packages/my-package/index.js', entries)
+ * // Returns: { packageName: 'my-package', packagePath: '/source/packages/my-package' }
+ * ```
  */
 export function findPackageForFile(
   file: string,
   packageEntries: Array<[string, string]>,
 ): { packageName: string, packagePath: string } | null {
   for (const [packageName, packagePath] of packageEntries) {
-    // Use a simple string startsWith check - if the file is within the package path
-    // Note: We need to be careful with paths to avoid false matches
-    // We'll use the existing logic from watcher for now
-    const relativePath = file.replace(packagePath, '')
+    const relativePath = relative(packagePath, file)
 
     // If relativePath doesn't start with '..', the file is within this package
+    // Examples:
+    //   'index.js' -> within package
+    //   'src/utils/helper.js' -> within package
+    //   '../other-package/file.js' -> outside package (starts with '..')
     if (!relativePath.startsWith('..')) {
       return { packageName, packagePath }
     }

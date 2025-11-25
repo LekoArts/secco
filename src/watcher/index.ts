@@ -15,7 +15,7 @@ import { traversePkgDeps } from '../utils/traverse-pkg-deps'
 import { intersection, uniq } from '../utils/underscore'
 import { publishPackagesAndInstall } from '../verdaccio'
 import { prepareGracefulExit } from '../verdaccio/cleanup-tasks'
-import { shouldIncludeFile } from './change-detector'
+import { findPackageForFile, shouldIncludeFile } from './change-detector'
 import { CopyQueue } from './copy-queue'
 
 function quit(copyQueue: CopyQueue) {
@@ -151,22 +151,12 @@ export async function watcher(source: Source, destination: Destination, packages
       if (!WATCH_EVENTS.includes(event))
         return
 
-      // Match name against package path
-      let packageName
-      let packagePath
-
-      for (const [_packageName, _packagePath] of pkgPathMatchingEntries) {
-        const relativePath = relative(_packagePath, file)
-        if (!relativePath.startsWith('..')) {
-          packageName = _packageName
-          packagePath = _packagePath
-          break
-        }
-      }
-
-      if (!packageName || !packagePath)
+      // Match file to its package
+      const packageMatch = findPackageForFile(file, pkgPathMatchingEntries)
+      if (!packageMatch)
         return
 
+      const { packageName, packagePath } = packageMatch
       const relativePackageFile = relative(packagePath, file)
 
       // If the package.json has a `files` field, only copy files that are included in that field
