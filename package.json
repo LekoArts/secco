@@ -49,7 +49,7 @@
     "check": "publint"
   },
   "dependencies": {
-    "chokidar": "^4.0.3",
+    "chokidar": "^5.0.0",
     "consola": "^3.4.2",
     "del": "^8.0.1",
     "destr": "^2.0.5",
