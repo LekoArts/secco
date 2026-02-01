@@ -59,12 +59,12 @@
     "fs-extra": "^11.3.3",
     "nanoid": "^5.1.6",
     "node-fetch": "^3.3.2",
-    "nypm": "^0.6.2",
+    "nypm": "^0.6.4",
     "pathe": "^2.0.3",
     "rc9": "^2.1.2",
     "signal-exit": "^4.1.0",
     "valibot": "^1.2.0",
-    "verdaccio": "^6.2.4",
+    "verdaccio": "^6.2.5",
     "yaml": "^2.8.2",
     "yargs": "^18.0.0"
   },
@@ -77,18 +77,18 @@
     "@types/node": "^24.10.9",
     "@types/yargs": "^17.0.35",
     "@verdaccio/types": "^10.8.0",
-    "@vitest/coverage-v8": "^4.0.16",
+    "@vitest/coverage-v8": "^4.0.18",
     "changesets-changelog-github-local": "^1.0.1",
     "eslint": "^9.39.2",
     "eslint-plugin-depend": "^1.4.0",
     "get-port": "^7.1.0",
     "lint-staged": "^16.2.7",
-    "publint": "^0.3.16",
+    "publint": "^0.3.17",
     "simple-git-hooks": "^2.13.1",
     "strip-ansi": "^7.1.2",
-    "tsdown": "^0.18.4",
+    "tsdown": "^0.20.1",
     "typescript": "^5.9.3",
-    "vitest": "^4.0.16"
+    "vitest": "^4.0.18"
   },
   "simple-git-hooks": {
     "pre-commit": "pnpm lint-staged"
