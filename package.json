@@ -49,7 +49,7 @@
     "check": "publint"
   },
   "dependencies": {
-    "chokidar": "^4.0.3",
+    "chokidar": "^5.0.0",
     "consola": "^3.4.2",
     "del": "^8.0.1",
     "destr": "^2.0.5",
@@ -61,7 +61,7 @@
     "node-fetch": "^3.3.2",
     "nypm": "^0.6.4",
     "pathe": "^2.0.3",
-    "rc9": "^2.1.2",
+    "rc9": "^3.0.0",
     "signal-exit": "^4.1.0",
     "valibot": "^1.2.0",
     "verdaccio": "^6.2.5",
