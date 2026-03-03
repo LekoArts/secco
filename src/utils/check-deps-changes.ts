@@ -1,7 +1,6 @@
 import type { PackageJson, PackageNamesToFilePath, SourcePackages } from '../types'
 import destr from 'destr'
 import fs from 'fs-extra'
-import fetch from 'node-fetch'
 import { CLI_NAME, NPM_DIST_TAG } from '../constants'
 import { getPackageVersion, getSourcePackageJsonPath } from './file'
 import { logger } from './logger'
