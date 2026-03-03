@@ -38,7 +38,7 @@ jobs:
       - name: Install Bun (optional)
         uses: oven-sh/setup-bun@v2
         if: ${{ matrix.pm.name == 'bun' }}
-      - uses: actions/download-artifact@v7
+      - uses: actions/download-artifact@v8
         with:
           name: dist
           path: dist
@@ -49,7 +49,7 @@ jobs:
           INTEGRATION_PM_VERSION: ${{ matrix.pm.version }}
       - name: Upload temp dir (optional)
         if: ${{ cancelled() || failure() }}
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: temp-dir-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.pm.name }}
           path: ${{ runner.temp }}/secco-**/**/*
