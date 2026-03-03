@@ -6,7 +6,6 @@ import { checkDepsChanges, difference } from '../check-deps-changes'
 
 // Mock dependencies
 vi.mock('fs-extra')
-vi.mock('node-fetch')
 vi.mock('../logger')
 vi.mock('../file')
 
@@ -14,7 +13,7 @@ const mockFs = vi.hoisted(() => ({
   readFile: vi.fn(),
 }))
 
-const mockFetch = vi.hoisted(() => vi.fn())
+const mockFetch = vi.fn()
 
 const mockLogger = vi.hoisted(() => ({
   logger: {
@@ -30,7 +29,6 @@ const mockFile = vi.hoisted(() => ({
 }))
 
 vi.mock('fs-extra', () => ({ default: mockFs }))
-vi.mock('node-fetch', () => ({ default: mockFetch }))
 vi.mock('../logger', () => mockLogger)
 vi.mock('../file', () => mockFile)
 
@@ -58,6 +56,7 @@ describe('checkDepsChanges', () => {
 
   beforeEach(() => {
     vi.resetAllMocks()
+    vi.stubGlobal('fetch', mockFetch)
 
     defaultArgs = {
       nodeModulesFilePath: '/path/to/node_modules/test-package/package.json',
