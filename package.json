@@ -68,7 +68,7 @@
     "yargs": "^18.0.0"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^7.7.3",
+    "@antfu/eslint-config": "^8.0.0",
     "@changesets/cli": "^2.30.0",
     "@total-typescript/ts-reset": "^0.6.1",
     "@types/fs-extra": "^11.0.4",
@@ -78,7 +78,7 @@
     "@verdaccio/types": "^10.8.0",
     "@vitest/coverage-v8": "^4.0.18",
     "changesets-changelog-github-local": "^1.0.1",
-    "eslint": "^9.39.4",
+    "eslint": "^10.1.0",
     "eslint-plugin-depend": "^1.5.0",
     "get-port": "^7.1.0",
     "lint-staged": "^16.4.0",
