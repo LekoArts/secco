@@ -86,7 +86,7 @@
     "simple-git-hooks": "^2.13.1",
     "strip-ansi": "^7.2.0",
     "tsdown": "^0.20.3",
-    "typescript": "^5.9.3",
+    "typescript": "^6.0.2",
     "vitest": "^4.0.18"
   },
   "simple-git-hooks": {
