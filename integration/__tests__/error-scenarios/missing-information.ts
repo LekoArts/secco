@@ -1,9 +1,24 @@
+import { cp } from 'node:fs/promises'
 import { join } from 'pathe'
+import { createTempDir } from '../../helpers/files'
 import { SeccoCLI } from '../../helpers/invoke-cli'
 
-const missingSourcePackagesLocation = join(__dirname, '..', '..', 'fixtures', 'missing-source-packages')
+const missingSourcePackagesFixtureLocation = join(__dirname, '..', '..', 'fixtures', 'missing-source-packages')
+let missingSourcePackagesLocation = ''
+let cleanupMissingSourcePackages = async () => {}
 
 describe('missing information', () => {
+  beforeAll(async () => {
+    const [isolatedDir, cleanup] = await createTempDir('missing-source-packages')
+    await cp(missingSourcePackagesFixtureLocation, isolatedDir, { recursive: true })
+    missingSourcePackagesLocation = isolatedDir
+    cleanupMissingSourcePackages = cleanup
+  })
+
+  afterAll(async () => {
+    await cleanupMissingSourcePackages()
+  })
+
   it('should display error when no .seccorc or env var is found', () => {
     const [exitCode, logs] = SeccoCLI().setFixture('empty').invoke([''])
 
