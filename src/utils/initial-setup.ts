@@ -24,19 +24,21 @@ Current directory must contain a \`package.json\` file.`)
 
 export function findWorkspacesInSource(sourcePath: Source['path']) {
   const workspaces = findWorkspaces(sourcePath)
+  const hasWorkspaces = Boolean(workspaces?.length)
 
   return {
-    hasWorkspaces: Boolean(workspaces),
-    workspaces,
+    hasWorkspaces,
+    workspaces: hasWorkspaces ? workspaces : null,
   }
 }
 
 export function findWorkspacesInDestination(destinationPath: string) {
   const workspaces = findWorkspaces(destinationPath)
+  const hasWorkspaces = Boolean(workspaces?.length)
 
   return {
-    hasWorkspaces: Boolean(workspaces),
-    workspaces,
+    hasWorkspaces,
+    workspaces: hasWorkspaces ? workspaces : null,
   }
 }
 

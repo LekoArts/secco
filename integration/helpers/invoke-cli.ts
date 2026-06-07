@@ -5,6 +5,7 @@ import { join } from 'pathe'
 import strip from 'strip-ansi'
 import { createLogsMatcher } from './matcher'
 
+const CLI_TIMEOUT_MS = 10_000
 const builtCliLocation = join(__dirname, '..', '..', 'dist', 'cli.mjs')
 const fixturesLocation = join(__dirname, '..', 'fixtures')
 
@@ -48,10 +49,16 @@ export function SeccoCLI() {
           {
             cwd,
             env: {
+              PATH: process.env.PATH,
+              HOME: process.env.HOME,
+              CI: process.env.CI,
+              SECCO_VERDACCIO_PORT: process.env.SECCO_VERDACCIO_PORT,
               NODE_ENV,
               ...env,
             },
+            extendEnv: false,
             input,
+            timeout: CLI_TIMEOUT_MS,
           },
         )
 
