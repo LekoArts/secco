@@ -67,10 +67,7 @@ export async function watcher(source: Source, destination: Destination, packages
           return
         }
         else {
-          setTimeout(
-            () => _copyPath({ ...args, retry: retry + 1 }),
-            500 * 2 ** retry,
-          )
+          setTimeout(_copyPath, 500 * 2 ** retry, { ...args, retry: retry + 1 })
           return
         }
       }

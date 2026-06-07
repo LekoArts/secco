@@ -77,7 +77,7 @@ export function transform<T extends Record<string, any>, R extends Record<string
   const result = (accumulator ?? {}) as R
 
   for (const key in object) {
-    if (Object.prototype.hasOwnProperty.call(object, key))
+    if (Object.hasOwn(object, key))
       iteratee(result, object[key], key)
   }
 
@@ -137,7 +137,7 @@ export function merge<T extends Record<string, any>>(
       continue
 
     for (const key in source) {
-      if (!Object.prototype.hasOwnProperty.call(source, key))
+      if (!Object.hasOwn(source, key))
         continue
 
       const sourceValue = source[key]

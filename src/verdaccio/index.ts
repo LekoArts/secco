@@ -40,7 +40,6 @@ async function startVerdaccio() {
 
   verdaccioStartupPromise = Promise.race([
     new Promise<Server>((resolve) => {
-      // @ts-expect-error: Verdaccio's types are wrong
       runServer(VERDACCIO_CONFIG).then((app: Server) => {
         app.listen(VERDACCIO_CONFIG.port, () => {
           logger.log('[Verdaccio] Started successfully!')
