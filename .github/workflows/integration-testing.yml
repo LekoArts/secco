@@ -13,7 +13,7 @@ jobs:
             version: 11.6.0
           - name: pnpm
             displayName: pnpm
-            version: 11.5.2
+            version: 11.5.0
           - name: yarn
             displayName: yarn (classic)
             version: 1.22.22
