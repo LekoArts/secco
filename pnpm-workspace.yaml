@@ -1,6 +1,8 @@
 shellEmulator: true
 
 trustPolicy: no-downgrade
+trustPolicyExclude:
+  - pino@9.14.0
 
 allowBuilds:
   esbuild: true
