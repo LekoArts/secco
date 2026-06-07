@@ -5,10 +5,6 @@ import { NPM_DIST_TAG } from '../../constants'
 import { checkDepsChanges, difference } from '../check-deps-changes'
 
 // Mock dependencies
-vi.mock('fs-extra')
-vi.mock('../logger')
-vi.mock('../file')
-
 const mockFs = vi.hoisted(() => ({
   readFile: vi.fn(),
 }))
