@@ -82,8 +82,8 @@ importers:
         specifier: ^17.0.35
         version: 17.0.35
       '@verdaccio/types':
-        specifier: ^10.8.0
-        version: 10.8.0
+        specifier: ^13.0.2
+        version: 13.0.2
       '@vitest/coverage-v8':
         specifier: ^4.1.2
         version: 4.1.8(vitest@4.1.8)
@@ -996,8 +996,9 @@ packages:
     resolution: {integrity: sha512-LQHoAlp7yk5Tlhv+uHWJKtExwbMDBvwTvoAsdWMq4sRjCrdJSz8KTfWEBrb0EayxEwPr0LmI0ce8mIriId9Zow==}
     engines: {node: '>=18'}
 
-  '@verdaccio/types@10.8.0':
-    resolution: {integrity: sha512-FuJyCRFPdy+gqCi0v29dE1xKn99Ztq6fuY9fb7ezeP1SRbUL/hgDaNkpjYvSIMCyb+dLFKOFBeZPyIUBLOSdlA==}
+  '@verdaccio/types@13.0.2':
+    resolution: {integrity: sha512-0KwWvRl1EJYlUvZbZOpIAviqsp9sdiV//xTIQ/naPSUDmmWshcxWkLEneuct2oy4xxwQs2lS9qzd23gcyUM75A==}
+    engines: {node: '>=18'}
 
   '@verdaccio/ui-theme@9.0.0-next-9.14':
     resolution: {integrity: sha512-0PQW6PV+sHsQdV3gnHQqAcDcVGfT75vHq1TfIeEN2QY5KuEkvli8e5vut+sTe89p+GOTahHKgTMOcL0O3BvsgA==}
@@ -4764,7 +4765,7 @@ snapshots:
       - react-native-b4a
       - supports-color
 
-  '@verdaccio/types@10.8.0': {}
+  '@verdaccio/types@13.0.2': {}
 
   '@verdaccio/ui-theme@9.0.0-next-9.14':
     dependencies:
@@ -6162,7 +6163,7 @@ snapshots:
       lodash.isstring: 4.0.1
       lodash.once: 4.1.1
       ms: 2.1.3
-      semver: 7.8.0
+      semver: 7.8.2
 
   jsprim@2.0.2:
     dependencies:
