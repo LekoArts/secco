@@ -82,8 +82,8 @@ importers:
         specifier: ^17.0.35
         version: 17.0.35
       '@verdaccio/types':
-        specifier: ^13.0.5
-        version: 13.0.5
+        specifier: ^13.0.6
+        version: 13.0.6
       '@vitest/coverage-v8':
         specifier: ^4.1.10
         version: 4.1.10(vitest@4.1.10)
@@ -1141,9 +1141,9 @@ packages:
     resolution: {integrity: sha512-y1hLbJkv0Keo338oqtBOlAdDWRl5+K9GaSjiINaD9U4fiRqppR6Ktj1UPAj6tGL1OGtNUAPM3xobgzWKc7/2QQ==}
     engines: {node: '>=22'}
 
-  '@verdaccio/types@13.0.5':
-    resolution: {integrity: sha512-+3lAAiPjgr9q4C/CbDKBgN8aRNu+Eh6PixXLA8RaxmN7LBxK73PUAQcex/Flza9K6CeTExBRnZnd8bbCCiDUVQ==}
-    engines: {node: '>=18'}
+  '@verdaccio/types@13.0.6':
+    resolution: {integrity: sha512-vvdEhMChw1vyUT6fW9GSzmlicKk2uVTZ2FQ+nl95G1kq5s47oieVDo6xbZ/UzfnlO3WP2KlMJWYsUsMOhl3J/A==}
+    engines: {node: '>=22'}
 
   '@verdaccio/ui-theme@9.0.0-next-9.21':
     resolution: {integrity: sha512-w423IDgBOTmUW94CF84bXosW9Kg6khNhbGxCAPEOtE7yZUyASMxoZP14Ro3N2F492pd0Nd/MV3a//opI+SNPQA==}
@@ -5126,7 +5126,7 @@ snapshots:
       - react-native-b4a
       - supports-color
 
-  '@verdaccio/types@13.0.5': {}
+  '@verdaccio/types@13.0.6': {}
 
   '@verdaccio/ui-theme@9.0.0-next-9.21':
     dependencies:
