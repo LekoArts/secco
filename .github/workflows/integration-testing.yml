@@ -27,7 +27,7 @@ jobs:
     name: ${{ matrix.pm.displayName }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Install dependencies
         uses: ./.github/actions/pnpm-install
       - name: Enable Corepack
