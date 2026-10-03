@@ -62,7 +62,10 @@ const revertIgnorePackageJsonChanges = vi.fn()
 describe('adjustPackageJson', () => {
   let result: ReturnType<typeof adjustPackageJson>
 
-  beforeAll(() => {
+  beforeEach(() => {
+    sourcePkgJson.version = '1.0.0'
+    sourcePkgJson.dependencies = { 'test-package': '^1.0.0', 'workspace-dep': 'workspace:*', 'catalog-dep': 'catalog:', 'react-catalog-dep': 'catalog:react' }
+    testPkgJson.version = '1.0.0'
     vi.mocked(fs.readFileSync).mockReturnValueOnce(sourcePkgJsonString).mockReturnValueOnce(testPkgJsonString)
     vi.mocked(destr).mockReturnValueOnce(sourcePkgJson).mockReturnValueOnce(testPkgJson)
     ignorePackageJsonChanges.mockReturnValue(revertIgnorePackageJsonChanges)

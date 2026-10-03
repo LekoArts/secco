@@ -13,8 +13,11 @@ jobs:
             displayName: npm
             version: 11.6.0
           - name: pnpm
-            displayName: pnpm
-            version: 11.5.0
+            displayName: pnpm (11)
+            version: 11.28.3
+          - name: pnpm
+            displayName: pnpm (12)
+            version: 12.8.1
           - name: yarn
             displayName: yarn (classic)
             version: 1.22.22
@@ -27,7 +30,7 @@ jobs:
     name: ${{ matrix.pm.displayName }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Install dependencies
         uses: ./.github/actions/pnpm-install
       - name: Enable Corepack
@@ -52,6 +55,6 @@ jobs:
         if: ${{ cancelled() || failure() }}
         uses: actions/upload-artifact@v7
         with:
-          name: temp-dir-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.pm.name }}
+          name: temp-dir-${{ github.run_id }}-${{ github.run_attempt }}-${{ matrix.pm.name }}-${{ matrix.pm.version }}
           path: ${{ runner.temp }}/secco-**/**/*
           retention-days: 1

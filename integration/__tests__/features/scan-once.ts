@@ -3,8 +3,8 @@ import getPort from 'get-port'
 import { renameFixture } from '../../helpers/renamer'
 import { presets } from '../../presets'
 
-describe.sequential('scan-once', () => {
-  describe.sequential('single package', () => {
+describe('scan-once', () => {
+  describe('single package', () => {
     let app: Application
 
     beforeAll(async () => {
@@ -44,7 +44,7 @@ describe.sequential('scan-once', () => {
     })
   })
 
-  describe.sequential('workspaces', () => {
+  describe('workspaces', () => {
     let app: Application
 
     beforeAll(async () => {
