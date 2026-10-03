@@ -1,8 +1,10 @@
-shellEmulator: true
+minimumReleaseAgeExcludePrune: true
 
 trustPolicy: no-downgrade
 trustPolicyExclude:
   - pino@9.14.0
+
+shellEmulator: true
 
 allowBuilds:
   esbuild: true

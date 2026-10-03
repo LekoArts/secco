@@ -20,3 +20,5 @@ pnpm-debug.log*
 
 # Vitest
 coverage
+
+.mastracode

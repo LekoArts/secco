@@ -4,14 +4,12 @@ import { execa } from 'execa'
 import { CLI_NAME } from '../constants'
 import { logger } from './logger'
 
-type Writeable<T> = { -readonly [P in keyof T]: T[P] }
-
-const defaultSpawnArgs: Writeable<Options> = {
+const defaultSpawnArgs: { cwd: string, stdio: 'inherit' | 'ignore' } = {
   cwd: process.cwd(),
   stdio: 'inherit',
 }
 
-export function setDefaultSpawnStdio(stdio: Options['stdio']) {
+export function setDefaultSpawnStdio(stdio: 'inherit' | 'ignore') {
   defaultSpawnArgs.stdio = stdio
 }
 

@@ -15,7 +15,7 @@ interface GetInstallCmdArgs {
   env?: NodeJS.ProcessEnv
 }
 
-const addMap: Record<PackageManagerName, 'install' | 'add'> = {
+const addMap: Partial<Record<PackageManagerName, 'install' | 'add'>> = {
   npm: 'install',
   pnpm: 'add',
   yarn: 'add',
@@ -24,7 +24,7 @@ const addMap: Record<PackageManagerName, 'install' | 'add'> = {
   deno: 'add',
 }
 
-const exactMap: Record<PackageManagerName, '--save-exact' | '--exact'> = {
+const exactMap: Partial<Record<PackageManagerName, '--save-exact' | '--exact'>> = {
   npm: '--save-exact',
   pnpm: '--save-exact',
   yarn: '--exact',
@@ -34,12 +34,20 @@ const exactMap: Record<PackageManagerName, '--save-exact' | '--exact'> = {
 }
 
 export function getAddDependenciesCmd({ packages, pm, externalRegistry = false, env = {} }: GetAddDependenciesCmdArgs) {
+  if (!addMap[pm.name] || !exactMap[pm.name]) {
+    throw new Error(`Unsupported package manager: ${pm.name}`)
+  }
+
   const commands: PromisifiedSpawnArgs = [pm.command, [addMap[pm.name], ...packages, exactMap[pm.name], !externalRegistry ? `--registry=${REGISTRY_URL}` : null, pm.name === 'npm' ? '--legacy-peer-deps' : null].filter(Boolean), { env }]
 
   return commands
 }
 
 export function getInstallCmd({ pm, externalRegistry = false, env = {} }: GetInstallCmdArgs) {
+  if (!addMap[pm.name]) {
+    throw new Error(`Unsupported package manager: ${pm.name}`)
+  }
+
   const commands: PromisifiedSpawnArgs = [pm.command, ['install', !externalRegistry ? `--registry=${REGISTRY_URL}` : null].filter(Boolean), { env }]
 
   return commands

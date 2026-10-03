@@ -4,6 +4,11 @@ import { REGISTRY_URL } from '../verdaccio-config'
 const registryUrlFlag = `--registry=${REGISTRY_URL}`
 
 describe('getAddDependenciesCmd', () => {
+  it.each(['aube', 'nub'] as const)('rejects unsupported package manager %s', (name) => {
+    expect(() => getAddDependenciesCmd({ packages: ['package1'], pm: { name, command: name } }))
+      .toThrow(`Unsupported package manager: ${name}`)
+  })
+
   it('returns the correct command for npm', () => {
     const packages = ['package1', 'package2']
     const pm = { command: 'npm', name: 'npm' as any }
@@ -63,6 +68,11 @@ describe('getAddDependenciesCmd', () => {
 })
 
 describe('getInstallCmd', () => {
+  it.each(['aube', 'nub'] as const)('rejects unsupported package manager %s', (name) => {
+    expect(() => getInstallCmd({ pm: { name, command: name } }))
+      .toThrow(`Unsupported package manager: ${name}`)
+  })
+
   it('should return the correct command for npm', () => {
     const pm = { name: 'npm' as const, command: 'npm' }
     const expectedCmd = ['npm', ['install', registryUrlFlag], { env: {} }]
