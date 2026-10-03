@@ -1,19 +1,5 @@
 # secco
 
-## 4.0.0
-
-### Major Changes
-
-- Node.js v20 is no longer supported (as it's EOL). The oldest supported version is now `22.22.3`. ([#273](https://github.com/LekoArts/secco/pull/273))
-
-### Patch Changes
-
-- Update internal `chokidar` dependency to v5 ([#273](https://github.com/LekoArts/secco/pull/273))
-
-- Better tracking of empty workspaces ([#273](https://github.com/LekoArts/secco/pull/273))
-
-- Update internal dependencies, including Execa v10 and Nano ID v6, and verify compatibility with pnpm v11 and v12.
-
 ## 3.1.2
 
 ### Patch Changes
