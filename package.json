@@ -80,7 +80,7 @@
     "@verdaccio/types": "^13.0.6",
     "@vitest/coverage-v8": "^5.0.5",
     "changesets-changelog-github-local": "^1.0.1",
-    "eslint": "^10.11.0",
+    "eslint": "^10.14.0",
     "eslint-plugin-depend": "^1.5.0",
     "get-port": "^7.2.0",
     "lint-staged": "^17.6.0",
