@@ -49,9 +49,9 @@
     "check": "publint"
   },
   "dependencies": {
-    "chokidar": "^5.0.0",
+    "chokidar": "^6.0.0",
     "consola": "^3.4.2",
-    "del": "^8.0.1",
+    "del": "^9.0.1",
     "destr": "^2.0.5",
     "enquirer": "^2.4.1",
     "execa": "^10.2.1",
@@ -63,7 +63,7 @@
     "rc9": "^3.1.0",
     "signal-exit": "^4.1.0",
     "valibot": "^1.5.0",
-    "verdaccio": "^6.11.1",
+    "verdaccio": "^7.0.2",
     "yaml": "^2.9.1",
     "yargs": "^18.2.0"
   },
