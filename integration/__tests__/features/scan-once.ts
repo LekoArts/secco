@@ -1,5 +1,7 @@
 import type { Application } from '../../models/application'
+import { appendFile, readFile } from 'node:fs/promises'
 import getPort from 'get-port'
+import { join } from 'pathe'
 import { renameFixture } from '../../helpers/renamer'
 import { presets } from '../../presets'
 
@@ -17,7 +19,7 @@ describe('scan-once', () => {
       await app.cleanup()
     })
 
-    it('should run Verdaccio with --force-verdaccio', () => {
+    it('should run Verdaccio with --force-verdaccio', async () => {
       const [exitCode, logs] = app.cli(['--scan-once', '--force-verdaccio', '--verbose'])
 
       logs.should.contain('[log] [Verdaccio] Starting server...')
@@ -29,9 +31,12 @@ describe('scan-once', () => {
       logs.should.contain('[success] Installation finished successfully!')
 
       expect(exitCode).toBe(0)
+
+      const installedPkg = JSON.parse(await readFile(join(app.dir, 'destination/node_modules/say-hello-world/package.json'), 'utf-8')) as { version: string }
+      expect(installedPkg.version).toMatch(/^0\.0\.2-secco-/)
     })
 
-    it('should copy files on consecutive runs', () => {
+    it('should copy files on consecutive runs', async () => {
       const [exitCode, logs] = app.cli(['--scan-once'], { verbose: true })
 
       logs.should.not.contain('[log] [Verdaccio] Starting server...')
@@ -41,6 +46,29 @@ describe('scan-once', () => {
       logs.should.contain('[info] Copied 2 files. Exiting...')
 
       expect(exitCode).toBe(0)
+
+      const [source, copied] = await Promise.all([
+        readFile(join(app.dir, 'source/index.mjs'), 'utf-8'),
+        readFile(join(app.dir, 'destination/node_modules/say-hello-world/index.mjs'), 'utf-8'),
+      ])
+      expect(copied).toBe(source)
+    })
+
+    it('should copy changed files in watch mode', async () => {
+      const watcher = app.watch()
+      const copiedFile = join(app.dir, 'destination/node_modules/say-hello-world/index.mjs')
+
+      try {
+        await vi.waitFor(() => expect(watcher.getOutput()).toContain('Copied `index.mjs`'), { timeout: 15_000, interval: 100 })
+
+        const marker = `// watch-mode-${Date.now()}`
+        await appendFile(join(app.dir, 'source/index.mjs'), `\n${marker}\n`)
+
+        await vi.waitFor(async () => expect(await readFile(copiedFile, 'utf-8')).toContain(marker), { timeout: 15_000, interval: 100 })
+      }
+      finally {
+        await watcher.stop()
+      }
     })
   })
 

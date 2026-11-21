@@ -1,6 +1,7 @@
 import type { ExecaSyncError } from 'execa'
+import type { Buffer } from 'node:buffer'
 import process from 'node:process'
-import { execaSync } from 'execa'
+import { execa, execaSync } from 'execa'
 import { join } from 'pathe'
 import strip from 'strip-ansi'
 import { createLogsMatcher } from './matcher'
@@ -40,22 +41,13 @@ export function SeccoCLI() {
       return self
     },
     invoke: (args: Array<string>): InvokeResult => {
-      const NODE_ENV = 'production'
-
       try {
         const results = execaSync(
           process.execPath,
           [cliLocation].concat(args),
           {
             cwd,
-            env: {
-              PATH: process.env.PATH,
-              HOME: process.env.HOME,
-              CI: process.env.CI,
-              SECCO_VERDACCIO_PORT: process.env.SECCO_VERDACCIO_PORT,
-              NODE_ENV,
-              ...env,
-            },
+            env: buildEnv(env),
             extendEnv: false,
             input,
             timeout: CLI_TIMEOUT_MS,
@@ -76,7 +68,44 @@ export function SeccoCLI() {
         ]
       }
     },
+
+    /**
+     * Start a long-running process (e.g. watch mode) without blocking. Caller is responsible for killing it.
+     */
+    spawn: (args: Array<string>) => {
+      const subprocess = execa(process.execPath, [cliLocation].concat(args), {
+        cwd,
+        env: buildEnv(env),
+        extendEnv: false,
+        all: true,
+        reject: false,
+        timeout: CLI_TIMEOUT_MS * 3,
+      })
+      let output = ''
+      subprocess.all.on('data', (chunk: Buffer) => {
+        output += strip(chunk.toString())
+      })
+
+      return {
+        getOutput: () => output,
+        stop: async () => {
+          subprocess.kill()
+          await subprocess
+        },
+      }
+    },
   }
 
   return self
+}
+
+function buildEnv(env: Record<string, string | undefined>) {
+  return {
+    PATH: process.env.PATH,
+    HOME: process.env.HOME,
+    CI: process.env.CI,
+    SECCO_VERDACCIO_PORT: process.env.SECCO_VERDACCIO_PORT,
+    NODE_ENV: 'production',
+    ...env,
+  }
 }

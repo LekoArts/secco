@@ -27,6 +27,9 @@ export function application(config: ApplicationConfig, isolatedDir: string) {
         VERBOSE: verbose ? 'true' : 'false',
       }).invoke(args)
     },
+    watch: (args: Array<string> = []) => {
+      return SeccoCLI().setCwd(join(isolatedDir, 'destination')).setEnv({ VERBOSE: 'true' }).spawn(args)
+    },
     cleanup: async () => {
       if (isTruthy(process.env.CI)) {
         logger.log(`Skipping cleanup in CI environment`)
