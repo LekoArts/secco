@@ -18,9 +18,12 @@ export async function createTempDir(name: string) {
   const tempDir = process.env.RUNNER_TEMP || tmpdir()
   const isolatedDir = await mkdtemp(join(tempDir, `secco-${name}-`))
 
-  return [isolatedDir, async () => {
-    await removeDir(isolatedDir)
-  }] as const
+  return [
+    isolatedDir,
+    async () => {
+      await removeDir(isolatedDir)
+    },
+  ] as const
 }
 
 /**

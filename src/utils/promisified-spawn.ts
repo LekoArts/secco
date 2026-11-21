@@ -16,7 +16,10 @@ export function setDefaultSpawnStdio(stdio: 'inherit' | 'ignore') {
 export type PromisifiedSpawnArgs = [string, Array<string>, Options?]
 
 export async function promisifiedSpawn([cmd, args = [], spawnArgs = {}]: PromisifiedSpawnArgs) {
-  const spawnOptions = { ...defaultSpawnArgs, ...spawnArgs }
+  const spawnOptions = {
+    ...defaultSpawnArgs,
+    ...spawnArgs,
+  }
 
   try {
     return await execa(cmd, args, spawnOptions)

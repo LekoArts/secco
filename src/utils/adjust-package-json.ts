@@ -86,7 +86,11 @@ export function adjustPackageJson({ sourcePkgJsonPath, packageName, packageNames
 
     // If any of the flags is true, log the adjusted features
     if (adjustedWorkspaceProtocol || adjustedDefaultCatalog || adjustedNamedCatalogs) {
-      const listOfAdjustedFeatures = [adjustedWorkspaceProtocol ? 'workspace:' : '', adjustedDefaultCatalog ? 'catalog:default' : '', adjustedNamedCatalogs ? 'catalog:<name>' : ''].filter(Boolean).join(', ')
+      const listOfAdjustedFeatures = [
+        adjustedWorkspaceProtocol ? 'workspace:' : '',
+        adjustedDefaultCatalog ? 'catalog:default' : '',
+        adjustedNamedCatalogs ? 'catalog:<name>' : '',
+      ].filter(Boolean).join(', ')
 
       logger.debug(`Adjusted pnpm workspaces features for ${packageName}: ${listOfAdjustedFeatures}`)
     }

@@ -15,17 +15,23 @@ export default antfu(
   {
     rules: {
       'no-console': 'warn',
-      'ts/no-restricted-types': ['error', {
-        types: {
-          '{}': {
-            fixWith: 'Record<string, unknown>',
-          },
-          'object': {
-            fixWith: 'Record<string, unknown>',
+      'ts/no-restricted-types': [
+        'error',
+        {
+          types: {
+            '{}': {
+              fixWith: 'Record<string, unknown>',
+            },
+            'object': {
+              fixWith: 'Record<string, unknown>',
+            },
           },
         },
-      }],
-      'ts/array-type': ['error', { default: 'generic' }],
+      ],
+      'ts/array-type': [
+        'error',
+        { default: 'generic' },
+      ],
       'node/prefer-global/process': 'off',
     },
   },
@@ -33,9 +39,12 @@ export default antfu(
     files: ['./src/**/*.ts'],
     ...dependPlugin.configs['flat/recommended'],
     rules: {
-      'depend/ban-dependencies': ['error', {
-        allowed: ['fs-extra', 'execa'],
-      }],
+      'depend/ban-dependencies': [
+        'error',
+        {
+          allowed: ['fs-extra', 'execa'],
+        },
+      ],
     },
   },
 )

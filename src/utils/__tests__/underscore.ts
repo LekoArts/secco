@@ -29,12 +29,32 @@ describe('isEqual', () => {
   })
 
   it('should return true for deeply nested equal objects', () => {
-    expect(isEqual({ a: { b: { c: 1 } } }, { a: { b: { c: 1 } } })).toBe(true)
-    expect(isEqual({ a: { b: 2 } }, { a: { b: 2 } })).toBe(true)
+    expect(isEqual({
+      a: {
+        b: { c: 1 },
+      },
+    }, {
+      a: {
+        b: { c: 1 },
+      },
+    })).toBe(true)
+    expect(isEqual({
+      a: { b: 2 },
+    }, {
+      a: { b: 2 },
+    })).toBe(true)
   })
 
   it('should return false for deeply nested different objects', () => {
-    expect(isEqual({ a: { b: { c: 1 } } }, { a: { b: { c: 2 } } })).toBe(false)
+    expect(isEqual({
+      a: {
+        b: { c: 1 },
+      },
+    }, {
+      a: {
+        b: { c: 2 },
+      },
+    })).toBe(false)
   })
 
   it('should return true for equal arrays', () => {
@@ -49,16 +69,40 @@ describe('isEqual', () => {
   })
 
   it('should return true for nested arrays with equal values', () => {
-    expect(isEqual([[1, 2], [3, 4]], [[1, 2], [3, 4]])).toBe(true)
+    expect(isEqual([
+      [1, 2],
+      [3, 4],
+    ], [
+      [1, 2],
+      [3, 4],
+    ])).toBe(true)
   })
 
   it('should return false for nested arrays with different values', () => {
-    expect(isEqual([[1, 2], [3, 4]], [[1, 2], [3, 5]])).toBe(false)
+    expect(isEqual([
+      [1, 2],
+      [3, 4],
+    ], [
+      [1, 2],
+      [3, 5],
+    ])).toBe(false)
   })
 
   it('should handle mixed object and array structures', () => {
-    expect(isEqual({ a: [1, 2], b: { c: 3 } }, { a: [1, 2], b: { c: 3 } })).toBe(true)
-    expect(isEqual({ a: [1, 2], b: { c: 3 } }, { a: [1, 3], b: { c: 3 } })).toBe(false)
+    expect(isEqual({
+      a: [1, 2],
+      b: { c: 3 },
+    }, {
+      a: [1, 2],
+      b: { c: 3 },
+    })).toBe(true)
+    expect(isEqual({
+      a: [1, 2],
+      b: { c: 3 },
+    }, {
+      a: [1, 3],
+      b: { c: 3 },
+    })).toBe(false)
   })
 
   it('should return false when comparing object to array', () => {
@@ -243,27 +287,57 @@ describe('merge', () => {
   })
 
   it('should deeply merge nested objects', () => {
-    const result: Record<string, any> = merge({ a: { x: 1 } } as any, { a: { y: 2 } } as any)
-    expect(result).toEqual({ a: { x: 1, y: 2 } })
+    const result: Record<string, any> = merge({
+      a: { x: 1 },
+    } as any, {
+      a: { y: 2 },
+    } as any)
+    expect(result).toEqual({
+      a: { x: 1, y: 2 },
+    })
   })
 
   it('should deeply merge multiple levels', () => {
     const result: Record<string, any> = merge(
-      { a: { b: { c: 1 } } } as any,
-      { a: { b: { d: 2 } } } as any,
+      {
+        a: {
+          b: { c: 1 },
+        },
+      } as any,
+      {
+        a: {
+          b: { d: 2 },
+        },
+      } as any,
     )
-    expect(result).toEqual({ a: { b: { c: 1, d: 2 } } })
+    expect(result).toEqual({
+      a: {
+        b: { c: 1, d: 2 },
+      },
+    })
   })
 
   it('should overwrite non-object values', () => {
-    const result1: Record<string, any> = merge({ a: 1 } as any, { a: { b: 2 } } as any)
-    expect(result1).toEqual({ a: { b: 2 } })
-    const result2: Record<string, any> = merge({ a: { b: 2 } } as any, { a: 1 } as any)
+    const result1: Record<string, any> = merge({ a: 1 } as any, {
+      a: { b: 2 },
+    } as any)
+    expect(result1).toEqual({
+      a: { b: 2 },
+    })
+    const result2: Record<string, any> = merge({
+      a: { b: 2 },
+    } as any, { a: 1 } as any)
     expect(result2).toEqual({ a: 1 })
   })
 
   it('should not merge arrays deeply', () => {
-    expect(merge({ a: [1, 2] }, { a: [3, 4] })).toEqual({ a: [3, 4] })
+    expect(merge({
+      a: [1, 2],
+    }, {
+      a: [3, 4],
+    })).toEqual({
+      a: [3, 4],
+    })
   })
 
   it('should handle undefined sources', () => {
@@ -283,10 +357,26 @@ describe('merge', () => {
 
   it('should merge complex nested structures', () => {
     const result: Record<string, any> = merge(
-      { a: { b: 1, c: { d: 2 } } } as any,
-      { a: { c: { e: 3 }, f: 4 } } as any,
+      {
+        a: {
+          b: 1,
+          c: { d: 2 },
+        },
+      } as any,
+      {
+        a: {
+          c: { e: 3 },
+          f: 4,
+        },
+      } as any,
     )
-    expect(result).toEqual({ a: { b: 1, c: { d: 2, e: 3 }, f: 4 } })
+    expect(result).toEqual({
+      a: {
+        b: 1,
+        c: { d: 2, e: 3 },
+        f: 4,
+      },
+    })
   })
 
   it('should skip inherited properties in source', () => {

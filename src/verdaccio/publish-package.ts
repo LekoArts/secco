@@ -9,7 +9,7 @@ import { logger } from '../utils/logger'
 import { promisifiedSpawn } from '../utils/promisified-spawn'
 import { REGISTRY_URL } from './verdaccio-config'
 
-export async function publishPackage({ packageName, packagesToPublish, packageNamesToFilePath, versionPostfix, source, ignorePackageJsonChanges }: PublishPackageArgs) {
+export async function publishPackage({ packageName, packagesToPublish, packageNamesToFilePath, versionPostfix, source, ignorePackageJsonChanges, authToken }: PublishPackageArgs) {
   const sourcePkgJsonPath = getSourcePackageJsonPath(packageName, packageNamesToFilePath)
 
   if (!sourcePkgJsonPath) {
@@ -28,12 +28,21 @@ export async function publishPackage({ packageName, packagesToPublish, packageNa
   })
 
   const pathToPkg = path.dirname(sourcePkgJsonPath)
-  const revertCreateTempNpmRc = createTempNpmRc({ pathToPkg, sourcePath: source.path })
+  const revertCreateTempNpmRc = createTempNpmRc({ pathToPkg, sourcePath: source.path, authToken })
 
   logger.log(`Publishing \`${packageName}@${newPackageVersion}\` to local registry...`)
 
   try {
-    await promisifiedSpawn(['npm', ['publish', '--tag', CLI_NAME, `--registry=${REGISTRY_URL}`], { cwd: pathToPkg }])
+    await promisifiedSpawn([
+      'npm',
+      [
+        'publish',
+        '--tag',
+        CLI_NAME,
+        `--registry=${REGISTRY_URL}`,
+      ],
+      { cwd: pathToPkg },
+    ])
 
     logger.log(`Published \`${packageName}@${newPackageVersion}\` to local registry`)
   }

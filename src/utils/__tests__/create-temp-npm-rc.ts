@@ -1,54 +1,79 @@
 import type { Mock } from 'vitest'
-import { execaSync } from 'execa'
 import fs from 'fs-extra'
+import { prepareGracefulExit } from '../../verdaccio/cleanup-tasks'
 import { createTempNpmRc } from '../create-temp-npm-rc'
 
 vi.mock('fs-extra')
-vi.mock('execa')
 
 describe('createTempNpmRc', () => {
   const pathToPkg = '/path/to/pkg'
   const sourcePath = '/path/to/source'
+  const authToken = 'issued-token'
+  const tokenLine = '//localhost:4873/:_authToken="issued-token"'
 
   afterEach(() => {
     vi.resetAllMocks()
   })
 
-  it('should create .npmrc files if they do not exist', () => {
-    (fs.existsSync as unknown as Mock).mockReturnValueOnce(false);
-    (fs.existsSync as unknown as Mock).mockReturnValueOnce(false)
+  it('should create .npmrc files if they do not exist and remove them on cleanup', () => {
+    (fs.existsSync as unknown as Mock).mockReturnValue(false)
 
-    createTempNpmRc({ pathToPkg, sourcePath })
+    const cleanup = createTempNpmRc({ pathToPkg, sourcePath, authToken })
 
     expect(fs.outputFileSync).toHaveBeenCalledTimes(2)
-    expect(fs.outputFileSync).toHaveBeenCalledWith('/path/to/pkg/.npmrc', '//localhost:4873/:_authToken="secco"')
-    expect(fs.outputFileSync).toHaveBeenCalledWith('/path/to/source/.npmrc', '//localhost:4873/:_authToken="secco"')
-    expect(execaSync).not.toHaveBeenCalled()
-  })
+    expect(fs.outputFileSync).toHaveBeenCalledWith('/path/to/pkg/.npmrc', tokenLine)
+    expect(fs.outputFileSync).toHaveBeenCalledWith('/path/to/source/.npmrc', tokenLine)
 
-  it('should use "npm config set" if .npmrc files already exist', () => {
-    (fs.existsSync as unknown as Mock).mockReturnValueOnce(true);
-    (fs.existsSync as unknown as Mock).mockReturnValueOnce(true)
+    cleanup()
 
-    createTempNpmRc({ pathToPkg, sourcePath })
-
-    expect(fs.outputFileSync).not.toHaveBeenCalled()
-    expect(execaSync).toHaveBeenCalledTimes(2)
-    expect(execaSync).toHaveBeenCalledWith('npm', ['config', 'set', '//localhost:4873/:_authToken="secco"'], { cwd: '/path/to/pkg' })
-    expect(execaSync).toHaveBeenCalledWith('npm', ['config', 'set', '//localhost:4873/:_authToken="secco"'], { cwd: '/path/to/source' })
-  })
-
-  it('should revert changes and remove .npmrc files on cleanup', () => {
-    (fs.existsSync as unknown as Mock).mockReturnValueOnce(true);
-    (fs.existsSync as unknown as Mock).mockReturnValueOnce(false)
-
-    const cleanupTask = createTempNpmRc({ pathToPkg, sourcePath })
-    cleanupTask()
-
-    expect(execaSync).toHaveBeenCalledTimes(2)
-    expect(execaSync).toHaveBeenCalledWith('npm', ['config', 'delete', '//localhost:4873/:_authToken'], { cwd: '/path/to/pkg' })
-    expect(fs.outputFileSync).toHaveBeenCalledWith('/path/to/source/.npmrc', '//localhost:4873/:_authToken="secco"')
-    expect(fs.removeSync).toHaveBeenCalledTimes(1)
+    expect(fs.removeSync).toHaveBeenCalledWith('/path/to/pkg/.npmrc')
     expect(fs.removeSync).toHaveBeenCalledWith('/path/to/source/.npmrc')
+  })
+
+  it('should append the token to existing .npmrc files and restore their original contents on cleanup', () => {
+    const originals: Record<string, string> = {
+      '/path/to/pkg/.npmrc': 'save-exact=true\n',
+      '/path/to/source/.npmrc': 'auto-install-peers=false',
+    };
+    (fs.existsSync as unknown as Mock).mockReturnValue(true);
+    (fs.readFileSync as unknown as Mock).mockImplementation((p: string) => originals[p])
+
+    const cleanup = createTempNpmRc({ pathToPkg, sourcePath, authToken })
+
+    expect(fs.outputFileSync).toHaveBeenCalledWith('/path/to/pkg/.npmrc', `save-exact=true\n${tokenLine}\n`)
+    expect(fs.outputFileSync).toHaveBeenCalledWith('/path/to/source/.npmrc', `auto-install-peers=false\n${tokenLine}\n`)
+
+    vi.mocked(fs.outputFileSync).mockClear()
+    cleanup()
+
+    expect(fs.removeSync).not.toHaveBeenCalled()
+    expect(fs.outputFileSync).toHaveBeenCalledWith('/path/to/pkg/.npmrc', originals['/path/to/pkg/.npmrc'])
+    expect(fs.outputFileSync).toHaveBeenCalledWith('/path/to/source/.npmrc', originals['/path/to/source/.npmrc'])
+  })
+
+  it('should revert already written .npmrc files when a later write fails', () => {
+    (fs.existsSync as unknown as Mock).mockReturnValue(false);
+    (fs.outputFileSync as unknown as Mock)
+      .mockImplementationOnce(() => {})
+      .mockImplementationOnce(() => {
+        throw new Error('EACCES')
+      })
+
+    expect(() => createTempNpmRc({ pathToPkg, sourcePath, authToken })).toThrow('EACCES')
+
+    // Process exit runs registered cleanup tasks
+    prepareGracefulExit()
+
+    expect(fs.removeSync).toHaveBeenCalledWith('/path/to/pkg/.npmrc')
+  })
+
+  it('should only touch the .npmrc once when the package is the source root', () => {
+    (fs.existsSync as unknown as Mock).mockReturnValue(false)
+
+    const cleanup = createTempNpmRc({ pathToPkg: sourcePath, sourcePath, authToken })
+    cleanup()
+
+    expect(fs.outputFileSync).toHaveBeenCalledTimes(1)
+    expect(fs.removeSync).toHaveBeenCalledTimes(1)
   })
 })

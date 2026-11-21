@@ -3,11 +3,12 @@ import os from 'node:os'
 import { join } from 'pathe'
 import { CLI_NAME } from '../constants'
 
+const STORAGE = join(os.tmpdir(), 'verdaccio', 'storage')
 const PORT = Number.parseInt(process.env.SECCO_VERDACCIO_PORT || '') || 4873 // Default
 
 // @ts-expect-error: Verdaccio's types are wrong
 export const VERDACCIO_CONFIG: VerdaccioConfig = {
-  storage: join(os.tmpdir(), 'verdaccio', 'storage'),
+  storage: STORAGE,
   port: PORT,
   max_body_size: '100mb',
   web: {
@@ -15,10 +16,15 @@ export const VERDACCIO_CONFIG: VerdaccioConfig = {
     title: CLI_NAME,
   },
   self_path: './',
-  logs: {
+  log: {
     type: 'stdout',
     format: 'pretty-timestamped',
     level: 'warn',
+  },
+  auth: {
+    htpasswd: {
+      file: join(STORAGE, 'htpasswd'),
+    },
   },
   packages: {
     '**': {

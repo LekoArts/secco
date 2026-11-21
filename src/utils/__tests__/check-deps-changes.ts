@@ -39,11 +39,21 @@ describe('difference', () => {
   })
   it('should return the diff between two objects with nested objects', () => {
     const result = difference(
-      { a: 1, b: 2, c: { d: 3, e: 4 } },
-      { a: 1, b: 2, c: { d: 3, e: 5 } },
+      {
+        a: 1,
+        b: 2,
+        c: { d: 3, e: 4 },
+      },
+      {
+        a: 1,
+        b: 2,
+        c: { d: 3, e: 5 },
+      },
     )
 
-    expect(result).toEqual({ c: { e: 4 } })
+    expect(result).toEqual({
+      c: { e: 4 },
+    })
   })
 })
 
@@ -59,7 +69,9 @@ describe('checkDepsChanges', () => {
       packageName: 'test-package',
       sourcePackages: ['source-package-1', 'source-package-2'],
       ignoredPackageJson: new Map(),
-      packageNamesToFilePath: new Map([['test-package', '/source/test-package/package.json']]),
+      packageNamesToFilePath: new Map([
+        ['test-package', '/source/test-package/package.json'],
+      ]),
       isInitialScan: true,
     }
 
@@ -466,7 +478,10 @@ describe('checkDepsChanges', () => {
       mockFs.readFile.mockResolvedValue(packageJsonString)
 
       const ignoredPackageJson = new Map([
-        ['test-package', [packageJsonString]],
+        [
+          'test-package',
+          [packageJsonString],
+        ],
       ])
 
       const result = await checkDepsChanges({

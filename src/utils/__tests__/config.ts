@@ -154,6 +154,8 @@ describe('configSchema', () => {
   it('should only pass objects with valid entries', () => {
     expect(() => parse(ConfigSchema, undefined)).toThrowError('You must pass an object with a \`source\` key.')
     expect(() => parse(ConfigSchema, { invalid: 'key' })).toThrowError('You must pass an object with a \`source\` key.')
-    expect(() => parse(ConfigSchema, { source: { invalid: 'key' } })).toThrowError('The key \`source.path\` is required and no other keys are allowed.')
+    expect(() => parse(ConfigSchema, {
+      source: { invalid: 'key' },
+    })).toThrowError('The key \`source.path\` is required and no other keys are allowed.')
   })
 })

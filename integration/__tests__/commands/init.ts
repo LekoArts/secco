@@ -25,7 +25,13 @@ describe('init', () => {
     const input = '/some/absolute/path/to/source'
 
     try {
-      const [exitCode, logs] = SeccoCLI().setEnv({ TEST: undefined, VITEST: undefined, VITEST_MODE: undefined, VITEST_WORKER_ID: undefined, VITEST_POOL_ID: undefined }).setCwd(testDir).invoke(['init', '--source', input, '--yes'])
+      const [exitCode, logs] = SeccoCLI().setEnv({
+        TEST: undefined,
+        VITEST: undefined,
+        VITEST_MODE: undefined,
+        VITEST_WORKER_ID: undefined,
+        VITEST_POOL_ID: undefined,
+      }).setCwd(testDir).invoke(['init', '--source', input, '--yes'])
 
       logs.should.contain('Successfully created .seccorc')
       expect(exitCode).toBe(0)
@@ -40,7 +46,12 @@ describe('init', () => {
     }
   })
   it('should error on invalid input', () => {
-    const [exitCode, logs] = SeccoCLI().setFixture('empty').invoke(['init', '--source', 'relative-path', '--yes'])
+    const [exitCode, logs] = SeccoCLI().setFixture('empty').invoke([
+      'init',
+      '--source',
+      'relative-path',
+      '--yes',
+    ])
 
     logs.should.contain('You need to provide an absolute path for the --source flag.')
     expect(exitCode).toBe(1)

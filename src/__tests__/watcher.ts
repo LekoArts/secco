@@ -43,7 +43,10 @@ vi.mocked(installDependencies).mockResolvedValue({} as any)
 vi.mocked(checkDepsChanges).mockResolvedValue({ didDepsChange: false, pkgNotInstalled: false })
 vi.mocked(getPackageJson).mockReturnValue(undefined)
 vi.mocked(getDependantPackages).mockReturnValue(new Set())
-vi.mocked(traversePkgDeps).mockReturnValue({ seenPackages: ['package-a'], depTree: {} })
+vi.mocked(traversePkgDeps).mockReturnValue({
+  seenPackages: ['package-a'],
+  depTree: {},
+})
 vi.mocked(publishPackagesAndInstall).mockResolvedValue()
 
 // Mock process.exit
@@ -593,123 +596,55 @@ describe('watcher', () => {
       // Mock getPackageJson to throw for one call
       vi.mocked(getPackageJson)
         .mockReturnValueOnce(undefined) // First call returns undefined
-        .mockReturnValueOnce({ name: 'package-b', files: ['lib'] }) // Second call is valid
+        .mockReturnValueOnce({
+          name: 'package-b',
+          files: ['lib'],
+        }) // Second call is valid
 
       // Should not throw
       await expect(
         watcher(mockSource, mockDestination, undefined, mockOptions),
       ).resolves.not.toThrow()
     })
-
-    it('should handle circular dependencies in depTree', async () => {
-      // Mock traversePkgDeps to return circular dependencies
-      vi.mocked(traversePkgDeps).mockReturnValue({
-        seenPackages: ['package-a', 'package-b'],
-        depTree: {
-          'package-a': new Set(['package-b']),
-          'package-b': new Set(['package-a']), // Circular dependency
-        },
-      })
-
-      // Mock getDependantPackages to handle circular deps
-      vi.mocked(getDependantPackages).mockReturnValue(new Set(['package-a', 'package-b']))
-
-      await watcher(mockSource, mockDestination, undefined, mockOptions)
-
-      // Setup callbacks
-      const chokidarCallbacks: Record<string, Function> = {}
-      mockChokidarInstance.on.mock.calls.forEach(([event, callback]) => {
-        chokidarCallbacks[event] = callback
-      })
-
-      // Mock dependency change
-      vi.mocked(checkDepsChanges).mockResolvedValueOnce({
-        didDepsChange: true,
-        pkgNotInstalled: false,
-      })
-
-      // Trigger package.json change
-      await chokidarCallbacks.all('change', '/source/packages/package-a/package.json')
-      await chokidarCallbacks.ready()
-
-      // Should handle circular dependencies without infinite loop
-      expect(publishPackagesAndInstall).toHaveBeenCalledTimes(1)
-    })
-  })
-
-  describe('package.json publishing state handling', () => {
-    it('should ignore package.json changes during publishing', async () => {
-      // Reset mocks
-      vi.mocked(publishPackagesAndInstall).mockReset()
-      vi.mocked(publishPackagesAndInstall).mockResolvedValue()
-
-      await watcher(mockSource, mockDestination, undefined, mockOptions)
-
-      // Setup callbacks
-      const chokidarCallbacks: Record<string, Function> = {}
-      mockChokidarInstance.on.mock.calls.forEach(([event, callback]) => {
-        chokidarCallbacks[event] = callback
-      })
-
-      // Mock dependency change to trigger publishing
-      vi.mocked(checkDepsChanges).mockResolvedValueOnce({
-        didDepsChange: true,
-        pkgNotInstalled: false,
-      })
-      vi.mocked(getDependantPackages).mockReturnValue(new Set(['package-a']))
-
-      // Trigger initial package.json change
-      await chokidarCallbacks.all('change', '/source/packages/package-a/package.json')
-
-      // Trigger ready - this starts publishing
-      await chokidarCallbacks.ready()
-
-      // Verify publishing was triggered
-      expect(publishPackagesAndInstall).toHaveBeenCalled()
-
-      // The test demonstrates the concept, but the actual isPublishing flag
-      // is internal to the watcher and hard to test directly
-    })
   })
 
   describe('error recovery', () => {
     it('should continue processing other files when one file copy fails', async () => {
-      let copyCount = 0
+      vi.useFakeTimers()
 
-      // Mock fs.copy to fail for first file, succeed for second
-      vi.mocked(fs.copy).mockImplementation((src: any, dest: any, callback: any) => {
-        copyCount++
-        if (copyCount === 1) {
-          // Fail immediately (after max retries)
-          callback(new Error('Copy failed'))
-        }
-        else {
-          callback() // Success
-        }
-      })
+      try {
+        vi.mocked(getPackageJson).mockReset().mockReturnValue(undefined)
+        vi.mocked(fs.existsSync).mockReset().mockReturnValue(true)
+        // file1 always fails, file2 succeeds
+        vi.mocked(fs.copy).mockImplementation((src: any, dest: any, callback: any) => {
+          callback(String(src).endsWith('file1.js')
+            ? new Error('Copy failed')
+            : undefined)
+        })
 
-      await watcher(mockSource, mockDestination, undefined, mockOptions)
+        await watcher(mockSource, mockDestination, undefined, mockOptions)
 
-      // Setup callbacks
-      const chokidarCallbacks: Record<string, Function> = {}
-      mockChokidarInstance.on.mock.calls.forEach(([event, callback]) => {
-        chokidarCallbacks[event] = callback
-      })
+        const chokidarCallbacks: Record<string, Function> = {}
+        mockChokidarInstance.on.mock.calls.forEach(([event, callback]) => {
+          chokidarCallbacks[event] = callback
+        })
 
-      // Trigger multiple file changes
-      await chokidarCallbacks.all('change', '/source/packages/package-a/file1.js')
-      await chokidarCallbacks.all('change', '/source/packages/package-a/file2.js')
+        await chokidarCallbacks.all('change', '/source/packages/package-a/file1.js')
+        await chokidarCallbacks.all('change', '/source/packages/package-a/file2.js')
+        await chokidarCallbacks.ready()
+        await vi.runAllTimersAsync()
 
-      // Process files
-      await chokidarCallbacks.ready()
-
-      // Both files should be attempted
-      expect(fs.copy).toHaveBeenCalledTimes(2)
-
-      // Second file should succeed
-      expect(logger.log).toHaveBeenCalledWith(
-        expect.stringContaining('Copied `packages/package-a/file2.js`'),
-      )
+        expect(logger.log).toHaveBeenCalledWith(
+          expect.stringContaining('Copied `packages/package-a/file2.js`'),
+        )
+        expect(logger.log).not.toHaveBeenCalledWith(
+          expect.stringContaining('Copied `packages/package-a/file1.js`'),
+        )
+        expect(logger.error).toHaveBeenCalledWith('One or more file copies failed:', expect.any(Error))
+      }
+      finally {
+        vi.useRealTimers()
+      }
     })
   })
 

@@ -71,7 +71,11 @@ export default defineConfig({
         },
         {
           label: 'CLI Reference',
-          items: [{ autogenerate: { directory: 'reference' } }],
+          items: [
+            {
+              autogenerate: { directory: 'reference' },
+            },
+          ],
         },
         { label: 'Acknowledgements', link: '/acknowledgements' },
       ],

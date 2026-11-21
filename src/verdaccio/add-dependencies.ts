@@ -38,7 +38,21 @@ export function getAddDependenciesCmd({ packages, pm, externalRegistry = false, 
     throw new Error(`Unsupported package manager: ${pm.name}`)
   }
 
-  const commands: PromisifiedSpawnArgs = [pm.command, [addMap[pm.name], ...packages, exactMap[pm.name], !externalRegistry ? `--registry=${REGISTRY_URL}` : null, pm.name === 'npm' ? '--legacy-peer-deps' : null].filter(Boolean), { env }]
+  const commands: PromisifiedSpawnArgs = [
+    pm.command,
+    [
+      addMap[pm.name],
+      ...packages,
+      exactMap[pm.name],
+      !externalRegistry
+        ? `--registry=${REGISTRY_URL}`
+        : null,
+      pm.name === 'npm'
+        ? '--legacy-peer-deps'
+        : null,
+    ].filter(Boolean),
+    { env },
+  ]
 
   return commands
 }
@@ -48,7 +62,16 @@ export function getInstallCmd({ pm, externalRegistry = false, env = {} }: GetIns
     throw new Error(`Unsupported package manager: ${pm.name}`)
   }
 
-  const commands: PromisifiedSpawnArgs = [pm.command, ['install', !externalRegistry ? `--registry=${REGISTRY_URL}` : null].filter(Boolean), { env }]
+  const commands: PromisifiedSpawnArgs = [
+    pm.command,
+    [
+      'install',
+      !externalRegistry
+        ? `--registry=${REGISTRY_URL}`
+        : null,
+    ].filter(Boolean),
+    { env },
+  ]
 
   return commands
 }

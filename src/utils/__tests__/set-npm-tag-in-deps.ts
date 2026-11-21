@@ -4,7 +4,11 @@ const TEST_VERSION = '1.0.0-test-09833'
 
 describe('adjustDeps', () => {
   it('should return false if the dependencies object is empty', () => {
-    const result = adjustDeps({ deps: {}, packagesToInstall: ['package1', 'package2'], newlyPublishedPackageVersions: {} })
+    const result = adjustDeps({
+      deps: {},
+      packagesToInstall: ['package1', 'package2'],
+      newlyPublishedPackageVersions: {},
+    })
     expect(result).toBe(false)
   })
 
@@ -14,7 +18,11 @@ describe('adjustDeps', () => {
       package2: '2.0.0',
       package3: '3.0.0',
     }
-    const result = adjustDeps({ deps, packagesToInstall: ['package1', 'package3'], newlyPublishedPackageVersions: { package1: TEST_VERSION, package3: TEST_VERSION } })
+    const result = adjustDeps({
+      deps,
+      packagesToInstall: ['package1', 'package3'],
+      newlyPublishedPackageVersions: { package1: TEST_VERSION, package3: TEST_VERSION },
+    })
 
     expect(result).toBe(true)
     expect(deps.package1).toBe(TEST_VERSION)
@@ -28,7 +36,11 @@ describe('adjustDeps', () => {
       package2: '2.0.0',
       package3: '3.0.0',
     }
-    const result = adjustDeps({ deps, packagesToInstall: ['package4', 'package5'], newlyPublishedPackageVersions: {} })
+    const result = adjustDeps({
+      deps,
+      packagesToInstall: ['package4', 'package5'],
+      newlyPublishedPackageVersions: {},
+    })
 
     expect(result).toBe(false)
     expect(deps.package1).toBe('1.0.0')
@@ -53,7 +65,11 @@ describe('setNpmTagInDeps', () => {
         'react': '^18.0.0',
       },
     }
-    const { updatedPkgJson, changed } = setNpmTagInDeps({ packageJson, packagesToInstall: ['package-1', 'package-2'], newlyPublishedPackageVersions: { 'package-1': TEST_VERSION, 'package-2': TEST_VERSION } })
+    const { updatedPkgJson, changed } = setNpmTagInDeps({
+      packageJson,
+      packagesToInstall: ['package-1', 'package-2'],
+      newlyPublishedPackageVersions: { 'package-1': TEST_VERSION, 'package-2': TEST_VERSION },
+    })
 
     expect(updatedPkgJson.dependencies).toEqual({
       'package-1': TEST_VERSION,
@@ -85,7 +101,11 @@ describe('setNpmTagInDeps', () => {
         'react': '^18.0.0',
       },
     }
-    const { updatedPkgJson, changed } = setNpmTagInDeps({ packageJson, packagesToInstall: ['package-1'], newlyPublishedPackageVersions: { 'package-1': TEST_VERSION } })
+    const { updatedPkgJson, changed } = setNpmTagInDeps({
+      packageJson,
+      packagesToInstall: ['package-1'],
+      newlyPublishedPackageVersions: { 'package-1': TEST_VERSION },
+    })
 
     expect(updatedPkgJson.dependencies).toEqual({
       'package-1': TEST_VERSION,
@@ -114,7 +134,11 @@ describe('setNpmTagInDeps', () => {
         react: '^18.0.0',
       },
     }
-    const { updatedPkgJson, changed } = setNpmTagInDeps({ packageJson, packagesToInstall: ['package-1'], newlyPublishedPackageVersions: { 'package-1': TEST_VERSION } })
+    const { updatedPkgJson, changed } = setNpmTagInDeps({
+      packageJson,
+      packagesToInstall: ['package-1'],
+      newlyPublishedPackageVersions: { 'package-1': TEST_VERSION },
+    })
 
     expect(updatedPkgJson.dependencies).toEqual({
       react: '^18.0.0',

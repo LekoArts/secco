@@ -2,7 +2,7 @@
   "name": "secco",
   "type": "module",
   "version": "3.1.2",
-  "packageManager": "pnpm@12.8.1",
+  "packageManager": "pnpm@12.21.0",
   "description": "Local package testing made easy. secco is a command-line tool for local development. It uses Verdaccio and direct file copying to apply your latest changes to other projects.",
   "author": "LekoArts",
   "license": "MIT",
@@ -29,7 +29,7 @@
     "dist/"
   ],
   "engines": {
-    "node": "^22.22.3 || >=23"
+    "node": ">=24"
   },
   "scripts": {
     "build": "tsdown",
@@ -49,9 +49,9 @@
     "check": "publint"
   },
   "dependencies": {
-    "chokidar": "^5.0.0",
+    "chokidar": "^6.0.0",
     "consola": "^3.4.2",
-    "del": "^8.0.1",
+    "del": "^9.0.1",
     "destr": "^2.0.5",
     "enquirer": "^2.4.1",
     "execa": "^10.2.1",
@@ -63,12 +63,12 @@
     "rc9": "^3.1.0",
     "signal-exit": "^4.1.0",
     "valibot": "^1.5.0",
-    "verdaccio": "^6.11.1",
+    "verdaccio": "^7.1.2",
     "yaml": "^2.9.1",
     "yargs": "^18.2.0"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^9.5.1",
+    "@antfu/eslint-config": "^10.0.0",
     "@changesets/cli": "^3.0.3",
     "@total-typescript/ts-reset": "^0.6.1",
     "@types/fs-extra": "^11.0.4",
@@ -78,18 +78,18 @@
     "@types/yargs": "^17.0.35",
     "@typescript/native": "npm:typescript@^7.0.2",
     "@verdaccio/types": "^13.1.0",
-    "@vitest/coverage-v8": "^5.0.5",
+    "@vitest/coverage-v8": "^5.1.1",
     "changesets-changelog-github-local": "^1.0.1",
-    "eslint": "^10.14.0",
+    "eslint": "^10.15.0",
     "eslint-plugin-depend": "^1.5.0",
     "get-port": "^7.2.0",
-    "lint-staged": "^17.6.0",
+    "lint-staged": "^17.6.1",
     "publint": "^0.3.25",
     "simple-git-hooks": "^2.14.0",
     "strip-ansi": "^7.2.0",
-    "tsdown": "^0.23.4",
+    "tsdown": "^0.23.7",
     "typescript": "npm:@typescript/typescript6@^6.0.2",
-    "vitest": "^5.0.5"
+    "vitest": "^5.1.1"
   },
   "simple-git-hooks": {
     "pre-commit": "pnpm lint-staged"
