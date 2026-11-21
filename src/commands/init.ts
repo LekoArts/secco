@@ -6,9 +6,10 @@ import process from 'node:process'
 import { colors } from 'consola/utils'
 import Enquirer from 'enquirer'
 import { serialize } from 'rc9'
-import { CONFIG_FILE_NAME } from '../constants'
+import { CLI_NAME, CONFIG_FILE_NAME } from '../constants'
 import { setConfig } from '../utils/config'
 import { hasConfigFile } from '../utils/initial-setup'
+import { isTruthy } from '../utils/is-truthy'
 import { logger } from '../utils/logger'
 
 type RequiredSourceConfig = Pick<Source, 'path'>
@@ -26,13 +27,26 @@ export async function initialize(argv: ArgumentsCamelCase<InitArgs>) {
   if (hasConfigFile())
     logger.warn(`${CONFIG_FILE_NAME} file already exists in this directory. If you continue this wizard the file will be overwritten.`)
 
+  if (argv?.source && !isAbsolute(argv.source)) {
+    logger.fatal('You need to provide an absolute path for the --source flag.')
+    process.exit(1)
+  }
+
+  // Prompts can't be answered without a terminal (CI, scripts, AI agents), so fail with the command that works instead
+  const isInteractive = Boolean(process.stdin.isTTY) && !isTruthy(process.env.CI)
+  if (!isInteractive && !(argv?.source && argv?.yes)) {
+    const source = argv?.source
+      ? quoteForShell(argv.source)
+      : '<ABSOLUTE_PATH>'
+    logger.fatal(`Can't create ${CONFIG_FILE_NAME} without --source and --yes in non-interactive mode. Run:
+
+  ${CLI_NAME} init --source ${source} --yes`)
+    process.exit(1)
+  }
+
   let sourcePath: string
 
   if (argv?.source) {
-    if (!isAbsolute(argv.source)) {
-      logger.fatal('You need to provide an absolute path for the --source flag.')
-      process.exit(1)
-    }
     sourcePath = argv.source
   }
   else {
@@ -94,4 +108,10 @@ ${optionsToDisplay}
   setConfig(configValues)
 
   logger.success(`Successfully created ${CONFIG_FILE_NAME}`)
+}
+
+function quoteForShell(value: string) {
+  return /^[\w./-]+$/.test(value)
+    ? value
+    : `'${value.replaceAll('\'', '\'\\\'\'')}'`
 }
