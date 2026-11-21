@@ -9,24 +9,24 @@ Hi! We're excited that you are interested in contributing to secco. Before submi
 
 ## Setup
 
-Make sure that you have at least [Node.js](https://nodejs.dev/en/) 20.19.0 or later installed. The secco repository uses [pnpm](https://pnpm.io/installation) as its package manager so you'll also need to [install pnpm](https://pnpm.io/installation). We'd recommend using `corepack enable`.
+Make sure that you have [Node.js](https://nodejs.dev/en/) 24 or later installed. The secco repository uses [pnpm](https://pnpm.io/installation) as its package manager so you'll also need to [install pnpm](https://pnpm.io/installation). We'd recommend using `corepack enable`.
 
 Install the dependencies:
 
 ```shell
-pnmp install
+pnpm install
 ```
 
 You can build the CLI to `dist/cli.mjs` by running:
 
 ```shell
-pnmp run build
+pnpm run build
 ```
 
 You can build the source in watch mode like this:
 
 ```shell
-pnmp run watch
+pnpm run watch
 ```
 
 ## Testing
@@ -36,7 +36,7 @@ pnmp run watch
 You can run all unit tests like so:
 
 ```shell
-pnmp run test
+pnpm run test:unit
 ```
 
 ### Integration Testing
@@ -44,7 +44,7 @@ pnmp run test
 You can run all integration tests like so:
 
 ```shell
-pnmp run test:integration
+pnpm run test:integration
 ```
 
 ### Testing with example project
@@ -56,7 +56,7 @@ For this, you should run `pnpm run watch` in the secco repository to build the C
 Inside your example project, execute the CLI like so:
 
 ```shell
-`node <path-to-secco-repo>/dist/cli.mjs`
+node <path-to-secco-repo>/dist/cli.mjs
 ```
 
 ## Documentation
