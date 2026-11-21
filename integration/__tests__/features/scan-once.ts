@@ -1,9 +1,13 @@
 import type { Application } from '../../models/application'
-import { appendFile, readFile } from 'node:fs/promises'
+import { appendFile, readFile, writeFile } from 'node:fs/promises'
 import getPort from 'get-port'
 import { join } from 'pathe'
+import { fileExists } from '../../helpers/files'
 import { renameFixture } from '../../helpers/renamer'
+import { USER_NPMRC } from '../../models/application-config'
 import { presets } from '../../presets'
+
+const PROJECT_NPMRC = 'save-exact=true\n'
 
 describe('scan-once', () => {
   describe('single package', () => {
@@ -11,6 +15,8 @@ describe('scan-once', () => {
 
     beforeAll(async () => {
       app = await presets.kitchenSink.commit()
+      // Real-world repos often ship an .npmrc, secco must add its token to it and restore it afterwards
+      await writeFile(join(app.dir, 'source/.npmrc'), PROJECT_NPMRC)
 
       process.env.SECCO_VERDACCIO_PORT = (await getPort()).toString()
     })
@@ -34,9 +40,17 @@ describe('scan-once', () => {
 
       const installedPkg = JSON.parse(await readFile(join(app.dir, 'destination/node_modules/say-hello-world/package.json'), 'utf-8')) as { version: string }
       expect(installedPkg.version).toMatch(/^0\.0\.2-secco-/)
+      expect(await readFile(join(app.dir, 'source/.npmrc'), 'utf-8')).toBe(PROJECT_NPMRC)
+      expect(await readFile(join(app.dir, 'user.npmrc'), 'utf-8')).toBe(USER_NPMRC)
     })
 
     it('should copy files on consecutive runs', async () => {
+      const installedPkgDir = join(app.dir, 'destination/node_modules/say-hello-world')
+      const marker = `// consecutive-run-${Date.now()}`
+      await appendFile(join(app.dir, 'source/index.mjs'), `\n${marker}\n`)
+      // Stale build output from a previous run must be removed before copying
+      await writeFile(join(installedPkgDir, 'stale.js'), '')
+
       const [exitCode, logs] = app.cli(['--scan-once'], { verbose: true })
 
       logs.should.not.contain('[log] [Verdaccio] Starting server...')
@@ -47,11 +61,8 @@ describe('scan-once', () => {
 
       expect(exitCode).toBe(0)
 
-      const [source, copied] = await Promise.all([
-        readFile(join(app.dir, 'source/index.mjs'), 'utf-8'),
-        readFile(join(app.dir, 'destination/node_modules/say-hello-world/index.mjs'), 'utf-8'),
-      ])
-      expect(copied).toBe(source)
+      expect(await readFile(join(installedPkgDir, 'index.mjs'), 'utf-8')).toContain(marker)
+      expect(await fileExists(join(installedPkgDir, 'stale.js'))).toBe(false)
     })
 
     it('should copy changed files in watch mode', async () => {

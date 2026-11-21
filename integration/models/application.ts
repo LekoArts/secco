@@ -15,6 +15,11 @@ interface CliOptions {
 export function application(config: ApplicationConfig, isolatedDir: string) {
   const { name, packageManager } = config
   const logger = createLogger({ prefix: name })
+  // Isolate per app: Verdaccio storage lives in os.tmpdir() (parallel test files would wipe each other's registry) and keep npm away from the developer's ~/.npmrc
+  const isolatedEnv = {
+    TMPDIR: join(isolatedDir, 'tmp'),
+    NPM_CONFIG_USERCONFIG: join(isolatedDir, 'user.npmrc'),
+  }
 
   const self = {
     name,
@@ -24,11 +29,12 @@ export function application(config: ApplicationConfig, isolatedDir: string) {
       const { verbose = false } = options || {}
 
       return SeccoCLI().setCwd(join(isolatedDir, 'destination')).setEnv({
+        ...isolatedEnv,
         VERBOSE: verbose ? 'true' : 'false',
       }).invoke(args)
     },
     watch: (args: Array<string> = []) => {
-      return SeccoCLI().setCwd(join(isolatedDir, 'destination')).setEnv({ VERBOSE: 'true' }).spawn(args)
+      return SeccoCLI().setCwd(join(isolatedDir, 'destination')).setEnv({ ...isolatedEnv, VERBOSE: 'true' }).spawn(args)
     },
     cleanup: async () => {
       if (isTruthy(process.env.CI)) {

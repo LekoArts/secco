@@ -1,4 +1,4 @@
-import { cp, mkdtemp, writeFile } from 'node:fs/promises'
+import { cp, mkdir, mkdtemp, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import fs from 'fs-extra'
 import { basename, join } from 'pathe'
@@ -6,6 +6,9 @@ import { packageManager as rootPackageManager } from '../../package.json'
 import { CONFIG_FILE_NAME } from '../../src/constants'
 import { createLogger } from '../helpers/logger'
 import { application } from './application'
+
+// Sentinel user-level npm config, secco must never modify it
+export const USER_NPMRC = '//localhost:4873/:_authToken="user-token"\n'
 
 export type ApplicationConfig = ReturnType<typeof applicationConfig>
 
@@ -56,6 +59,9 @@ export function applicationConfig() {
 
       logger.log('Creating .seccorc file')
       await writeFile(join(isolatedDir, 'destination', CONFIG_FILE_NAME), `source.path="${join(isolatedDir, 'source')}"`, { encoding: 'utf-8' })
+
+      await mkdir(join(isolatedDir, 'tmp'))
+      await writeFile(join(isolatedDir, 'user.npmrc'), USER_NPMRC)
 
       logger.log(`Setting package manager to "${packageManager}" in destination`)
       const pkgJsonPath = join(isolatedDir, 'destination', 'package.json')
