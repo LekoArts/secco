@@ -1,5 +1,23 @@
 # secco
 
+## 4.0.0
+
+### Major Changes
+
+- Drop support for Node.js 22. secco now requires Node.js 24 or later, as its internal Verdaccio dependency was updated to v7 which doesn't support older versions. ([#306](https://github.com/LekoArts/secco/pull/306))
+  
+  Internal dependency updates: `verdaccio` to v7, `chokidar` to v6, and `del` to v9. Because Verdaccio 7 no longer accepts placeholder auth tokens, secco now creates a temporary user on its local registry and publishes with the token Verdaccio issues for it. No changes to your workflow are required.
+  
+  If your source or package already has an `.npmrc`, secco now temporarily appends its token to that file and restores the original afterwards. Previously it used `npm config set`, which wrote to your global `~/.npmrc`.
+
+### Patch Changes
+
+- Update internal dependencies, including Execa to v10 and Nano ID to v6. Report an explicit error when adding or installing dependencies with an unsupported package manager instead of attempting an invalid command. ([#295](https://github.com/LekoArts/secco/pull/295))
+
+- Update internal `chokidar` dependency to v5 ([#273](https://github.com/LekoArts/secco/pull/273))
+
+- Better tracking of empty workspaces ([#273](https://github.com/LekoArts/secco/pull/273))
+
 ## 3.1.2
 
 ### Patch Changes
