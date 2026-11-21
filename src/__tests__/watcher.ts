@@ -43,7 +43,10 @@ vi.mocked(installDependencies).mockResolvedValue({} as any)
 vi.mocked(checkDepsChanges).mockResolvedValue({ didDepsChange: false, pkgNotInstalled: false })
 vi.mocked(getPackageJson).mockReturnValue(undefined)
 vi.mocked(getDependantPackages).mockReturnValue(new Set())
-vi.mocked(traversePkgDeps).mockReturnValue({ seenPackages: ['package-a'], depTree: {} })
+vi.mocked(traversePkgDeps).mockReturnValue({
+  seenPackages: ['package-a'],
+  depTree: {},
+})
 vi.mocked(publishPackagesAndInstall).mockResolvedValue()
 
 // Mock process.exit
@@ -593,7 +596,10 @@ describe('watcher', () => {
       // Mock getPackageJson to throw for one call
       vi.mocked(getPackageJson)
         .mockReturnValueOnce(undefined) // First call returns undefined
-        .mockReturnValueOnce({ name: 'package-b', files: ['lib'] }) // Second call is valid
+        .mockReturnValueOnce({
+          name: 'package-b',
+          files: ['lib'],
+        }) // Second call is valid
 
       // Should not throw
       await expect(

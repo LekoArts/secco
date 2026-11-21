@@ -1,22 +1,22 @@
 import { execaSync } from 'execa'
 import fs from 'fs-extra'
 import { join } from 'pathe'
-import { CLI_NAME } from '../constants'
 import { registerCleanupTask } from '../verdaccio/cleanup-tasks'
 import { REGISTRY_URL } from '../verdaccio/verdaccio-config'
 
 const NpmRcConfigKey = `${REGISTRY_URL.replace(/https?:/g, '')}/:_authToken`
-const NpmRcContent = `${NpmRcConfigKey}="${CLI_NAME}"`
 
 interface CreateTempNpmRcArgs {
   pathToPkg: string
   sourcePath: string
+  authToken: string
 }
 
 /**
- * Anonymous publishing requires a dummy .npmrc file. This is a requirement for npm and yarn 🤷🏻‍♀️. Creates an .npmrc file in the source package directory and in the source directory. If an .npmrc file already exists, it will edit the file.
+ * Publishing requires an auth token in .npmrc. This is a requirement for npm and yarn 🤷🏻‍♀️. Creates an .npmrc file in the source package directory and in the source directory. If an .npmrc file already exists, it will edit the file.
  */
-export function createTempNpmRc({ pathToPkg, sourcePath }: CreateTempNpmRcArgs) {
+export function createTempNpmRc({ pathToPkg, sourcePath, authToken }: CreateTempNpmRcArgs) {
+  const NpmRcContent = `${NpmRcConfigKey}="${authToken}"`
   const npmRcPathInPkg = join(pathToPkg, '.npmrc')
   const npmRcPathInSource = join(sourcePath, '.npmrc')
   let revertPkg = false

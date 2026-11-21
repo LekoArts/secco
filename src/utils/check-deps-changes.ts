@@ -117,7 +117,10 @@ export async function checkDepsChanges(args: CheckDependencyChangesArgs) {
     let needsPublishing = false
     let isPublishing = false
 
-    const uniqueDepskeys = uniq(Object.keys({ ...diff, ...diff2 }))
+    const uniqueDepskeys = uniq(Object.keys({
+      ...diff,
+      ...diff2,
+    }))
     const depsChangelog: Array<string> = []
 
     // Create a changelog of the dependencies that changed
@@ -165,11 +168,15 @@ export async function checkDepsChanges(args: CheckDependencyChangesArgs) {
     if (!isPublishing && depsChangelog.length > 0) {
       logger.log(`Dependencies of \`${args.packageName}\` changed:\n${depsChangelog.join('\n')}`)
 
-      if (args.isInitialScan)
-        logger.info(`Will ${!needsPublishing ? 'not ' : ''}publish to local registry.`)
+      if (args.isInitialScan) {
+        logger.info(`Will ${!needsPublishing
+          ? 'not '
+          : ''}publish to local registry.`)
+      }
 
-      else
+      else {
         logger.warn(`Installation of dependencies after initial scan is not supported in ${CLI_NAME}.`)
+      }
 
       return {
         didDepsChange: needsPublishing,

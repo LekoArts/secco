@@ -50,11 +50,27 @@ const packageName = 'test-package'
 const packageNamesToFilePath = new Map(Object.entries({ 'test-package': '/path/to/test-package/package.json' }))
 const packagesToPublish = ['test-package']
 const versionPostfix = 'test'
-const sourcePkgJson = { version: '1.0.0', dependencies: { 'test-package': '^1.0.0', 'workspace-dep': 'workspace:*', 'catalog-dep': 'catalog:', 'react-catalog-dep': 'catalog:react' } }
+const sourcePkgJson = {
+  version: '1.0.0',
+  dependencies: {
+    'test-package': '^1.0.0',
+    'workspace-dep': 'workspace:*',
+    'catalog-dep': 'catalog:',
+    'react-catalog-dep': 'catalog:react',
+  },
+}
 const testPkgJson = { version: '1.0.0' }
 const sourcePkgJsonString = JSON.stringify(sourcePkgJson)
 const testPkgJsonString = JSON.stringify(testPkgJson)
-const tempSourcePkgJsonString = JSON.stringify({ version: `1.0.0-${CLI_NAME}-${versionPostfix}`, dependencies: { 'test-package': `1.0.0-${CLI_NAME}-${versionPostfix}`, 'workspace-dep': 'latest', 'catalog-dep': '1.0.0', 'react-catalog-dep': '2.0.0' } })
+const tempSourcePkgJsonString = JSON.stringify({
+  version: `1.0.0-${CLI_NAME}-${versionPostfix}`,
+  dependencies: {
+    'test-package': `1.0.0-${CLI_NAME}-${versionPostfix}`,
+    'workspace-dep': 'latest',
+    'catalog-dep': '1.0.0',
+    'react-catalog-dep': '2.0.0',
+  },
+})
 
 const ignorePackageJsonChanges = vi.fn()
 const revertIgnorePackageJsonChanges = vi.fn()
@@ -64,7 +80,12 @@ describe('adjustPackageJson', () => {
 
   beforeEach(() => {
     sourcePkgJson.version = '1.0.0'
-    sourcePkgJson.dependencies = { 'test-package': '^1.0.0', 'workspace-dep': 'workspace:*', 'catalog-dep': 'catalog:', 'react-catalog-dep': 'catalog:react' }
+    sourcePkgJson.dependencies = {
+      'test-package': '^1.0.0',
+      'workspace-dep': 'workspace:*',
+      'catalog-dep': 'catalog:',
+      'react-catalog-dep': 'catalog:react',
+    }
     testPkgJson.version = '1.0.0'
     vi.mocked(fs.readFileSync).mockReturnValueOnce(sourcePkgJsonString).mockReturnValueOnce(testPkgJsonString)
     vi.mocked(destr).mockReturnValueOnce(sourcePkgJson).mockReturnValueOnce(testPkgJson)

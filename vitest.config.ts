@@ -6,10 +6,17 @@ export default defineConfig({
     name: 'Unit tests',
     include: ['src/**/__tests__/*.ts'],
     globals: true,
-    reporters: [process.env.CI ? 'default' : 'verbose'],
+    reporters: [
+      process.env.CI ? 'default' : 'verbose',
+    ],
     coverage: {
       include: ['src/**'],
-      exclude: ['src/commands/**', '**/*.d.ts', '**/__tests__/**', '**/vitest.config.ts'],
+      exclude: [
+        'src/commands/**',
+        '**/*.d.ts',
+        '**/__tests__/**',
+        '**/vitest.config.ts',
+      ],
       reporter: ['html', 'text'],
     },
   },

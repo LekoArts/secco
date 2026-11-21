@@ -71,25 +71,78 @@ describe('getDestinationPackages', () => {
     })
 
     it('returns an empty array if there are no matching dependencies', () => {
-      const result = getDestinationPackages(['package1', 'package2'], [{ location: 'location-package3', package: { name: 'package3', dependencies: { package4: '^1.0.0' } } }])
+      const result = getDestinationPackages(['package1', 'package2'], [
+        {
+          location: 'location-package3',
+          package: {
+            name: 'package3',
+            dependencies: { package4: '^1.0.0' },
+          },
+        },
+      ])
 
       expect(result).toEqual([])
     })
 
     it('returns an array of matching dependencies', () => {
-      const result = getDestinationPackages(['package1', 'package2'], [{ location: 'location-package3', package: { name: 'package3', dependencies: { package1: '^1.0.0' } } }, { location: 'location-package4', package: { name: 'package4', dependencies: { package2: '^1.0.0' } } }])
+      const result = getDestinationPackages(['package1', 'package2'], [
+        {
+          location: 'location-package3',
+          package: {
+            name: 'package3',
+            dependencies: { package1: '^1.0.0' },
+          },
+        },
+        {
+          location: 'location-package4',
+          package: {
+            name: 'package4',
+            dependencies: { package2: '^1.0.0' },
+          },
+        },
+      ])
 
       expect(result).toEqual(['package1', 'package2'])
     })
 
     it('returns an array of matching devDependencies', () => {
-      const result = getDestinationPackages(['package1', 'package2'], [{ location: 'location-package3', package: { name: 'package3', devDependencies: { package1: '^1.0.0' } } }, { location: 'location-package4', package: { name: 'package4', devDependencies: { package2: '^1.0.0' } } }])
+      const result = getDestinationPackages(['package1', 'package2'], [
+        {
+          location: 'location-package3',
+          package: {
+            name: 'package3',
+            devDependencies: { package1: '^1.0.0' },
+          },
+        },
+        {
+          location: 'location-package4',
+          package: {
+            name: 'package4',
+            devDependencies: { package2: '^1.0.0' },
+          },
+        },
+      ])
 
       expect(result).toEqual(['package1', 'package2'])
     })
 
     it('sets the pkg name + path in destinationPackageNameToFilePath Map if intersection', () => {
-      getDestinationPackages(['package1', 'package2'], [{ location: 'location-package3', package: { name: 'package3', dependencies: { package1: '^1.0.0' } } }, { location: 'location-package4', package: { name: 'package4', devDependencies: { package2: '^1.0.0' } } }])
+      getDestinationPackages(['package1', 'package2'], [
+        {
+          location: 'location-package3',
+          package: {
+            name: 'package3',
+            dependencies: { package1: '^1.0.0' },
+          },
+        },
+        {
+          location: 'location-package4',
+          package: {
+            name: 'package4',
+            devDependencies: { package2: '^1.0.0' },
+          },
+        },
+      ])
 
       expect(getAbsolutePathsForDestinationPackages().has('location-package3')).toBe(true)
       expect(getAbsolutePathsForDestinationPackages().has('location-package4')).toBe(true)
@@ -136,7 +189,16 @@ describe('getPackages', () => {
   })
   describe('workspaces', () => {
     it('returns an array with multiple entries', () => {
-      const result = getPackages('sourcePath', [{ location: 'location-package1', package: { name: 'package1' } }, { location: 'location-package2', package: { name: 'package2' } }])
+      const result = getPackages('sourcePath', [
+        {
+          location: 'location-package1',
+          package: { name: 'package1' },
+        },
+        {
+          location: 'location-package2',
+          package: { name: 'package2' },
+        },
+      ])
 
       expect(result).toEqual(['package1', 'package2'])
     })
@@ -146,14 +208,32 @@ describe('getPackages', () => {
       expect(result).toEqual([])
     })
     it('returns a filter array exlcuding packages that are private', () => {
-      const result = getPackages('sourcePath', [{ location: 'location-package1', package: { name: 'package1' } }, { location: 'location-package2', package: { name: 'package2', private: true } }])
+      const result = getPackages('sourcePath', [
+        {
+          location: 'location-package1',
+          package: { name: 'package1' },
+        },
+        {
+          location: 'location-package2',
+          package: { name: 'package2', private: true },
+        },
+      ])
       const mockLoggerInfo = ((logger.info as unknown as Mock).mock).calls[0][0]
 
       expect(result).toEqual(['package1'])
       expect(mockLoggerInfo).toContain('Skipping private package')
     })
     it('sets the package name and path in the packageNameToFilePath Map', () => {
-      getPackages('sourcePath', [{ location: 'location-package1', package: { name: 'package1' } }, { location: 'location-package2', package: { name: 'package2' } }])
+      getPackages('sourcePath', [
+        {
+          location: 'location-package1',
+          package: { name: 'package1' },
+        },
+        {
+          location: 'location-package2',
+          package: { name: 'package2' },
+        },
+      ])
 
       expect(getPackageNamesToFilePath().get('package1')).toBe('location-package1')
       expect(getPackageNamesToFilePath().get('package2')).toBe('location-package2')

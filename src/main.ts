@@ -44,11 +44,15 @@ If you have control over the destination, manually add the "packageManager" key 
   logger.debug(`Destination has workspaces: ${destinationHasWorkspaces}`)
 
   const sourcePackages = getPackages(sourceConfig.path, sourceWorkspaces)
-  logger.debug(`Found ${sourcePackages.length} ${sourcePackages.length === 1 ? 'package' : 'packages'} in source.`)
+  logger.debug(`Found ${sourcePackages.length} ${sourcePackages.length === 1
+    ? 'package'
+    : 'packages'} in source.`)
   const packageNamesToFilePath = getPackageNamesToFilePath()
   const destinationPackages = getDestinationPackages(sourcePackages, destinationWorkspaces)
   const absolutePathsForDestinationPackages = getAbsolutePathsForDestinationPackages()
-  logger.debug(`Found ${destinationPackages.length} ${destinationPackages.length === 1 ? 'package' : 'packages'} in destination.`)
+  logger.debug(`Found ${destinationPackages.length} ${destinationPackages.length === 1
+    ? 'package'
+    : 'packages'} in destination.`)
 
   if (!argv?.packageNames && destinationPackages.length === 0) {
     logger.error(`You haven't got any source dependencies in your current \`package.json\`.

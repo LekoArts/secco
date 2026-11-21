@@ -91,7 +91,9 @@ export function transform<T extends Record<string, any>, R extends Record<string
  * uniq([1, 2, 1, 3, 2]) // [1, 2, 3]
  */
 export function uniq<T>(array: Array<T>): Array<T> {
-  return [...new Set(array)]
+  return [
+    ...new Set(array),
+  ]
 }
 
 /**

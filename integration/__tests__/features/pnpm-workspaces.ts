@@ -22,7 +22,13 @@ describe.runIf(isPnpm)('pnpm workspaces', () => {
   })
 
   it('should support protocol and catalogs', () => {
-    const [exitCode, logs] = app.cli(['--scan-once', '--force-verdaccio', '--verbose', 'packages', 'say-hello-world'])
+    const [exitCode, logs] = app.cli([
+      '--scan-once',
+      '--force-verdaccio',
+      '--verbose',
+      'packages',
+      'say-hello-world',
+    ])
 
     logs.should.contain('[log] [Verdaccio] Starting server...')
     logs.should.contain('[log] [Verdaccio] Started successfully!')

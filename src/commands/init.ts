@@ -81,7 +81,9 @@ ${optionsToDisplay}
     name: 'confirm',
     initial: 'Yes',
     message: 'Do you want to create the file?',
-    format: value => (value ? colors.greenBright('Yes') : colors.red('No')),
+    format: value => (value
+      ? colors.greenBright('Yes')
+      : colors.red('No')),
   })
 
   if (!confirm) {

@@ -83,7 +83,13 @@ export async function watcher(source: Source, destination: Destination, packages
 
   function copyPath({ oldPath, newPath, packageName }: CopyPathArgs) {
     return new Promise<void>((resolve, reject) => {
-      const args = { oldPath, newPath, packageName, resolve, reject }
+      const args = {
+        oldPath,
+        newPath,
+        packageName,
+        resolve,
+        reject,
+      }
 
       if (afterPackageInstallation)
         _copyPath(args)
@@ -129,7 +135,9 @@ export async function watcher(source: Source, destination: Destination, packages
   })
 
   // If secco is run without the "packages" command, we need to copy all packages from the source location to the destination location
-  const allPackagesToWatch = packages ? intersection(packages, seenPackages) : seenPackages
+  const allPackagesToWatch = packages
+    ? intersection(packages, seenPackages)
+    : seenPackages
 
   const ignoredPackageJson: Map<string, Array<string>> = new Map()
   function ignorePackageJsonChanges(packageName: string, contentArray: Array<string>) {
@@ -156,7 +164,10 @@ export async function watcher(source: Source, destination: Destination, packages
       else {
         // Use package manager inside destination repository to install dependencies
         logger.log('Installing dependencies from public npm registry...')
-        await installDependencies({ cwd: process.cwd(), silent: !isVerbose })
+        await installDependencies({
+          cwd: process.cwd(),
+          silent: !isVerbose,
+        })
         logger.success('Installation complete')
       }
     }
@@ -207,7 +218,9 @@ export async function watcher(source: Source, destination: Destination, packages
 
   chokidar
     .watch(watchers, {
-      ignored: [filePath => ignored.some(i => i.test(filePath))],
+      ignored: [
+        filePath => ignored.some(i => i.test(filePath)),
+      ],
     })
     .on('all', async (event, file) => {
       if (!WATCH_EVENTS.includes(event))
@@ -242,7 +255,9 @@ export async function watcher(source: Source, destination: Destination, packages
               return true
             }
 
-            const normalizedPattern = pattern.endsWith('/') ? pattern.slice(0, -1) : pattern
+            const normalizedPattern = pattern.endsWith('/')
+              ? pattern.slice(0, -1)
+              : pattern
 
             if (relativePackageFile.startsWith(`${normalizedPattern}/`)) {
               return true
@@ -310,7 +325,9 @@ export async function watcher(source: Source, destination: Destination, packages
       // Do not copy package.json files as this will mess up future dependency checks. So if code reaches this path, do nothing.
       }
 
-      const localCopies = [copyPath({ oldPath: file, newPath: nodeModulesFilePath, packageName })]
+      const localCopies = [
+        copyPath({ oldPath: file, newPath: nodeModulesFilePath, packageName }),
+      ]
 
       allCopies = allCopies.concat(localCopies)
     })
@@ -342,7 +359,10 @@ export async function watcher(source: Source, destination: Destination, packages
         else if (anyPackageNotInstalled) {
           // Use package manager inside destination repository to install dependencies
           logger.log('Installing dependencies from public npm registry...')
-          await installDependencies({ cwd: process.cwd(), silent: !isVerbose })
+          await installDependencies({
+            cwd: process.cwd(),
+            silent: !isVerbose,
+          })
           logger.success('Installation complete')
         }
 

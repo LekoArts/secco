@@ -34,12 +34,16 @@ describe('getPackageVersion', () => {
 
 describe('getSourcePackageJsonPath', () => {
   it('should return null if the package is not found', () => {
-    const packageNamesToFilePath = new Map<string, string>([['foo', '/path/to/foo']])
+    const packageNamesToFilePath = new Map<string, string>([
+      ['foo', '/path/to/foo'],
+    ])
 
     expect(getSourcePackageJsonPath('bar', packageNamesToFilePath)).toBeNull()
   })
   it('should return the path to the package.json file', () => {
-    const packageNamesToFilePath = new Map<string, string>([['foo', '/path/to/foo']])
+    const packageNamesToFilePath = new Map<string, string>([
+      ['foo', '/path/to/foo'],
+    ])
 
     expect(getSourcePackageJsonPath('foo', packageNamesToFilePath)).toBe('/path/to/foo/package.json')
   })
